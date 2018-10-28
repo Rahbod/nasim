@@ -1,0 +1,116 @@
+@media screen and (max-width: 767px){
+    .parallax-window{
+        height: 60%;
+    }
+    .page .parallax-window{
+        height: 100%;
+    }
+    .logo{
+        background-size: 250px;
+        position: relative;
+        display: block;
+        width: 100%;
+        border-top: none;
+        margin-top: 90px;
+    }
+    .price-box{
+        width: 100%;
+        right: 0;
+        top: 100vh;
+        margin-top: -300px;
+    }
+    .intro-box{
+        margin-top: 80px;
+    }
+    .intro-box .text{
+        padding-left: 0;
+        border-bottom: 1px solid #d1cfcf;
+        border-left: none;
+        padding-bottom: 15px;
+    }
+    .intro-box .col-lg-4:last-child .text{
+        border-bottom: none;
+    }
+    #google-map{
+        position: relative;
+        width: 100%;
+        top: auto;
+        left: auto;
+        height: 300px;
+    }
+    .copyright{
+        text-align: center;
+    }
+    .copyright .socials-container{
+        float: none;
+    }
+    .copyright .left{
+        float: none;
+    }
+    .copyright .socials-container a{
+        float: none;
+        display: inline-block;
+    }
+    .copyright .socials-container{
+        text-align: center;
+        height: 30px;
+    }
+    .page .logo{
+        width: 200px;
+        height:40px;
+        margin-top: 0;
+        background: url("../svg/logo-white.svg") no-repeat left center;
+        background-size: auto 40px;
+    }
+    .page .mobile-menu-trigger{
+        float: right;
+    }
+    .page .top,
+    .page-bg{
+        height:350px;
+    }
+    .page .page-title{
+        top: 340px;
+        font-size: 40px;
+        width: auto;
+    }
+    .page .price-box{
+        margin-top: 60px;
+        width: 100%;
+    }
+    .page .price-box .item{
+        padding: 20px;
+    }
+    .page-bg::after{
+        height: 150px;
+    }
+    .page .footer .content{
+        padding: 30px 0;
+    }
+    .page .content{
+        padding: 50px 0 0;
+    }
+    .page .header{
+        position: fixed;
+        width: 100%;
+        top: 0;
+        right: 0;
+        z-index:400;
+    }
+    .page{
+        padding-top: 70px;
+    }
+    .page .page-title.terms-page{
+        font-size: 30px;
+    }
+    .transfer-link{
+        margin-top: 5px;
+        width: 100%;
+    }
+    .transfer-link.black{
+        margin-top: 50px;
+    }
+}
+@media (min-width: 768px) and (max-width: 991px){}
+@media (min-width: 992px) and (max-width: 1200px){}
+@media (min-width: 1200px){}
