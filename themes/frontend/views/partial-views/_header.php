@@ -1,15 +1,5 @@
-<?
+<?php
 /* @var $this Controller*/
-
-$scl = SiteSetting::getOption('social_links')?:null;
-if($scl):
-    $scl = CJSON::decode($scl);
-    $tl = isset($scl['telegram'])?$scl['telegram']:false;
-    $tw = isset($scl['twitter'])?$scl['twitter']:false;
-    $fb = isset($scl['facebook'])?$scl['facebook']:false;
-    $wh = isset($scl['whatsapp'])?$scl['whatsapp']:false;
-    $in = isset($scl['instagram'])?$scl['instagram']:false;
-endif;
 ?>
 <?php if(isset($inner) && $inner): ?>
     <div class="header">
@@ -31,7 +21,18 @@ endif;
         </div>
     </div>
     <?php $this->renderPartial('//partial-views/_banner', array('class' => 'page-bg'));?>
-<?php else: ?>
+<?php else:
+    $scl = SiteSetting::getOption('social_links')?:null;
+    if($scl):
+        $scl = CJSON::decode($scl);
+        $tl = isset($scl['telegram'])?$scl['telegram']:false;
+        $tw = isset($scl['twitter'])?$scl['twitter']:false;
+        $fb = isset($scl['facebook'])?$scl['facebook']:false;
+        $wh = isset($scl['whatsapp'])?$scl['whatsapp']:false;
+        $in = isset($scl['instagram'])?$scl['instagram']:false;
+    endif;
+
+    ?>
     <div class="home-top">
         <?php $this->renderPartial('//partial-views/_banner');?>
         <div class="container">
@@ -70,7 +71,7 @@ endif;
                     <?php if($in): ?><a target="_blank" href="<?= $in; ?>" class="instagram"></a><?php endif; ?>
                     <span>exchange</span>
                     <div class="phone">
-                        <?= SiteSetting::getOption('tel_code') ?><span><?= SiteSetting::getOption('tel') ?></span>
+                        <?= SiteSetting::getOption('tel_code') ?><span><?= SiteSetting::getOption('tel') ?> - <?= SiteSetting::getOption('tel2') ?></span>
                     </div>
                 </div>
             </div>

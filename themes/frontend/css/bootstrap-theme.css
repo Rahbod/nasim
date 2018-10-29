@@ -293,8 +293,12 @@ a:active {
     background-size: 30px;
 }
 .socials-container a.instagram{
-    background: url("../svg/instagram.svg") no-repeat center;
-    background-size: 30px;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: url("../svg/instagram-black.svg") no-repeat center #de4b00;
+    background-size: 18px;
 }
 #mobile-menu .socials-container a.whatsapp{
     background: url("../svg/whatsapp-white.svg") no-repeat center;
@@ -437,9 +441,10 @@ a:active {
     font-size: 15px;
     color: #de4b00;
     line-height:20px;
+    margin-top: 15px;
 }
 .footer .content p{
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     line-height:20px;
 }
 .footer .phone{

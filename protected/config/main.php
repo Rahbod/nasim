@@ -70,6 +70,7 @@ return array(
 			'appendParams'=>true,
 			'rules'=>array(
 				'/page/<title:(.*)>'=>'/pages/manage/view',
+				'/pages/<id:\d+>'=>'/pages/manage/view',
 				'<action:(about|contact|help|terms|search|faq)>' => 'site/<action>',
 				'<action:(logout|dashboard|googleLogin|login|register|changePassword|forgetPassword|profile|notifications|recoverPassword|bookmarks)>' => 'users/public/<action>',
 				'<module:\w+>/<id:\d+>'=>'<module>/public/view',

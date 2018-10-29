@@ -10,3 +10,9 @@ $this->description=$model->getDescription();
     echo $purifier->purify($model->summary);
     ?>
 </div>
+<?php if($model->id == 2): ?>
+    <div class="overflow-fix">
+        <a href="#" class="transfer-link black">فرم با فرمت<span>pdf</span></a>
+        <a href="#" class="transfer-link">فرم با فرمت<span>word</span></a>
+    </div>
+<?php endif; ?>

@@ -50,6 +50,17 @@
         <div class="title-box hidden-xs">
             <h1>nas<span>ee</span>m</h1>
             <div class="socials-container">
+                <?php
+                $scl = SiteSetting::getOption('social_links')?:null;
+                if($scl):
+                    $scl = CJSON::decode($scl);
+                    $tl = isset($scl['telegram'])?$scl['telegram']:false;
+                    $tw = isset($scl['twitter'])?$scl['twitter']:false;
+                    $fb = isset($scl['facebook'])?$scl['facebook']:false;
+                    $wh = isset($scl['whatsapp'])?$scl['whatsapp']:false;
+                    $in = isset($scl['instagram'])?$scl['instagram']:false;
+                endif;
+                ?>
                 <?php if($tl): ?><a target="_blank" href="<?= $tl; ?>" class="telegram"></a><?php endif; ?>
                 <?php if($tw): ?><a target="_blank" href="<?= $tw; ?>" class="twitter"></a><?php endif; ?>
                 <?php if($fb): ?><a target="_blank" href="<?= $fb; ?>" class="facebook"></a><?php endif; ?>
@@ -57,7 +68,7 @@
                 <?php if($in): ?><a target="_blank" href="<?= $in; ?>" class="instagram"></a><?php endif; ?>
                 <span>exchange</span>
                 <div class="phone">
-                    <?= SiteSetting::getOption('tel_code') ?><span><?= SiteSetting::getOption('tel') ?></span>
+                    <?= SiteSetting::getOption('tel_code') ?><span><?= SiteSetting::getOption('tel') ?> - <?= SiteSetting::getOption('tel2') ?></span>
                 </div>
             </div>
         </div>
