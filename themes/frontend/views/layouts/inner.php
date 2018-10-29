@@ -7,12 +7,12 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="theme-color" content="#5d9602" />
+    <meta name="theme-color" content="#de400b" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<?= Yii::app()->request->csrfToken ?>" />
     <meta name="keywords" content="<?= $this->keywords ?>">
     <meta name="description" content="<?= $this->description?> ">
-    <link rel="alternate" href="afra841.ir" hreflang="fa" />
+    <!-- <link rel="alternate" href="afra841.ir" hreflang="fa" /> -->
     <link rel="shortcut icon" href="<?php echo Yii::app()->getBaseUrl(true).'/themes/frontend/images/favicon.png';?>">
     <title><?= (!empty($this->pageTitle)?$this->pageTitle.' | ':'').$this->siteName ?></title>
 
@@ -21,27 +21,54 @@
     $baseUrl = Yii::app()->theme->baseUrl;
     $cs = Yii::app()->getClientScript();
     Yii::app()->clientScript->registerCoreScript('jquery');
-    Yii::app()->clientScript->registerCoreScript('jquery.ui');
-    $cssCoreUrl = $cs->getCoreScriptUrl();
-    $cs->registerCssFile($cssCoreUrl . '/jui/css/base/jquery-ui.css');
 
     $cs->registerCssFile($baseUrl.'/css/bootstrap.min.css');
     $cs->registerCssFile($baseUrl.'/css/bootstrap-rtl.min.css');
-    $cs->registerCssFile($baseUrl.'/css/fontiran.css');
-    $cs->registerCssFile($baseUrl.'/css/font-awesome.css');
     $cs->registerCssFile($baseUrl.'/css/bootstrap-theme.css?'.time());
     $cs->registerCssFile($baseUrl.'/css/responsive-theme.css?'.time());
 
     $cs->registerScriptFile($baseUrl.'/js/bootstrap.min.js', CClientScript::POS_END);
+    $cs->registerScriptFile($baseUrl.'/js/parallax.min.js?', CClientScript::POS_END);
     $cs->registerScriptFile($baseUrl.'/js/jquery.script.js?'.time(), CClientScript::POS_END);
     ?>
 </head>
-<body class="inner-page">
-    <?php $this->renderPartial('//partial-views/_header');?>
+<body class="page">
+<?php $this->renderPartial('//partial-views/_header', array('inner'=>true));?>
+
+<div class="container">
+    <div class="top">
+        <div class="price-box">
+            <div class="item black">
+                <h3>استرالیا به ایران<small>australia to iran</small></h3>
+                <span><?= number_format(SiteSetting::getOption('price')) ?> تومان</span>
+            </div>
+            <div class="item orange">
+                <h3>ایران به استرالیا<small>iran to australia</small></h3>
+                <span>تماس بگیرید</span>
+            </div>
+        </div>
+        <div class="title-box hidden-xs">
+            <h1>nas<span>ee</span>m</h1>
+            <div class="socials-container">
+                <?php if($tl): ?><a target="_blank" href="<?= $tl; ?>" class="telegram"></a><?php endif; ?>
+                <?php if($tw): ?><a target="_blank" href="<?= $tw; ?>" class="twitter"></a><?php endif; ?>
+                <?php if($fb): ?><a target="_blank" href="<?= $fb; ?>" class="facebook"></a><?php endif; ?>
+                <?php if($wh): ?><a target="_blank" href="<?= $wh; ?>" class="whatsapp"></a><?php endif; ?>
+                <?php if($in): ?><a target="_blank" href="<?= $in; ?>" class="instagram"></a><?php endif; ?>
+                <span>exchange</span>
+                <div class="phone">
+                    <?= SiteSetting::getOption('tel_code') ?><span><?= SiteSetting::getOption('tel') ?></span>
+                </div>
+            </div>
+        </div>
+        <div class="page-title h1"><?= $this->pageHeader ?></div>
+    </div>
     <div class="content">
-        <?php $this->renderPartial('//partial-views/_banner');?>
         <?php echo $content;?>
     </div>
-    <?php $this->renderPartial('//partial-views/_footer');?>
+</div>
+
+<?php $this->renderPartial('//partial-views/_footer');?>
+<?php $this->renderPartial('//partial-views/_copyright');?>
 </body>
 </html>

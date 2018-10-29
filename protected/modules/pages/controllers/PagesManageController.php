@@ -85,15 +85,17 @@ class PagesManageController extends Controller
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
 	 */
-	public function actionView($title)
+	public function actionView($id)
     {
         Yii::app()->theme = 'frontend';
         $this->layout = '//layouts/inner';
 
-        $model = $this->loadModelWithTitle(trim(strip_tags($title)));
+//        $model = $this->loadModel(trim(strip_tags($title)));
+        $model = $this->loadModel($id);
         $this->pageBanner = $model->image ?: null;
         $this->categorySlug = $model->category->slug;
         $this->categoryId = $model->category->id;
+        $this->pageHeader = $model->en_title;
         $this->render('//site/pages/page', array(
             'model' => $model,
         ));
@@ -112,9 +114,9 @@ class PagesManageController extends Controller
 		if(isset($_POST['Pages'])){
 			$model->attributes = $_POST['Pages'];
 			$model->category_id = $this->categoryId;
-//            $image = new UploadedFiles($this->tempPath, $model->image,$this->imageOptions);
+            $image = new UploadedFiles($this->tempPath, $model->image,$this->imageOptions);
 			if($model->save()){
-//			    $image->move($this->imagePath);
+			    $image->move($this->imagePath);
 				Yii::app()->user->setFlash('success' ,'اطلاعات با موفقیت ثبت شد.');
 				$this->redirect(array('manage/admin/slug/' . $this->categorySlug));
 			}else
@@ -139,17 +141,17 @@ class PagesManageController extends Controller
         // $this->performAjaxValidation($model);
         $this->categorySlug = $model->category->slug;
         $this->categoryId = $model->category->id;
-//        if($this->categorySlug == 'menu')
-//            $this->imageOptions = ['resize' => ['width' => 1600, 'height' => 1024]];
+        if($this->categorySlug == 'base')
+            $this->imageOptions = ['resize' => ['width' => 1600, 'height' => 1024]];
 //
-//        $image = new UploadedFiles($this->imagePath, $model->image, $this->imageOptions);
+        $image = new UploadedFiles($this->imagePath, $model->image, $this->imageOptions);
         if(isset($_POST['Pages'])){
-//            $oldImage= $model->image;
+            $oldImage= $model->image;
             $model->attributes = $_POST['Pages'];
             $model->category_id = $this->categoryId;
 
 			if($model->save()){
-//			    $image->update($oldImage, $model->image, $this->tempPath);
+			    $image->update($oldImage, $model->image, $this->tempPath);
 				Yii::app()->user->setFlash('success' ,'اطلاعات با ویرایش شد.');
 				$this->refresh();
 			}else

@@ -6,6 +6,7 @@
  * The followings are the available columns in table 'ym_pages':
  * @property string $id
  * @property string $title
+ * @property string $en_title
  * @property string $summary
  * @property string $category_id
  * @property string $image
@@ -36,13 +37,13 @@ class Pages extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('image, title', 'length', 'max' => 255),
+            array('image, title, en_title', 'length', 'max' => 255),
             array('category_id', 'length', 'max' => 11),
             array('summary', 'safe'),
             array('formTags', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, title, summary, category_id', 'safe', 'on' => 'search'),
+            array('id, title, en_title, summary, category_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -74,6 +75,7 @@ class Pages extends CActiveRecord
         return array(
             'id' => 'ID',
             'title' => 'عنوان',
+            'en_title' => 'عنوان انگلیسی',
             'summary' => 'متن',
             'category_id' => 'دسته بندی',
             'formTags' => 'کلمات کلیدی',
@@ -101,6 +103,7 @@ class Pages extends CActiveRecord
 
         $criteria->compare('id', $this->id, true);
         $criteria->compare('title', $this->title, true);
+        $criteria->compare('en_title', $this->en_title, true);
         $criteria->compare('summary', $this->summary, true);
         $criteria->compare('category_id', $this->category_id, true);
 
@@ -157,13 +160,13 @@ class Pages extends CActiveRecord
     protected function afterFind()
     {
         parent::afterFind();
-        $this->formTags = CHtml::listData($this->tags, 'title', 'title');
+//        $this->formTags = CHtml::listData($this->tags, 'title', 'title');
     }
 
     public function getKeywords()
     {
-        $tags = CHtml::listData($this->tags, 'title', 'title');
-        return implode(',', $tags);
+//        $tags = CHtml::listData($this->tags, 'title', 'title');
+//        return implode(',', $tags);
     }
 
     public function getDescription()
