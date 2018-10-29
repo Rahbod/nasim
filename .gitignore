@@ -9,6 +9,5 @@ Thumbs.db
 # composer.phar
 
 assets/*
-uploads/*
 protected/runtime/*
 protected/tests/*
