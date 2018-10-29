@@ -40,7 +40,7 @@ $mapScript = "var map;
 	google.maps.event.addDomListener(window, 'load', initialize);
 	";
 // google map
-Yii::app()->clientScript->registerScriptFile('http://maps.googleapis.com/maps/api/js');
+Yii::app()->clientScript->registerScriptFile('https://maps.googleapis.com/maps/api/js?key=AIzaSyDbhMDAxCreEWc5Due7477QxAVuBAJKdTM');
 Yii::app()->clientScript->registerScript('googleMap', $mapScript);
 ?>
 
@@ -61,14 +61,14 @@ echo $form->hiddenField($model , 'map_lat' ,array('id' => 'map_lat'));
 echo $form->hiddenField($model , 'map_lng' ,array('id' => 'map_lng'));
 echo $form->hiddenField($model , 'map_zoom' ,array('id' => 'map_zoom'));
 ?>
-	<div class="row">
+	<div class="form-group">
 		<div class="map span12 pull-right">
 			<div id="googleMap"></div>
 		</div>
 	</div>
 
 
-	<div class="row buttons">
+	<div class="form-group buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'ثبت' : 'ذخیره' ,array('class' => 'btn btn-success')); ?>
 	</div>
 
@@ -81,6 +81,7 @@ Yii::app()->clientScript->registerCss('map','
 	border-radius: 5px;
     display: block;
     height: 500px;
+    width:100%;
     overflow: hidden;
     position: relative;
 }

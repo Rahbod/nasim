@@ -8,14 +8,14 @@
             <div class="navbar hidden-xs">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="<?= Yii::app()->getBaseUrl(true)?>">صفحه اصلی</a></li>
-                    <li><a href="#">ارسال حواله</a></li>
-                    <li><a href="#">شرایط و مقررات</a></li>
-                    <li><a href="#">درباره ما</a></li>
+                    <li><a href="<?= $this->createUrl('/pages/2') ?>">ارسال حواله</a></li>
+                    <li><a href="<?= $this->createUrl('/pages/3') ?>">شرایط و مقررات</a></li>
+                    <li><a href="<?= $this->createUrl('/pages/1') ?>">درباره ما</a></li>
                     <li><a href="<?= $this->createUrl('/contact')?>">تماس با ما</a></li>
                 </ul>
             </div>
             <div class="visible-xs">
-                <a href="#mobile-menu" class="mobile-menu-trigger"></a>
+                <a href="#" class="mobile-menu-trigger"></a>
             </div>
             <a href="<?= Yii::app()->getBaseUrl(true)?>" class="logo"></a>
         </div>

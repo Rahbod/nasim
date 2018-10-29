@@ -112,9 +112,9 @@ class PagesManageController extends Controller
 		if(isset($_POST['Pages'])){
 			$model->attributes = $_POST['Pages'];
 			$model->category_id = $this->categoryId;
-            $image = new UploadedFiles($this->tempPath, $model->image,$this->imageOptions);
+//            $image = new UploadedFiles($this->tempPath, $model->image,$this->imageOptions);
 			if($model->save()){
-			    $image->move($this->imagePath);
+//			    $image->move($this->imagePath);
 				Yii::app()->user->setFlash('success' ,'اطلاعات با موفقیت ثبت شد.');
 				$this->redirect(array('manage/admin/slug/' . $this->categorySlug));
 			}else
@@ -139,17 +139,17 @@ class PagesManageController extends Controller
         // $this->performAjaxValidation($model);
         $this->categorySlug = $model->category->slug;
         $this->categoryId = $model->category->id;
-        if($this->categorySlug == 'menu')
-            $this->imageOptions = ['resize' => ['width' => 1600, 'height' => 1024]];
-
-        $image = new UploadedFiles($this->imagePath, $model->image, $this->imageOptions);
+//        if($this->categorySlug == 'menu')
+//            $this->imageOptions = ['resize' => ['width' => 1600, 'height' => 1024]];
+//
+//        $image = new UploadedFiles($this->imagePath, $model->image, $this->imageOptions);
         if(isset($_POST['Pages'])){
-            $oldImage= $model->image;
+//            $oldImage= $model->image;
             $model->attributes = $_POST['Pages'];
             $model->category_id = $this->categoryId;
 
 			if($model->save()){
-			    $image->update($oldImage, $model->image, $this->tempPath);
+//			    $image->update($oldImage, $model->image, $this->tempPath);
 				Yii::app()->user->setFlash('success' ,'اطلاعات با ویرایش شد.');
 				$this->refresh();
 			}else

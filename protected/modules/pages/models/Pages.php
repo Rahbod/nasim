@@ -124,32 +124,32 @@ class Pages extends CActiveRecord
     {
         $this->formTags = isset($_POST[get_class($this)]['formTags']) ? explode(',', $_POST[get_class($this)]['formTags']) : null;
         if ($this->formTags && !empty($this->formTags)) {
-            if (!$this->isNewRecord) {
-                $cr = new CDbCriteria();
-                $cr->compare("model_name", get_class($this));
-                $cr->compare("model_id", $this->id);
-                TagRel::model()->deleteAll($cr);
-            }
-
-            foreach ($this->formTags as $tag) {
-                $tagModel = Tags::model()->findByAttributes(array('title' => $tag));
-                if ($tagModel) {
-                    $tag_rel = new TagRel();
-                    $tag_rel->model_name = get_class($this);
-                    $tag_rel->model_id = $this->id;
-                    $tag_rel->tag_id = $tagModel->id;
-                    $tag_rel->save(false);
-                } else if (!empty($tag)) {
-                    $tagModel = new Tags();
-                    $tagModel->title = $tag;
-                    $tagModel->save(false);
-                    $tag_rel = new TagRel();
-                    $tag_rel->model_name = get_class($this);
-                    $tag_rel->model_id = $this->id;
-                    $tag_rel->tag_id = $tagModel->id;
-                    $tag_rel->save(false);
-                }
-            }
+//            if (!$this->isNewRecord) {
+//                $cr = new CDbCriteria();
+//                $cr->compare("model_name", get_class($this));
+//                $cr->compare("model_id", $this->id);
+//                TagRel::model()->deleteAll($cr);
+//            }
+//
+//            foreach ($this->formTags as $tag) {
+//                $tagModel = Tags::model()->findByAttributes(array('title' => $tag));
+//                if ($tagModel) {
+//                    $tag_rel = new TagRel();
+//                    $tag_rel->model_name = get_class($this);
+//                    $tag_rel->model_id = $this->id;
+//                    $tag_rel->tag_id = $tagModel->id;
+//                    $tag_rel->save(false);
+//                } else if (!empty($tag)) {
+//                    $tagModel = new Tags();
+//                    $tagModel->title = $tag;
+//                    $tagModel->save(false);
+//                    $tag_rel = new TagRel();
+//                    $tag_rel->model_name = get_class($this);
+//                    $tag_rel->model_id = $this->id;
+//                    $tag_rel->tag_id = $tagModel->id;
+//                    $tag_rel->save(false);
+//                }
+//            }
         }
         parent::afterSave();
     }

@@ -117,6 +117,7 @@ class Controller extends AuthController
                     'submenuOptions' => array('class' => 'treeview-menu'),
                     'items' => array(
                         array('label' => '<i class="fa fa-circle-o"></i>صفحات و متون اصلی', 'url' => Yii::app()->createUrl('/pages/manage/admin/slug/base')),
+                        array('label' => '<i class="fa fa-circle-o"></i>متون صفحه اصلی', 'url' => Yii::app()->createUrl('/pages/manage/admin/slug/index')),
                     )
                 ),
 
