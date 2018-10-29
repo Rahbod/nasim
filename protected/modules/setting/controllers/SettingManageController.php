@@ -103,6 +103,18 @@ class SettingManageController extends Controller
         ));
     }
 
+
+
+    public function actionChangePrice()
+    {
+        if (isset($_POST['SiteSetting']['price'])) {
+            SiteSetting::setOption('price', $_POST['SiteSetting']['price']);
+            Yii::app()->user->setFlash('success', 'اطلاعات با موفقیت ثبت شد.');
+            $this->refresh();
+        }
+        $this->render('_price');
+    }
+
     /**
      * Change site setting
      */

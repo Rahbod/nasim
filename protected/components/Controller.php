@@ -111,6 +111,10 @@ class Controller extends AuthController
                     'url' => array('/admins/dashboard')
                 ),
                 array(
+                    'label' => '<i class="fa fa-dashboard"></i><span>تغییر قیمت ارز</span>',
+                    'url' => array('/setting/manage/changePrice')
+                ),
+                array(
                     'label' => '<i class="fa fa-bars"></i><span>صفحات متنی</span> <i class="fa fa-angle-left pull-left"></i>',
                     'url' => '#',
                     'itemOptions' => array('class' => 'treeview', 'tabindex' => "-1"),
