@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2018-10-28 21:00:03
+Date: 2018-10-29 15:06:04
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -173,9 +173,9 @@ CREATE TABLE `ym_counter_save` (
 -- ----------------------------
 -- Records of ym_counter_save
 -- ----------------------------
-INSERT INTO `ym_counter_save` VALUES ('day_time', '2458420');
-INSERT INTO `ym_counter_save` VALUES ('counter', '1');
-INSERT INTO `ym_counter_save` VALUES ('yesterday', '0');
+INSERT INTO `ym_counter_save` VALUES ('day_time', '2458421');
+INSERT INTO `ym_counter_save` VALUES ('counter', '2');
+INSERT INTO `ym_counter_save` VALUES ('yesterday', '1');
 INSERT INTO `ym_counter_save` VALUES ('max_count', '1');
 INSERT INTO `ym_counter_save` VALUES ('max_time', '1540629000');
 
@@ -192,7 +192,7 @@ CREATE TABLE `ym_counter_users` (
 -- ----------------------------
 -- Records of ym_counter_users
 -- ----------------------------
-INSERT INTO `ym_counter_users` VALUES ('837ec5754f503cfaaee0929fd48974e7', '1540747734');
+INSERT INTO `ym_counter_users` VALUES ('837ec5754f503cfaaee0929fd48974e7', '1540812835');
 
 -- ----------------------------
 -- Table structure for ym_google_maps
@@ -210,7 +210,7 @@ CREATE TABLE `ym_google_maps` (
 -- ----------------------------
 -- Records of ym_google_maps
 -- ----------------------------
-INSERT INTO `ym_google_maps` VALUES ('1', '', '35.72781914695719', '51.41998856328428', '19');
+INSERT INTO `ym_google_maps` VALUES ('1', '', '34.64061525591295', '50.876765132646824', '15');
 
 -- ----------------------------
 -- Table structure for ym_pages
@@ -221,17 +221,22 @@ CREATE TABLE `ym_pages` (
   `title` varchar(255) DEFAULT NULL COMMENT 'عنوان',
   `summary` text COMMENT 'متن',
   `category_id` int(11) unsigned DEFAULT NULL,
+  `image` varchar(500) DEFAULT NULL,
+  `en_title` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ym_pages
 -- ----------------------------
-INSERT INTO `ym_pages` VALUES ('1', 'درباره ما', 'متن صفحه درباره ما', '1');
-INSERT INTO `ym_pages` VALUES ('2', 'راهنما', 'متن راهنما', '1');
-INSERT INTO `ym_pages` VALUES ('3', 'شرایط', 'متن شرایط', '1');
-INSERT INTO `ym_pages` VALUES ('4', 'سوالات متداول', 'متن سوالات و جواب ها', '1');
+INSERT INTO `ym_pages` VALUES ('1', 'درباره ما', 'گروه صرافی نسیم با چهار شعبه صرافی در شهرهای ملبورن ،سیدنی ،تهران و نوشهر مدت 17 سال است که در زمینه انتقال پول به تمام نقاط دنیا زیر نظر بانک مرکزی ایران فعالیت می کند.\r\n            این گروه فعالیت خود را زیر نظر اداره پول شویی کشور استرالیا (AUSTRAC) با کسب مجوزهای لازم از سال 2015 در شهر ملبورن آغاز نموده و در سال 2018 با توجه به نیاز جامعه ایرانیان استرالیا، چهارمین صرافی را در شهر سیدنی برای خدمت به شما عزیزان تاسیس کرده است.\r\n            گروه صرافی نسیم جهت رفع نیازهای ارزی هموطنان ایرانی در زمینه های مختلف از جمله انتقال سرمایه، حواله های دانشجویی، پرداخت های بیمه و آنلاین و مشاوره استراتژیک بزینس و … خدمات ارایه می دهد.\r\n            <br>\r\n            <br>\r\n            <b>چرا صرافی نسیم؟</b>\r\n            <br>\r\n            <br>\r\n            بهترین نرخ تبدیل ارز:\r\n            صرافی نسیم بهترین نرخ تبدیل ارز را با توجه به داشتن یک شعبه در بورس صرافی های تهران (خیابان منوچهری) ارایه می کند.\r\n            تبدیل و انتقال ارز در کمترین زمان:\r\n            صرافی نسیم با کادری مجرب و کار آزموده، داشتن چهار شعبه صرافی زمان خدماتی ارزی را به حداقل رسانیده است.\r\n            ایمن و قانونی:\r\n            صرافی نسیم دارای مجوزهای مربوط به انتقال ارز در کشور استرالیا و ایران و متعهد به قوانین پول شویی است. خیال شما را از داشتن پول قانونی و سفید در حساب بانکی مقصد آسوده می سازد.', '1', 'about-bg.jpg', 'about us');
+INSERT INTO `ym_pages` VALUES ('2', 'ارسال حواله', 'لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است.لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است.لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است.', '1', 'transfer-bg.jpg', 'transfer form');
+INSERT INTO `ym_pages` VALUES ('3', 'شرایط و مقررات', '<p style=\"direction: ltr\">\r\n        <b>Refunds and cancellation</b><br>\r\n        REFUNDS OF PRINCIPAL AMOUNT and cancellation of the money transfer will be made upon Your written request if payment to the Receiver has not yet been made or credited at the time the request is processed\r\n        <br>\r\n        <br>\r\n        <b>Money transfer services</b><br>\r\n        Javadi Pty ltd provides money transfer services whereby you authorize us to transfer funds to a person overseas; and/or receive Funds from a person overseas\r\n        <br>\r\n        <br>\r\n        <b>Anti-Money Laundering</b><br>\r\n        Javadi Pty ltd are required by the Anti-Money Laundering and Counter-Terrorism Financing Act 2006 to verify your identity before we can provide you with financial products and services. Electronic verification allows us to verify your identity by using electronic tools and external data sources\r\n        <br>\r\n        <br>\r\n        <b>Customers privacy</b><br>\r\n        Due to Privacy Act, we are subjected to protect your privacy. It is our company’s Code Of Conduct to respect customers privacy\r\n        <br>\r\n        <br>\r\n        By sending information to us, you consent to your information being checked with the document issuer or official record holder. Javadi Pty ltd may ask for more information regarding your money transfer\r\n        Information\r\n        Javadi Pty ltd charges 15$ for under 1000$ transaction\r\n        Minimum charges\r\n        Javadi Pty ltd may refuse the payment order, if we cannot match the user’s name and address as provided to Javadi to your bank account or credit card details. In this case you may be liable for an administration charge, which will be deducted from your deposit\r\n        Refusing a payment order\r\n        You are responsible for ensuring the payment details you provide are accurate. Once payment instructions have been executed by Javadi Pty ltd transactions cannot be reversed and Javadi Pty ltd will not be liable in any way for any loss you suffer as a result of a transaction being carried out in accordance with your instructions\r\n        Responsibility\r\n        The offered rate is fixed for 1 hour until we receive a photo of your receipt\r\n        Rate Validity\r\n        After sending the receipt to us the rate is fixed and we will transfer the fund in destination with our agreed price in the day of deal. Please note that incase of market fluctuations the rate will not change in any circumstances\r\n        Fixed Rate Guarantee\r\n        In case of request for cancellation of the transfer 3% will be deducted from your fund, If we have not processed the transaction in destination country\r\n        Cancelation Fee\r\n        In case of deficiency of your documents we may refuse to provide you service without any penalty\r\n        Required Documents\r\n        Any mistake in providing information regarding the transaction from your side will not make Javadi Pty Ltd liable\r\n        Liability Policy\r\n        Funds less than 1,000 Australian Dollars subjected to $15 transfer fee\r\n        Transfer Fee\r\n        Your information – Your privacy\r\n        Your personal information is protected by the law\r\n        Privacy & Security\r\n        By sending information you consent to your information being checked with the document issuer or official record holder\r\n        Document Verification\r\n    </p>', '1', 'terms-bg.jpg', 'terms conditions');
+INSERT INTO `ym_pages` VALUES ('4', 'تماس با ما', ' ', '1', 'contact-bg.jpg', 'contact us');
+INSERT INTO `ym_pages` VALUES ('6', 'ایمن و قانونی', 'ورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.', '2', null, null);
+INSERT INTO `ym_pages` VALUES ('7', 'بهترین نرخ تبدیل ارز', 'ورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.', '2', null, null);
+INSERT INTO `ym_pages` VALUES ('8', 'تبدیل و انتقال ارز در کمترین زمان', 'ورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد.', '2', null, null);
 
 -- ----------------------------
 -- Table structure for ym_page_categories
@@ -243,12 +248,13 @@ CREATE TABLE `ym_page_categories` (
   `slug` varchar(255) DEFAULT NULL COMMENT 'آدرس',
   `multiple` tinyint(1) unsigned DEFAULT '1' COMMENT 'چند صحفه ای',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ym_page_categories
 -- ----------------------------
 INSERT INTO `ym_page_categories` VALUES ('1', 'صفحات استاتیک', 'base', '1');
+INSERT INTO `ym_page_categories` VALUES ('2', 'صفحه اصلی', 'index', '1');
 
 -- ----------------------------
 -- Table structure for ym_site_setting
@@ -260,7 +266,7 @@ CREATE TABLE `ym_site_setting` (
   `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_persian_ci NOT NULL,
   `value` text CHARACTER SET utf8 COLLATE utf8_persian_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ym_site_setting
@@ -270,13 +276,15 @@ INSERT INTO `ym_site_setting` VALUES ('2', 'default_title', 'عنوان پیش �
 INSERT INTO `ym_site_setting` VALUES ('3', 'keywords', 'کلمات کلیدی سایت', '[\"\"]');
 INSERT INTO `ym_site_setting` VALUES ('4', 'site_description', 'شرح وبسایت', '');
 INSERT INTO `ym_site_setting` VALUES ('5', 'social_links', 'شبکه های اجتماعی', '{\"whatsapp\":\"http:\\/\\/https:\\/whatsapp.com\",\"facebook\":\"http:\\/\\/facebook.com\",\"telegram\":\"http:\\/\\/telegram.me\",\"instagram\":\"https:\\/\\/instagram.com\\/naseemexchange\",\"twitter\":\"http:\\/\\/twitter.com\"}');
-INSERT INTO `ym_site_setting` VALUES ('6', 'banner', 'تصویر بنر', ' ');
+INSERT INTO `ym_site_setting` VALUES ('6', 'banner', 'تصویر بنر', ' bg.jpg');
 INSERT INTO `ym_site_setting` VALUES ('13', 'price', 'مبلغ استرالیا به ایران', '9100');
 INSERT INTO `ym_site_setting` VALUES ('14', 'tel', 'شماره تماس', '433 347 481');
 INSERT INTO `ym_site_setting` VALUES ('15', 'tel_code', 'کد کشور', '+61');
 INSERT INTO `ym_site_setting` VALUES ('16', 'iran_address', 'آدرس ایران', 'تهران: سعدی شمالی، بعد از چهارراه منوچهری، پلاک 528');
-INSERT INTO `ym_site_setting` VALUES ('17', 'foreign_address', 'آدرس خارجی', 'سیدنی: Level 5, 282 Victoria Ave Chatswood, 2067, NSW');
+INSERT INTO `ym_site_setting` VALUES ('17', 'foreign_address', 'آدرس خارجی', 'shop 9/45 rawson st, auburn 2144');
 INSERT INTO `ym_site_setting` VALUES ('18', 'tel2', 'شماره تماس دوم', '298 940 213');
+INSERT INTO `ym_site_setting` VALUES ('19', 'foreign_address2', 'آدرس خارجی2', 'shop 1A 35-39 aurburn rd, aurburn');
+INSERT INTO `ym_site_setting` VALUES ('20', 'master_email', 'پست الکترونیک وبسایت', '');
 
 -- ----------------------------
 -- Table structure for ym_tags
