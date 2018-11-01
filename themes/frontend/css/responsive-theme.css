@@ -1,4 +1,19 @@
+@media screen and (max-width: 992px) {
+    .contact-box .about-map-pic{
+        height: 300px;
+    }
+}
 @media screen and (max-width: 767px){
+
+    .contact-form .col-lg-8{
+        padding: 0 15px;
+    }
+    .contact-box .about-map-pic{
+        height: 250px;
+    }
+    .contact-box{
+        padding: 0;
+    }
     .parallax-window{
         height: 60%;
     }
@@ -113,4 +128,16 @@
 }
 @media (min-width: 768px) and (max-width: 991px){}
 @media (min-width: 992px) and (max-width: 1200px){}
+
+@media screen and (max-width: 400px){
+    .contact-box .contact-form{
+        padding: 15px;
+    }
+    .captcha-container input,
+    .captcha-container a{
+        display: block;
+        width: 100% !important;
+        margin-bottom: 10px;
+    }
+}
 @media (min-width: 1200px){}
