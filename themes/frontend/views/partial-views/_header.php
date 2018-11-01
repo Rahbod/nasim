@@ -81,3 +81,25 @@ $action = $this->action->id;
         </div>
     </div>
 <?php endif; ?>
+
+<div class="" id="mobile-menu">
+    <div class="overlay"></div>
+    <div class="content">
+        <a href="#" class="close-menu"></a>
+        <div class="mobile-logo"></div>
+        <ul>
+            <li class="active"><a href="<?= Yii::app()->getBaseUrl(true)?>">صفحه اصلی</a></li>
+            <li><a href="<?= $this->createUrl('/pages/2') ?>">ارسال حواله</a></li>
+            <li><a href="<?= $this->createUrl('/pages/3') ?>">شرایط و مقررات</a></li>
+            <li><a href="<?= $this->createUrl('/pages/1') ?>">درباره ما</a></li>
+            <li><a href="<?= $this->createUrl('/contact')?>">تماس با ما</a></li>
+        </ul>
+        <div class="socials-container">
+            <?php if($tl): ?><a target="_blank" href="<?= $tl; ?>" class="telegram"></a><?php endif; ?>
+            <?php if($tw): ?><a target="_blank" href="<?= $tw; ?>" class="twitter"></a><?php endif; ?>
+            <?php if($fb): ?><a target="_blank" href="<?= $fb; ?>" class="facebook"></a><?php endif; ?>
+            <?php if($wh): ?><a target="_blank" href="<?= $wh; ?>" class="whatsapp"></a><?php endif; ?>
+            <?php if($in): ?><a target="_blank" href="<?= $in; ?>" class="instagram"></a><?php endif; ?>
+        </div>
+    </div>
+</div>

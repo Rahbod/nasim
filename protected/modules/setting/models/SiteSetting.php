@@ -108,6 +108,14 @@ class SiteSetting extends CActiveRecord
 		return $scalar?(self::model()->findByAttributes(array('name' => $name))?self::model()->findByAttributes(array('name' => $name))->value:null):self::model()->findByAttributes(array('name' => $name));
 	}
 
+	public static function removeOption($name)
+    {
+        $modei = self::model()->findByAttributes(array('name' => $name));
+        if ($modei)
+            return $modei->delete();
+        return true;
+    }
+
 	public static function setOption($name, $value, $title = null)
 	{
 		$model = self::getOption($name, false);

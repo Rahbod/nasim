@@ -19,6 +19,7 @@ class SettingManageController extends Controller
             'backend' => array(
                 'gatewaySetting',
                 'changeSetting',
+                'changePrice',
                 'socialLinks'
             )
         );
