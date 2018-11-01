@@ -4,7 +4,13 @@
     }
 }
 @media screen and (max-width: 767px){
-
+    .footer #google-map{
+        position: relative;
+        display: block;
+        overflow: hidden;
+        height: 250px;
+        width: 100%;
+    }
     .contact-form .col-lg-8{
         padding: 0 15px;
     }

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="content row">
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                <h5>شعبه استرالیا</h5>
+                <h5>آدرس</h5>
                 <p><?= SiteSetting::getOption('foreign_address') ?></p>
                 <p><?= SiteSetting::getOption('foreign_address2') ?></p>
                 <div class="phone">

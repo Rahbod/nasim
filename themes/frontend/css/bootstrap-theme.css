@@ -110,6 +110,11 @@ a:active {
 .page .header{
     background: #18191b;
     padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
 }
 .page .header::before{
     content: '';
@@ -123,6 +128,9 @@ a:active {
 .page .header .container{
     position: relative;
     padding: 15px;
+}
+.page > .container{
+    margin-top: 82px;
 }
 .logo{
     position: absolute;
