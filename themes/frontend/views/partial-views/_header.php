@@ -1,16 +1,19 @@
 <?php
 /* @var $this Controller*/
+$controller = $this->action->controller->id;
+$module = $this->action->controller->module->id;
+$action = $this->action->id;
 ?>
 <?php if(isset($inner) && $inner): ?>
     <div class="header">
         <div class="container">
             <div class="navbar hidden-xs">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="<?= Yii::app()->getBaseUrl(true)?>">صفحه اصلی</a></li>
-                    <li><a href="<?= $this->createUrl('/pages/2') ?>">ارسال حواله</a></li>
-                    <li><a href="<?= $this->createUrl('/pages/3') ?>">شرایط و مقررات</a></li>
-                    <li><a href="<?= $this->createUrl('/pages/1') ?>">درباره ما</a></li>
-                    <li><a href="<?= $this->createUrl('/contact')?>">تماس با ما</a></li>
+                    <li<?= $controller=='site' && $action=='index'?' class="active"':''?>><a href="<?= Yii::app()->getBaseUrl(true)?>">صفحه اصلی</a></li>
+                    <li<?= $module=='pages' && $action=='view' && isset($_GET['id']) && $_GET['id']==2?' class="active"':''?>><a href="<?= $this->createUrl('/pages/2') ?>">ارسال حواله</a></li>
+                    <li<?= $module=='pages' && $action=='view' && isset($_GET['id']) && $_GET['id']==3?' class="active"':''?>><a href="<?= $this->createUrl('/pages/3') ?>">شرایط و مقررات</a></li>
+                    <li<?= $module=='pages' && $action=='view' && isset($_GET['id']) && $_GET['id']==1?' class="active"':''?>><a href="<?= $this->createUrl('/pages/1') ?>">درباره ما</a></li>
+                    <li<?= $controller=='site' && $action=='contact'?' class="active"':''?>><a href="<?= $this->createUrl('/contact')?>">تماس با ما</a></li>
                 </ul>
             </div>
             <div class="visible-xs">

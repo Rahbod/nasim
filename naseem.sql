@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50719
 File Encoding         : 65001
 
-Date: 2018-10-29 15:06:04
+Date: 2018-11-01 16:12:02
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -192,7 +192,7 @@ CREATE TABLE `ym_counter_users` (
 -- ----------------------------
 -- Records of ym_counter_users
 -- ----------------------------
-INSERT INTO `ym_counter_users` VALUES ('837ec5754f503cfaaee0929fd48974e7', '1540812835');
+INSERT INTO `ym_counter_users` VALUES ('837ec5754f503cfaaee0929fd48974e7', '1540813463');
 
 -- ----------------------------
 -- Table structure for ym_google_maps
@@ -266,7 +266,7 @@ CREATE TABLE `ym_site_setting` (
   `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_persian_ci NOT NULL,
   `value` text CHARACTER SET utf8 COLLATE utf8_persian_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ym_site_setting
@@ -276,15 +276,15 @@ INSERT INTO `ym_site_setting` VALUES ('2', 'default_title', 'عنوان پیش �
 INSERT INTO `ym_site_setting` VALUES ('3', 'keywords', 'کلمات کلیدی سایت', '[\"\"]');
 INSERT INTO `ym_site_setting` VALUES ('4', 'site_description', 'شرح وبسایت', '');
 INSERT INTO `ym_site_setting` VALUES ('5', 'social_links', 'شبکه های اجتماعی', '{\"whatsapp\":\"http:\\/\\/https:\\/whatsapp.com\",\"facebook\":\"http:\\/\\/facebook.com\",\"telegram\":\"http:\\/\\/telegram.me\",\"instagram\":\"https:\\/\\/instagram.com\\/naseemexchange\",\"twitter\":\"http:\\/\\/twitter.com\"}');
-INSERT INTO `ym_site_setting` VALUES ('6', 'banner', 'تصویر بنر', ' bg.jpg');
-INSERT INTO `ym_site_setting` VALUES ('13', 'price', 'مبلغ استرالیا به ایران', '9100');
-INSERT INTO `ym_site_setting` VALUES ('14', 'tel', 'شماره تماس', '433 347 481');
-INSERT INTO `ym_site_setting` VALUES ('15', 'tel_code', 'کد کشور', '+61');
-INSERT INTO `ym_site_setting` VALUES ('16', 'iran_address', 'آدرس ایران', 'تهران: سعدی شمالی، بعد از چهارراه منوچهری، پلاک 528');
-INSERT INTO `ym_site_setting` VALUES ('17', 'foreign_address', 'آدرس خارجی', 'shop 9/45 rawson st, auburn 2144');
-INSERT INTO `ym_site_setting` VALUES ('18', 'tel2', 'شماره تماس دوم', '298 940 213');
-INSERT INTO `ym_site_setting` VALUES ('19', 'foreign_address2', 'آدرس خارجی2', 'shop 1A 35-39 aurburn rd, aurburn');
-INSERT INTO `ym_site_setting` VALUES ('20', 'master_email', 'پست الکترونیک وبسایت', '');
+INSERT INTO `ym_site_setting` VALUES ('6', 'banner', 'تصویر بنر', 'bg.jpg');
+INSERT INTO `ym_site_setting` VALUES ('7', 'price', 'مبلغ استرالیا به ایران', '9100');
+INSERT INTO `ym_site_setting` VALUES ('12', 'tel', 'شماره تماس', '433 347 481');
+INSERT INTO `ym_site_setting` VALUES ('11', 'tel_code', 'کد کشور', '+61');
+INSERT INTO `ym_site_setting` VALUES ('8', 'iran_address', 'آدرس ایران', 'تهران: سعدی شمالی، بعد از چهارراه منوچهری، پلاک 528');
+INSERT INTO `ym_site_setting` VALUES ('9', 'foreign_address', 'آدرس خارجی', 'shop 9/45 rawson st, auburn 2144');
+INSERT INTO `ym_site_setting` VALUES ('13', 'tel2', 'شماره تماس دوم', '298 940 213');
+INSERT INTO `ym_site_setting` VALUES ('10', 'foreign_address2', 'آدرس خارجی دوم', 'shop 1A 35-39 aurburn rd, aurburn');
+INSERT INTO `ym_site_setting` VALUES ('14', 'master_email', 'پست الکترونیک وبسایت', '');
 
 -- ----------------------------
 -- Table structure for ym_tags
