@@ -86,17 +86,20 @@
     .page .mobile-menu-trigger{
         float: right;
     }
+    .page > .container{
+        margin-top: 0;
+    }
     .page .top,
     .page-bg{
         height:350px;
     }
     .page .page-title{
-        top: 340px;
+        top: 320px;
         font-size: 40px;
         width: auto;
     }
     .page .price-box{
-        margin-top: 60px;
+        margin-top: 40px;
         width: 100%;
     }
     .page .price-box .item{

@@ -18,7 +18,7 @@ $action = $this->action->id;
             </div>
             <div class="visible-xs">
                 <a href="#mobile-menu" class="mobile-menu-trigger"></a>
-                <a href="#" class="logo"></a>
+                <a href="<?= Yii::app()->getBaseUrl(true)?>" class="logo"></a>
             </div>
             <a href="<?= Yii::app()->getBaseUrl(true)?>" class="logo hidden-xs"></a>
         </div>
@@ -86,7 +86,7 @@ $action = $this->action->id;
     <div class="overlay"></div>
     <div class="content">
         <a href="#" class="close-menu"></a>
-        <div class="mobile-logo"></div>
+        <a href="<?= Yii::app()->getBaseUrl(true)?>" ><div class="mobile-logo"></div></a>
         <ul>
             <li class="active"><a href="<?= Yii::app()->getBaseUrl(true)?>">صفحه اصلی</a></li>
             <li><a href="<?= $this->createUrl('/pages/2') ?>">ارسال حواله</a></li>

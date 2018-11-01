@@ -10,6 +10,7 @@ class SettingManageController extends Controller
     public $defaultAction = 'changeSetting';
     public $tempPath = 'uploads/temp';
     public $bannerPath = 'uploads/banner';
+    public $formPath = 'uploads/setting';
     /**
      * @return array actions type list
      */
@@ -20,6 +21,7 @@ class SettingManageController extends Controller
                 'gatewaySetting',
                 'changeSetting',
                 'changePrice',
+                'forms',
                 'socialLinks'
             )
         );
@@ -31,7 +33,7 @@ class SettingManageController extends Controller
     public function filters()
     {
         return array(
-            'checkAccess - upload, deleteUpload',
+            'checkAccess - upload, deleteUpload, uploadWord, uploadPdf, deleteForm',
         );
     }
     public function actions()
@@ -52,21 +54,29 @@ class SettingManageController extends Controller
                 'uploadDir' => '/uploads/banner/',
                 'storedMode' => 'field'
             ),
-            'uploadMap' => array( // list image upload
+            'uploadPdf' => array( // list image upload
                 'class' => 'ext.dropZoneUploader.actions.AjaxUploadAction',
-                'attribute' => 'map_pic',
+                'attribute' => 'form_pdf',
                 'rename' => 'random',
                 'validateOptions' => array(
-                    'acceptedTypes' => array('png', 'jpg', 'jpeg')
+                    'acceptedTypes' => array('pdf')
                 )
             ),
-            'deleteMap' => array( // delete list image uploaded
+            'uploadWord' => array( // list image upload
+                'class' => 'ext.dropZoneUploader.actions.AjaxUploadAction',
+                'attribute' => 'form_word',
+                'rename' => 'random',
+                'validateOptions' => array(
+                    'acceptedTypes' => array('doc', 'docx')
+                )
+            ),
+            'deleteForm' => array( // delete list image uploaded
                 'class' => 'ext.dropZoneUploader.actions.AjaxDeleteUploadedAction',
                 'modelName' => 'SiteSetting',
                 'attribute' => 'value',
-                'uploadDir' => '/uploads/map/',
+                'uploadDir' => "/$this->formPath/",
                 'storedMode' => 'field'
-            ),
+            )
         );
     }
 
@@ -97,7 +107,7 @@ class SettingManageController extends Controller
             $this->refresh();
         }
         $criteria = new CDbCriteria();
-        $criteria->addCondition('name NOT REGEXP \'\\([^\\)]*gateway_.*\\)\'');
+        $criteria->addCondition('name NOT REGEXP \'\\([^\\)]*form_.*\\)\'');
         $model = SiteSetting::model()->findAll($criteria);
         $this->render('_general', array(
             'model' => $model
@@ -114,6 +124,26 @@ class SettingManageController extends Controller
             $this->refresh();
         }
         $this->render('_price');
+    }
+
+    public function actionForms()
+    {
+        if (isset($_POST['SiteSetting'])) {
+            foreach ($_POST['SiteSetting'] as $name => $value) {
+                $oldImage = SiteSetting::getOption($name);
+                $image = new UploadedFiles($this->formPath, $oldImage);
+                SiteSetting::setOption($name, $value);
+                $image->update($oldImage, $value, $this->tempPath);
+            }
+            Yii::app()->user->setFlash('success', 'اطلاعات با موفقیت ثبت شد.');
+            $this->refresh();
+        }
+        $criteria = new CDbCriteria();
+        $criteria->addCondition('name REGEXP \'\\([^\\)]*form_.*\\)\'');
+        $model = SiteSetting::model()->findAll($criteria);
+        $this->render('_forms', array(
+            'model' => $model
+        ));
     }
 
     /**

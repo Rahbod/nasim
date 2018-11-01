@@ -12,7 +12,12 @@ $this->description=$model->getDescription();
 </div>
 <?php if($model->id == 2): ?>
     <div class="overflow-fix">
-        <a href="#" class="transfer-link black">فرم با فرمت<span>pdf</span></a>
-        <a href="#" class="transfer-link">فرم با فرمت<span>word</span></a>
+        <?php if(SiteSetting::getOption('form_pdf')):?>
+            <a target="_blank" href="<?= Yii::app()->getBaseUrl(true)."/uploads/setting/".SiteSetting::getOption('form_pdf') ?>" class="transfer-link black">فرم با فرمت<span>pdf</span></a>
+        <?php endif; ?>
+
+        <?php if(SiteSetting::getOption('form_word')):?>
+            <a target="_blank" href="<?= Yii::app()->getBaseUrl(true)."/uploads/setting/".SiteSetting::getOption('form_word') ?>" class="transfer-link">فرم با فرمت<span>word</span></a>
+        <?php endif; ?>
     </div>
 <?php endif; ?>
