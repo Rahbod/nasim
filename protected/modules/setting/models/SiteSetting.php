@@ -27,7 +27,8 @@ class SiteSetting extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, title, value', 'required'),
+			array('name, title', 'required'),
+			array('value', 'safe'),
 			array('name, title', 'length', 'max'=>255),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.

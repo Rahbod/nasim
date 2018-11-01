@@ -118,8 +118,11 @@ class SettingManageController extends Controller
 
     public function actionChangePrice()
     {
-        if (isset($_POST['SiteSetting']['price'])) {
-            SiteSetting::setOption('price', $_POST['SiteSetting']['price']);
+        if (isset($_POST['SiteSetting'])) {
+            if(isset($_POST['SiteSetting']['price']))
+                SiteSetting::setOption('price', $_POST['SiteSetting']['price']);
+            if(isset($_POST['SiteSetting']['foreign_price']))
+                SiteSetting::setOption('foreign_price', $_POST['SiteSetting']['foreign_price']);
             Yii::app()->user->setFlash('success', 'اطلاعات با موفقیت ثبت شد.');
             $this->refresh();
         }

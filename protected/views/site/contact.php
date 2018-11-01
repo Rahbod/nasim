@@ -10,6 +10,41 @@ $this->breadcrumbs=array(
 	'تماس با ما',
 );
 
+Yii::import('map.models.GoogleMaps');
+$map_model = GoogleMaps::model()->findByPk(1);
+$mapLat = $map_model->map_lat;
+$mapLng = $map_model->map_lng;
+$mapZoom = 15;
+if($map_model) {
+    Yii::app()->clientScript->registerScriptFile('https://maps.googleapis.com/maps/api/js?key=AIzaSyDbhMDAxCreEWc5Due7477QxAVuBAJKdTM');
+    Yii::app()->clientScript->registerScript('concat-script', "
+    var map2;
+	var marker2;
+	var myCenter2=new google.maps.LatLng(" . $mapLat . "," . $mapLng . ");
+	function initialize2()
+	{
+		var mapProp = {
+          center:myCenter2,
+          zoom:" . $mapZoom . ",
+          scrollwheel: false
+          };
+
+	    map2 = new google.maps.Map(document.getElementById('contact-google-map-2'),mapProp);
+		placeMarker2(myCenter2 ,map2);
+	}
+
+	function placeMarker2(location ,map) {
+
+		if(marker2 != undefined)
+			marker2.setMap(null);
+	    marker2 = new google.maps.Marker({
+            position: location,
+            map: map,
+        });
+	}
+	google.maps.event.addDomListener(window, 'load', initialize2);",CClientScript::POS_READY);
+}
+
 ?>
 <div class="contact-box">
     <h2 class="orange-title"><?= $page->title ?></h2>
@@ -31,7 +66,7 @@ $this->breadcrumbs=array(
         </div>
     </div>
     <div id="contact-google-map">
-        <?php $this->renderPartial('//partial-views/_map',['id' => 'contact-google-map']) ?>
+        <div style="height: 300px;" id="contact-google-map-2"></div>
     </div>
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>'contact-form',

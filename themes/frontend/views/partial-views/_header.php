@@ -55,13 +55,17 @@ $action = $this->action->id;
                 <a href="<?= Yii::app()->getBaseUrl(true)?>" class="logo"></a>
             </div>
             <div class="price-box">
+                <?php
+                $p = SiteSetting::getOption('price');
+                $fp = SiteSetting::getOption('foreign_price');
+                ?>
                 <div class="item black">
                     <h3>استرالیا به ایران<small>australia to iran</small></h3>
-                    <span><?= number_format(SiteSetting::getOption('price')) ?> تومان</span>
+                    <span><?php if($p): ?><?= number_format($p) ?> تومان<?php else: ?>تماس بگیرید<?php endif; ?></span>
                 </div>
                 <div class="item orange">
                     <h3>ایران به استرالیا<small>iran to australia</small></h3>
-                    <span>تماس بگیرید</span>
+                    <span><?php if($fp): ?><?= number_format($fp) ?> تومان<?php else: ?>تماس بگیرید<?php endif; ?></span>
                 </div>
             </div>
             <div class="title-box hidden-xs">

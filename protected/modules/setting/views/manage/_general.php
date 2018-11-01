@@ -19,7 +19,7 @@
 
     <?php
     foreach($model as $field):
-        if($field->name != 'social_links'&& $field->name != 'price'):
+        if($field->name != 'social_links'&& $field->name != 'price' && $field->name != 'foreign_price'):
             if($field->name == 'keywords'):?>
                 <div class="form-group">
                     <?php echo CHtml::label($field->title,''); ?>
