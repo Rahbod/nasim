@@ -1,4 +1,7 @@
 <?
+if(!isset($id))
+    $id = 'google-map';
+
 // google map
 Yii::import('map.models.GoogleMaps');
 $map_model = GoogleMaps::model()->findByPk(1);
@@ -19,7 +22,7 @@ if($map_model) {
           scrollwheel: false
           };
 
-	    map = new google.maps.Map(document.getElementById('google-map'),mapProp);
+	    map = new google.maps.Map(document.getElementById('{$id}'),mapProp);
 		placeMarker(myCenter ,map);
 	}
 
@@ -35,4 +38,4 @@ if($map_model) {
 	google.maps.event.addDomListener(window, 'load', initialize);",CClientScript::POS_READY);
 }
 ?>
-<div id="google-map"></div>
+<div id="<?= $id ?>"></div>

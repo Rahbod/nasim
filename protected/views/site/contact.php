@@ -31,7 +31,7 @@ $this->breadcrumbs=array(
         </div>
     </div>
     <div id="contact-google-map">
-        <?php $this->renderPartial('//partial-views/_map') ?>
+        <?php $this->renderPartial('//partial-views/_map',['id' => 'contact-google-map']) ?>
     </div>
     <?php $form=$this->beginWidget('CActiveForm', array(
         'id'=>'contact-form',
