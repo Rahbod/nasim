@@ -72,7 +72,11 @@
                 <?php if($in): ?><a target="_blank" href="<?= $in; ?>" class="instagram"></a><?php endif; ?>
                 <span>exchange</span>
                 <div class="phone">
-                    <?= SiteSetting::getOption('tel_code') ?><span><?= SiteSetting::getOption('tel') ?> - <?= SiteSetting::getOption('tel2') ?></span>
+                    <?= SiteSetting::getOption('tel_code') ?><span><a href="tel:<?= SiteSetting::getOption('tel_code').str_replace(' ','', SiteSetting::getOption('tel'))?>">
+                            <?= SiteSetting::getOption('tel') ?>
+                        </a> - <a href="tel:<?= SiteSetting::getOption('tel_code').str_replace(' ','', SiteSetting::getOption('tel2'))?>">
+                            <?= SiteSetting::getOption('tel2') ?>
+                        </a></span>
                 </div>
             </div>
         </div>

@@ -168,11 +168,13 @@ a:active {
     width: 340px;
 }
 .price-box .item{
-    height:150px;
-    padding: 20px 30px;
+    min-height:150px;
+    padding: 20px;
 }
 .page .price-box .item{
-    height:87px;
+    min-height:87px;
+    display: block;
+    overflow: hidden;
 }
 .price-box .item.orange{
     background: #de4b00;
@@ -192,7 +194,7 @@ a:active {
 }
 .price-box .item h3 > small{
     display: block;
-    font-weight: lighter;
+    font-weight: 500;
     text-transform: uppercase;
     color: inherit;
     margin-top: 5px;
@@ -469,6 +471,9 @@ a:active {
     direction: ltr;
     line-height:14px;
     padding-top: 3px;
+}
+.footer .phone span a{
+    color: #de4b00 !important;
 }
 .footer .phone span{
     display: block;
