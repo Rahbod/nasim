@@ -43,11 +43,11 @@
             $fp = SiteSetting::getOption('foreign_price');
             ?>
             <div class="item black">
-                <h3>استرالیا به ایران<small>australia to iran</small></h3>
+                <h2>استرالیا به ایران<small>australia to iran</small></h2>
                 <span><?php if($p): ?><?= number_format($p) ?> تومان<?php else: ?>تماس بگیرید<?php endif; ?></span>
             </div>
             <div class="item orange">
-                <h3>ایران به استرالیا<small>iran to australia</small></h3>
+                <h2>ایران به استرالیا<small>iran to australia</small></h2>
                 <span><?php if($fp): ?><?= number_format($fp) ?> تومان<?php else: ?>تماس بگیرید<?php endif; ?></span>
             </div>
         </div>
