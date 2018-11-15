@@ -160,6 +160,10 @@ class Controller extends AuthController
                     )
                 ),
                 array(
+                    'label' => '<i class="fa fa-key"></i><span>تغییر کلمه عبور</span>',
+                    'url' => array('/admins/manage/changePassword')
+                ),
+                array(
                     'label' => '<i class="fa fa-lock"></i><span>ورود</span>',
                     'url' => array('/admins/login'),
                     'visible' => Yii::app()->user->isGuest

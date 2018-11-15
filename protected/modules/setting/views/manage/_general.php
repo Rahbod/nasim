@@ -91,7 +91,7 @@
             <?php else:?>
                 <div class="form-group">
                     <?php echo CHtml::label($field->title,''); ?>
-                    <?php echo CHtml::textField("SiteSetting[$field->name]",$field->value,array('size'=>60,'class'=>'form-control')); ?>
+                    <?php echo CHtml::textField("SiteSetting[$field->name]",$field->value,array('size'=>60,'class'=>'form-control text-right', 'dir' => 'auto')); ?>
                     <?php echo $form->error($field,'name'); ?>
                 </div>
             <?php

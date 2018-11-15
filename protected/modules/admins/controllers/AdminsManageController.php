@@ -23,7 +23,7 @@ class AdminsManageController extends Controller
 				'admin',
 				'sessions',
 				'removeSession',
-				'changePass',
+				'changePassword',
 				'delete'
 			)
 		);
@@ -35,7 +35,7 @@ class AdminsManageController extends Controller
 	public function filters()
 	{
 		return array(
-			'checkAccess',
+			'checkAccess - changePassword',
 			'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
@@ -100,34 +100,6 @@ class AdminsManageController extends Controller
         }
 
         $this->render( 'update', array(
-            'model' => $model,
-        ) );
-    }
-
-	public function actionChangePass()
-    {
-		$id = Yii::app()->user->getId();
-        $this->pageTitle = 'تغییر کلمه عبور';
-        $model = $this->loadModel( $id );
-        $model->setScenario('changePassword');
-
-        if ( isset( $_POST[ 'Admins' ] ) ) {
-            $model->attributes = $_POST[ 'Admins' ];
-            if($model->validate() ) {
-                $model->password = $_POST[ 'Admins' ][ 'newPassword' ];
-				if ( $model->save() )
-				{
-					Yii::app()->user->setFlash('success','با موفقیت انجام شد');
-					$this->redirect(array('admin'));
-				}
-				else
-					Yii::app()->user->setFlash('failed','درخواست با خطا مواجه است. لطفا مجددا سعی نمایید.');
-            }
-            else
-				Yii::app()->user->setFlash('failed','درخواست با خطا مواجه است. لطفا مجددا سعی نمایید.');
-        }
-
-        $this->render( '_change_password_form', array(
             'model' => $model,
         ) );
     }
@@ -224,4 +196,30 @@ class AdminsManageController extends Controller
 			Yii::app()->end();
 		}
 	}
+
+    public function actionChangePassword()
+    {
+        if(Yii::app()->user->isGuest)
+            $this->redirect(array('/admins/login'));
+
+        $model = Admins::model()->findByPk(Yii::app()->user->getId());
+        $model->setScenario('changePassword');
+
+        if (isset($_POST['Admins'])) {
+            $model->attributes = $_POST['Admins'];
+            if ($model->validate()) {
+                $model->password = $_POST['Admins']['newPassword'];
+                $model->password = $model->encrypt($model->password);
+                if ($model->save(false)) {
+                    Yii::app()->user->setFlash('success', 'کلمه عبور با موفقیت تغییر یافت.');
+                    $this->refresh();
+                } else
+                    Yii::app()->user->setFlash('failed', 'در ثبت اطلاعات خطایی رخ داده است! لطفا مجددا تلاش کنید.');
+            }
+        }
+
+        $this->render('change_password', array(
+            'model' => $model
+        ));
+    }
 }

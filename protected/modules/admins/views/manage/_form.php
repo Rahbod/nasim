@@ -15,35 +15,19 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("a
 		<?php echo $form->textField($model,'username',array('size'=>50,'maxlength'=>100 , 'class'=>'form-control', (!$model->isNewRecord?'disabled':'s') => true)); ?>
 		<?php echo $form->error($model,'username'); ?>
 	</div>
-    <?php
-    if(!$model->isNewRecord){
-    ?>
+    <?php if($model->isNewRecord): ?>
         <div class="form-group">
-            <?php echo $form->labelEx($model,'oldPassword'); ?>
-            <?php echo $form->passwordField($model,'oldPassword',array('size'=>50,'maxlength'=>100,'class'=>'form-control')); ?>
-            <?php echo $form->error($model,'oldPassword'); ?>
+            <?php echo $form->labelEx($model,'password'); ?>
+            <?php echo $form->passwordField($model,'password',array('size'=>50,'maxlength'=>100,'class'=>'form-control')); ?>
+            <?php echo $form->error($model,'password'); ?>
         </div>
+
         <div class="form-group">
-            <?php echo $form->labelEx($model,'newPassword'); ?>
-            <?php echo $form->passwordField($model,'newPassword',array('size'=>50,'maxlength'=>100,'class'=>'form-control')); ?>
-            <?php echo $form->error($model,'newPassword'); ?>
+            <?php echo $form->labelEx($model,'repeatPassword'); ?>
+            <?php echo $form->passwordField($model,'repeatPassword',array('size'=>50,'maxlength'=>100,'class'=>'form-control')); ?>
+            <?php echo $form->error($model,'repeatPassword'); ?>
         </div>
-    <?php
-    }else{
-    ?>
-	<div class="form-group">
-		<?php echo $form->labelEx($model,'password'); ?>
-		<?php echo $form->passwordField($model,'password',array('size'=>50,'maxlength'=>100,'class'=>'form-control')); ?>
-		<?php echo $form->error($model,'password'); ?>
-	</div>
-
-    <?php } ?>
-
-    <div class="form-group">
-        <?php echo $form->labelEx($model,'repeatPassword'); ?>
-        <?php echo $form->passwordField($model,'repeatPassword',array('size'=>50,'maxlength'=>100,'class'=>'form-control')); ?>
-        <?php echo $form->error($model,'repeatPassword'); ?>
-    </div>
+    <?php endif; ?>
 
     <div class="form-group">
         <?php echo $form->labelEx($model,'email'); ?>

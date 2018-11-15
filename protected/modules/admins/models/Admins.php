@@ -43,13 +43,13 @@ class Admins extends CActiveRecord
         // will receive user inputs.
         return array(
             array('username, password ,repeatPassword , email ,role_id', 'required' , 'on' => 'create'),
-            array('email' , 'email'),
-            array('email' , 'unique'),
+            array('email' , 'email', 'except' => 'changePassword'),
+            array('email' , 'unique', 'except' => 'changePassword'),
             array('email' , 'filter' , 'filter' => 'trim'),
             array('username, password', 'length', 'max'=>100),
             array('username', 'checkExist' , 'on'=>'create'),
             array('email, role_id', 'required' , 'on'=>'update'),
-            array('oldPassword ,newPassword ,repeatPassword, email, role_id', 'required' , 'on'=>'changePassword'),
+            array('oldPassword ,newPassword ,repeatPassword', 'required' , 'on'=>'changePassword'),
             array('oldPassword', 'oldPass' , 'on'=>'changePassword'),
             array('repeatPassword', 'compare', 'compareAttribute'=>'newPassword' ,'operator'=>'==', 'message' => 'کلمه های عبور همخوانی ندارند' , 'on'=>'changePassword'),
             array('repeatPassword', 'compare', 'compareAttribute'=>'password' ,'operator'=>'==', 'message' => 'کلمه های عبور همخوانی ندارند' , 'on'=>'create'),
@@ -100,7 +100,7 @@ class Admins extends CActiveRecord
 
     protected function afterValidate()
     {
-        if($this->scenario=='create' || $this->scenario=='changePassword')
+        if($this->scenario=='create')
 			$this->password = $this->encrypt($this->password);
         return parent::afterValidate();
     }
