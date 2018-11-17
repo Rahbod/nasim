@@ -128,7 +128,7 @@ a:active {
 }
 .page .header .container{
     position: relative;
-    padding: 15px 15px 5px;
+    padding: 5px 15px 15px;
 }
 .page > .container{
     margin-top: 82px;
@@ -561,7 +561,7 @@ a:active {
     background: #de4b00 url("../svg/logo-white.svg") no-repeat center;
     background-size: 200px;
     width: calc(100% - 40px);
-    height:150px;
+    height:120px;
     z-index:2;
     position: relative;
 }
