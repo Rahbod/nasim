@@ -92,6 +92,7 @@ a:active {
 .nav>li>a{
     border-bottom: 2px solid transparent;
     color: #fff;
+    padding-bottom: 5px !important;
 }
 .nav>li.active>a{
     border-bottom-color: #de4b00;
@@ -104,7 +105,7 @@ a:active {
     background: transparent;
 }
 .header{
-    padding-top: 20px;
+    padding-top: 5px;
     position: relative;
 }
 .page .header{
@@ -127,7 +128,7 @@ a:active {
 }
 .page .header .container{
     position: relative;
-    padding: 15px;
+    padding: 15px 15px 5px;
 }
 .page > .container{
     margin-top: 82px;
@@ -580,7 +581,7 @@ a:active {
     background: #fff;
     padding: 20px 0;
     list-style: none;
-    height: calc(100% - 200px);
+    height: calc(100% - 160px);
     width: calc(100% - 40px);
     margin: 0;
     position: relative;
@@ -588,7 +589,7 @@ a:active {
 }
 #mobile-menu ul li a{
     color: #18191b;
-    padding: 10px 20px;
+    padding: 7px 20px;
     display: block;
     border-right: 4px solid transparent;
 }
@@ -829,4 +830,16 @@ a:active {
 }
 .address-link:hover{
     color: #de9200;
+}
+.address .address-link{
+    color: #000;
+}
+.address .address-link:hover{
+    color: #de9200;
+}
+
+#mobile-menu .en-title,
+.navbar .en-title{
+    display: block;
+    font-size: 12px;
 }

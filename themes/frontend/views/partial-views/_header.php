@@ -9,11 +9,11 @@ $action = $this->action->id;
         <div class="container">
             <div class="navbar hidden-xs">
                 <ul class="nav navbar-nav">
-                    <li<?= $controller=='site' && $action=='index'?' class="active"':''?>><a href="<?= Yii::app()->getBaseUrl(true)?>">صفحه اصلی</a></li>
-                    <li<?= $module=='pages' && $action=='view' && isset($_GET['id']) && $_GET['id']==2?' class="active"':''?>><a href="<?= $this->createUrl('/pages/2') ?>">ارسال حواله</a></li>
-                    <li<?= $module=='pages' && $action=='view' && isset($_GET['id']) && $_GET['id']==3?' class="active"':''?>><a href="<?= $this->createUrl('/pages/3') ?>">شرایط و مقررات</a></li>
-                    <li<?= $module=='pages' && $action=='view' && isset($_GET['id']) && $_GET['id']==1?' class="active"':''?>><a href="<?= $this->createUrl('/pages/1') ?>">درباره ما</a></li>
-                    <li<?= $controller=='site' && $action=='contact'?' class="active"':''?>><a href="<?= $this->createUrl('/contact')?>">تماس با ما</a></li>
+                    <li<?= $controller=='site' && $action=='index'?' class="active"':''?>><a href="<?= Yii::app()->getBaseUrl(true)?>">صفحه اصلی<span class="en-title">Home</span></a></li>
+                    <li<?= $module=='pages' && $action=='view' && isset($_GET['id']) && $_GET['id']==2?' class="active"':''?>><a href="<?= $this->createUrl('/pages/2') ?>">ارسال حواله<span class="en-title">Transfer Form</span></a></li>
+                    <li<?= $module=='pages' && $action=='view' && isset($_GET['id']) && $_GET['id']==3?' class="active"':''?>><a href="<?= $this->createUrl('/pages/3') ?>">شرایط و مقررات<span class="en-title">Terms</span></a></li>
+                    <li<?= $module=='pages' && $action=='view' && isset($_GET['id']) && $_GET['id']==1?' class="active"':''?>><a href="<?= $this->createUrl('/pages/1') ?>">درباره ما<span class="en-title">About us</span></a></li>
+                    <li<?= $controller=='site' && $action=='contact'?' class="active"':''?>><a href="<?= $this->createUrl('/contact')?>">تماس با ما<span class="en-title">Contact us</span></a></li>
                 </ul>
             </div>
             <div class="visible-xs">
@@ -42,11 +42,11 @@ $action = $this->action->id;
             <div class="header">
                 <div class="navbar hidden-xs">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="<?= Yii::app()->getBaseUrl(true)?>">صفحه اصلی</a></li>
-                        <li><a href="<?= $this->createUrl('/pages/2') ?>">ارسال حواله</a></li>
-                        <li><a href="<?= $this->createUrl('/pages/3') ?>">شرایط و مقررات</a></li>
-                        <li><a href="<?= $this->createUrl('/pages/1') ?>">درباره ما</a></li>
-                        <li><a href="<?= $this->createUrl('/contact')?>">تماس با ما</a></li>
+                        <li class="active"><a href="<?= Yii::app()->getBaseUrl(true)?>">صفحه اصلی<span class="en-title">Home</span></a></li>
+                        <li><a href="<?= $this->createUrl('/pages/2') ?>">ارسال حواله<span class="en-title">Transfer Form</span></a></li>
+                        <li><a href="<?= $this->createUrl('/pages/3') ?>">شرایط و مقررات<span class="en-title">Terms</span></a></li>
+                        <li><a href="<?= $this->createUrl('/pages/1') ?>">درباره ما<span class="en-title">About us</span></a></li>
+                        <li><a href="<?= $this->createUrl('/contact')?>">تماس با ما<span class="en-title">Contact us</span></a></li>
                     </ul>
                 </div>
                 <div class="visible-xs">
@@ -96,11 +96,11 @@ $action = $this->action->id;
         <a href="#" class="close-menu"></a>
         <a href="<?= Yii::app()->getBaseUrl(true)?>" ><div class="mobile-logo"></div></a>
         <ul>
-            <li class="active"><a href="<?= Yii::app()->getBaseUrl(true)?>">صفحه اصلی</a></li>
-            <li><a href="<?= $this->createUrl('/pages/2') ?>">ارسال حواله</a></li>
-            <li><a href="<?= $this->createUrl('/pages/3') ?>">شرایط و مقررات</a></li>
-            <li><a href="<?= $this->createUrl('/pages/1') ?>">درباره ما</a></li>
-            <li><a href="<?= $this->createUrl('/contact')?>">تماس با ما</a></li>
+            <li class="active"><a href="<?= Yii::app()->getBaseUrl(true)?>">صفحه اصلی<span class="en-title">Home</span></a></li>
+            <li><a href="<?= $this->createUrl('/pages/2') ?>">ارسال حواله<span class="en-title">Transfer Form</span></a></li>
+            <li><a href="<?= $this->createUrl('/pages/3') ?>">شرایط و مقررات<span class="en-title">Terms</span></a></li>
+            <li><a href="<?= $this->createUrl('/pages/1') ?>">درباره ما<span class="en-title">About us</span></a></li>
+            <li><a href="<?= $this->createUrl('/contact')?>">تماس با ما<span class="en-title">Contact us</span></a></li>
         </ul>
         <div class="socials-container">
             <?php if($tl): ?><a target="_blank" href="<?= $tl; ?>" class="telegram"></a><?php endif; ?>

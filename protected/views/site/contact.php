@@ -119,11 +119,11 @@ if($map_model) {
         </div>
     </div>
     <?php $this->endWidget() ?>
-    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-8 pull-left address">
-        <?php if(SiteSetting::getOption('foreign_address')): ?><div dir="ltr"><span>Address: </span><div class="pull-left ltr"><?= CHtml::encode(SiteSetting::getOption('foreign_address')) ?></div>
-            <?php if(SiteSetting::getOption('foreign_address2')): ?><br><div class="pull-left ltr"><?= CHtml::encode(SiteSetting::getOption('foreign_address2')) ?></div><?php endif;?>
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-8 pull-left address">
+        <?php if(SiteSetting::getOption('foreign_address')): ?><div dir="ltr"><span>Address: </span><div class="pull-left ltr"><a class="address-link" href="http://maps.google.com/?q=<?= urlencode(SiteSetting::getOption('foreign_address')) ?>"><?= SiteSetting::getOption('foreign_address') ?></a></div>
+            <?php if(SiteSetting::getOption('foreign_address2')): ?><br><div class="pull-left ltr"><a class="address-link" href="http://maps.google.com/?q=<?= urlencode(SiteSetting::getOption('foreign_address2')) ?>"><?= SiteSetting::getOption('foreign_address2') ?></a></div><?php endif;?>
             </div><?php endif;?>
-        <?php if(SiteSetting::getOption('tel')): ?><div dir="ltr"><span>tel :</span><div dir="ltr"><?= CHtml::encode(SiteSetting::getOption('tel_code')) ?>&nbsp;&nbsp;&nbsp;<a href="tel:<?= SiteSetting::getOption('tel_code').str_replace(' ','', SiteSetting::getOption('tel'))?>">
+        <?php if(SiteSetting::getOption('tel')): ?><div dir="ltr"><span>tel :</span><div dir="ltr"><?= CHtml::encode(SiteSetting::getOption('tel_code')) ?> <a href="tel:<?= SiteSetting::getOption('tel_code').str_replace(' ','', SiteSetting::getOption('tel'))?>">
                     <?= SiteSetting::getOption('tel') ?>
                 </a> - <a href="tel:<?= SiteSetting::getOption('tel_code').str_replace(' ','', SiteSetting::getOption('tel2'))?>">
                     <?= SiteSetting::getOption('tel2') ?>

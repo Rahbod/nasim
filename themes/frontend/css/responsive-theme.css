@@ -4,6 +4,9 @@
     }
 }
 @media screen and (max-width: 767px){
+    .page .header .container{
+        padding: 15px;
+    }
     .footer #google-map{
         position: relative;
         display: block;
