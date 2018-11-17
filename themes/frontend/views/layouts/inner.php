@@ -44,11 +44,11 @@
             ?>
             <div class="item black">
                 <h2>استرالیا به ایران<small>australia to iran</small></h2>
-                <span><?php if($p): ?><?= number_format($p) ?> تومان<?php else: ?>تماس بگیرید<?php endif; ?></span>
+                <span><?php if($p && intval($p)): ?><?= number_format($p) ?> تومان<?php else: ?>تماس بگیرید<?php endif; ?></span>
             </div>
             <div class="item orange">
                 <h2>ایران به استرالیا<small>iran to australia</small></h2>
-                <span><?php if($fp): ?><?= number_format($fp) ?> تومان<?php else: ?>تماس بگیرید<?php endif; ?></span>
+                <span><?php if($fp && intval($fp)): ?><?= number_format($fp) ?> تومان<?php else: ?>تماس بگیرید<?php endif; ?></span>
             </div>
         </div>
         <div class="title-box hidden-xs">
