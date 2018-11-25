@@ -1,0 +1,182 @@
+<?php
+/* @var $this TransferManageController */
+/* @var $model Transfer */
+/* @var $form CActiveForm */
+Yii::app()->clientScript->registerScript('resetForm','document.getElementById("transfer-form").reset();');
+?>
+<?php $form=$this->beginWidget('CActiveForm', array(
+	'id'=>'transfer-form',
+	'enableAjaxValidation'=>true,
+
+)); ?>
+    <div class="message"></div>
+
+    <div class="form-group">
+        <?php echo $form->labelEx($model,'sender_id'); ?>
+        <?php echo $form->dropDownList($model,'sender_id',CHtml::listData(Customers::model()->findAll(), 'id', 'name'),array('class'=>'form-control')); ?>
+        <?php echo $form->error($model,'sender_id'); ?>
+    </div>
+
+    <div class="form-group">
+        <?php echo $form->labelEx($model,'receiver_id'); ?>
+        <?php echo $form->dropDownList($model,'receiver_id',CHtml::listData(Customers::model()->findAll(), 'id', 'name'),array('class'=>'form-control')); ?>
+        <?php echo $form->error($model,'receiver_id'); ?>
+    </div>
+
+    <div class="form-group">
+        <?php echo $form->labelEx($model,'origin_country'); ?>
+        <?php echo $form->dropDownList($model,'origin_country',Transfer::$countryLabels,array('class'=>'form-control')); ?>
+        <?php echo $form->error($model,'origin_country'); ?>
+    </div>
+
+    <div class="form-group">
+        <?php if($model->isNewRecord) $model->destination_country = 'AUSTRALIA';?>
+        <?php echo $form->labelEx($model,'destination_country'); ?>
+        <?php echo $form->dropDownList($model,'destination_country',Transfer::$countryLabels,array('class'=>'form-control')); ?>
+        <?php echo $form->error($model,'destination_country'); ?>
+    </div>
+
+    <div class="form-group">
+        <?php echo $form->labelEx($model,'foreign_currency'); ?>
+        <?php echo $form->dropDownList($model,'foreign_currency',Transfer::$foreignCurrencyLabels,array('class'=>'form-control')); ?>
+        <?php echo $form->error($model,'foreign_currency'); ?>
+    </div>
+
+    <div class="form-group">
+        <?php echo $form->labelEx($model,'currency_price'); ?>
+        <?php echo $form->textField($model,'currency_price',array('maxlength'=>20,'class'=>'form-control','placeholder'=>'نرخ پیش فرض')); ?>
+        <?php echo $form->error($model,'currency_price'); ?>
+    </div>
+
+    <div class="form-group">
+        <?php echo $form->labelEx($model,'currency_amount'); ?>
+        <div class="input-group">
+            <span class="input-group-addon">IRR</span>
+            <?php echo $form->textField($model,'currency_amount',array('maxlength'=>255,'class'=>'form-control','value'=>0)); ?>
+        </div>
+        <?php echo $form->error($model,'currency_amount'); ?>
+    </div>
+
+    <div class="form-group">
+        <?php echo $form->labelEx($model,'total_amount'); ?>
+        <div class="input-group">
+            <span class="input-group-addon">AUD</span>
+            <?php echo $form->textField($model,'total_amount',array('maxlength'=>255,'class'=>'form-control','value'=>0)); ?>
+        </div>
+        <?php echo $form->error($model,'total_amount'); ?>
+    </div>
+
+    <div class="form-group buttons">
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'افزودن' : 'ویرایش', array('class'=>'btn btn-success')); ?>
+	</div>
+
+<?php $this->endWidget(); ?>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('body').on('blur', '#Transfer_currency_amount', function(){
+            calculateCurrencyPrice();
+        }).on('change', '#Transfer_destination_country, #Transfer_origin_country', function () {
+            calculateCurrencyPrice();
+        }).on('change', '#Transfer_foreign_currency', function () {
+            checkCurrency();
+        });
+    });
+
+    function calculateCurrencyPrice() {
+        if (!checkCurrency())
+            return false;
+
+        var originCountry = $('#Transfer_origin_country').val(),
+            destinationCountry = $('#Transfer_destination_country').val(),
+            foreignCurrency = $('#Transfer_foreign_currency').val(),
+            amount = parseInt($('#Transfer_currency_amount').val()),
+            totalAmount = 0,
+            operator = '*',
+            currency = 'dollar';
+
+        if (originCountry != destinationCountry) {
+            if (foreignCurrency == 'IRR')
+                operator = '/';
+            else if (foreignCurrency == 'AED' && (originCountry == 'AUSTRALIA' || destinationCountry == 'AUSTRALIA'))
+                operator = '/';
+            else
+                operator = '*';
+
+            if (originCountry == 'AUSTRALIA' || destinationCountry == 'AUSTRALIA') {
+                currency = 'dollar';
+                if (originCountry == 'EMIRATES' || destinationCountry == 'EMIRATES')
+                    currency = 'dollarDirham';
+            } else
+                currency = 'dirham';
+
+            totalAmount = calculator(amount, currency, operator);
+        } else
+            totalAmount = 0;
+
+        $('#Transfer_total_amount').val(totalAmount)
+    }
+
+    function calculator(amount, currency, operator) {
+        var dollarPrice = <?= SiteSetting::getOption('dollar_price')?>,
+            dirhamPrice = <?= SiteSetting::getOption('dirham_price')?>,
+            dollarPriceDirham = <?= SiteSetting::getOption('dollar_price_dirham')?>,
+            currencyPrice = $('#Transfer_currency_price').val();
+
+        if (currencyPrice != '')
+            dollarPrice = dirhamPrice = dollarPriceDirham = currencyPrice;
+
+        var result = 0;
+        switch (currency) {
+            case 'dollar':
+                result = amount * dollarPrice;
+                if (operator == '/')
+                    result = amount / dollarPrice;
+                break;
+
+            case 'dirham':
+                result = amount * dirhamPrice;
+                if (operator == '/')
+                    result = amount / dirhamPrice;
+                break;
+
+            case 'dollarDirham':
+                result = amount * dollarPriceDirham;
+                if (operator == '/')
+                    result = amount / dollarPriceDirham;
+                break;
+        }
+
+        return result;
+    }
+
+    function checkCurrency() {
+        var currency = $('#Transfer_foreign_currency').val(),
+            originCountry = $('#Transfer_origin_country').val(),
+            destinationCountry = $('#Transfer_destination_country').val();
+
+        switch (currency) {
+            case 'IRR':
+                if (originCountry != 'IRAN' && destinationCountry != 'IRAN') {
+                    alert('ارز انتخاب شده اشتباه است.');
+                    return false;
+                }
+                break;
+
+            case 'AUD':
+                if (originCountry != 'AUSTRALIA' && destinationCountry != 'AUSTRALIA') {
+                    alert('ارز انتخاب شده اشتباه است.');
+                    return false;
+                }
+                break;
+
+            case 'AED':
+                if (originCountry != 'EMIRATES' && destinationCountry != 'EMIRATES') {
+                    alert('ارز انتخاب شده اشتباه است.');
+                    return false;
+                }
+                break;
+        }
+        return true;
+    }
+</script>

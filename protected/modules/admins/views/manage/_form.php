@@ -2,7 +2,9 @@
 /* @var $this AdminsManageController */
 /* @var $model Admins */
 /* @var $form CActiveForm */
+/* @var $branch boolean */
 Yii::app()->clientScript->registerScript('resetForm','document.getElementById("admins-form").reset();');
+$branch = isset($branch);
 ?>
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'admins-form',
@@ -35,11 +37,15 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("a
         <?php echo $form->error($model,'email'); ?>
     </div>
 
+    <?php if(!$branch):?>
     <div class="form-group">
         <?php echo $form->labelEx($model,'role_id'); ?>
         <?php echo $form->dropDownList($model,'role_id' ,CHtml::listData(  AdminRoles::model()->findAll('role <> "superAdmin"') , 'id' , 'name'),array('class'=>'form-control')); ?>
         <?php echo $form->error($model,'role_id'); ?>
     </div>
+    <?php else:?>
+        <?php echo $form->hiddenField($model,'role_id' ,array('value'=>'4')); ?>
+    <?php endif;?>
 
 	<div class="form-group buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'افزودن' : 'ویرایش', array('class'=>'btn btn-success')); ?>

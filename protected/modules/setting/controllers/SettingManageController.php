@@ -21,6 +21,7 @@ class SettingManageController extends Controller
                 'gatewaySetting',
                 'changeSetting',
                 'changePrice',
+                'changeCurrencyPrice',
                 'forms',
                 'socialLinks'
             )
@@ -127,6 +128,21 @@ class SettingManageController extends Controller
             $this->refresh();
         }
         $this->render('_price');
+    }
+
+    public function actionChangeCurrencyPrice()
+    {
+        if (isset($_POST['SiteSetting'])) {
+            if(isset($_POST['SiteSetting']['dollar_price']))
+                SiteSetting::setOption('dollar_price', $_POST['SiteSetting']['dollar_price']);
+            if(isset($_POST['SiteSetting']['dirham_price']))
+                SiteSetting::setOption('dirham_price', $_POST['SiteSetting']['dirham_price']);
+            if(isset($_POST['SiteSetting']['dollar_price_dirham']))
+                SiteSetting::setOption('dollar_price_dirham', $_POST['SiteSetting']['dollar_price_dirham']);
+            Yii::app()->user->setFlash('success', 'اطلاعات با موفقیت ثبت شد.');
+            $this->refresh();
+        }
+        $this->render('_currency_price');
     }
 
     public function actionForms()

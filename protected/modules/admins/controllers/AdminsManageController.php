@@ -24,7 +24,9 @@ class AdminsManageController extends Controller
 				'sessions',
 				'removeSession',
 				'changePassword',
-				'delete'
+				'delete',
+				'branches',
+				'createBranch',
 			)
 		);
 	}
@@ -60,6 +62,8 @@ class AdminsManageController extends Controller
         $this->pageTitle = 'افزودن مدیر جدید';
 		$model=new Admins('create');
 
+		$this->performAjaxValidation($model);
+
 		if(isset($_POST['Admins'])) {
             $model->attributes = $_POST[ 'Admins' ];
             if ( $model->save() )
@@ -72,6 +76,33 @@ class AdminsManageController extends Controller
         }
 
 		$this->render('create',array(
+			'model'=>$model,
+		));
+	}
+
+    /**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'views' page.
+	 */
+	public function actionCreateBranch()
+	{
+        $this->pageTitle = 'افزودن شعبه جدید';
+		$model=new Admins('create');
+
+		$this->performAjaxValidation($model);
+
+		if(isset($_POST['Admins'])) {
+            $model->attributes = $_POST[ 'Admins' ];
+            if ( $model->save() )
+			{
+				Yii::app()->user->setFlash('success','با موفقیت انجام شد');
+				$this->redirect(array('branches'));
+			}
+            else
+				Yii::app()->user->setFlash('failed','درخواست با خطا مواجه است. لطفا مجددا سعی نمایید.');
+        }
+
+		$this->render('createBranch',array(
 			'model'=>$model,
 		));
 	}
@@ -144,6 +175,22 @@ class AdminsManageController extends Controller
 			'model'=>$model,
 		));
 	}
+
+    /**
+	 * Manages all models.
+	 */
+	public function actionBranches()
+	{
+		$model=new Admins('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['Admins']))
+			$model->attributes=$_GET['Admins'];
+        $model->roleId = 4;
+		$this->render('branches',array(
+			'model'=>$model,
+		));
+	}
+
 	/**
 	 * Show Admin Sessions
 	 */

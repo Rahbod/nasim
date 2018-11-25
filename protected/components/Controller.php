@@ -175,6 +175,54 @@ class Controller extends AuthController
                     'visible' => !Yii::app()->user->isGuest
                 ),
             );
+        elseif(Yii::app()->user->roles == 'transfer_admin')
+            return [
+                array(
+                    'label' => 'منوی مدیریت سیستم صدور حواله',
+                    'itemOptions' => array('class' => 'header'),
+                ),
+                array(
+                    'label' => '<i class="fa fa-money"></i><span>مدیریت حواله ها</span>',
+                    'url' => array('/transfer/manage/admin')
+                ),
+                array(
+                    'label' => '<i class="fa fa-user"></i><span>مدیریت مشتریان</span>',
+                    'url' => array('/customers/manage/admin')
+                ),
+                array(
+                    'label' => '<i class="fa fa-briefcase"></i><span>مدیریت شعب</span>',
+                    'url' => array('/admins/manage/branches')
+                ),
+                array(
+                    'label' => '<i class="fa fa-dollar"></i><span>تنظیم نرخ ارز</span>',
+                    'url' => array('/setting/manage/changeCurrencyPrice')
+                ),
+                array(
+                    'label' => '<i class="fa fa-sign-out text-danger"></i><span class="text-danger">خروج</span>',
+                    'url' => array('/admins/login/logout'),
+                    'visible' => !Yii::app()->user->isGuest
+                ),
+            ];
+        elseif(Yii::app()->user->roles == 'branch')
+            return [
+                array(
+                    'label' => 'منوی مدیریت سیستم صدور حواله',
+                    'itemOptions' => array('class' => 'header'),
+                ),
+                array(
+                    'label' => '<i class="fa fa-money"></i><span>مدیریت حواله ها</span>',
+                    'url' => array('/transfer/manage/admin')
+                ),
+                array(
+                    'label' => '<i class="fa fa-user"></i><span>مدیریت مشتریان</span>',
+                    'url' => array('/customers/manage/admin')
+                ),
+                array(
+                    'label' => '<i class="fa fa-sign-out text-danger"></i><span class="text-danger">خروج</span>',
+                    'url' => array('/admins/login/logout'),
+                    'visible' => !Yii::app()->user->isGuest
+                ),
+            ];
         else
             return array();
     }

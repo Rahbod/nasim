@@ -20,6 +20,7 @@ return array(
 		'ext.dropZoneUploader.*',
 		'application.modules.pages.models.*',
 		'application.modules.setting.models.*',
+		'application.modules.users.models.*',
 	),
 
 	'modules'=>array(
@@ -38,6 +39,8 @@ return array(
 		'places',
         'contact',
         'map',
+        'customers',
+        'transfer',
 	),
 
 	// application components

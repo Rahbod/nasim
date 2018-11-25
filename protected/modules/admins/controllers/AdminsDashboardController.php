@@ -26,6 +26,9 @@ class AdminsDashboardController extends Controller
 
     public function actionIndex()
     {
+        if(in_array(Yii::app()->user->roles, ['transfer_admin', 'branch']))
+            $this->redirect(['/transfer/manage/admin']);
+
         Yii::app()->getModule('contact');
 
         $messagesCriteria = new CDbCriteria();
