@@ -12,10 +12,22 @@
  * @property string $address
  * @property string $email
  * @property string $code
+ * @property string $id_number
+ * @property integer $id_number_type
  * @property integer $creator_id
+ *
+ * The followings are the available model relations:
+ * @property Transfer[] $transfers
+ * @property Transfer[] $transfers1
  */
 class Customers extends CActiveRecord
 {
+	public static $idNumLabels = [
+        0 => 'شماره شناسنامه',
+        1 => 'کد ملی',
+        2 => 'شماره گذرنامه',
+    ];
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -32,14 +44,15 @@ class Customers extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name', 'required'),
+			array('name, phone, mobile, country, address', 'required'),
+			array('id_number_type, creator_id', 'numerical', 'integerOnly'=>true),
 			array('name, email, code', 'length', 'max'=>255),
 			array('phone, mobile, country', 'length', 'max'=>20),
-			array('creator_id', 'length', 'max'=>11),
 			array('address', 'length', 'max'=>1024),
+			array('id_number', 'length', 'max'=>50),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, name, phone, mobile, country, address, email, code', 'safe', 'on'=>'search'),
+			array('id, name, phone, mobile, country, address, email, code, id_number, id_number_type, creator_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -51,6 +64,8 @@ class Customers extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'transfers' => array(self::HAS_MANY, 'Transfer', 'sender_id'),
+			'transfers1' => array(self::HAS_MANY, 'Transfer', 'receiver_id'),
 		);
 	}
 
@@ -67,7 +82,10 @@ class Customers extends CActiveRecord
 			'country' => 'کشور',
 			'address' => 'آدرس',
 			'email' => 'پست الکترونیکی',
-			'code' => 'کد مشتری',
+			'code' => 'کد',
+			'id_number' => 'شناسه',
+			'id_number_type' => 'نوع شناسه',
+			'creator_id' => 'Creator',
 		);
 	}
 
@@ -97,8 +115,9 @@ class Customers extends CActiveRecord
 		$criteria->compare('address',$this->address,true);
 		$criteria->compare('email',$this->email,true);
 		$criteria->compare('code',$this->code,true);
-
-        $criteria->order = 'id DESC';
+		$criteria->compare('id_number',$this->id_number,true);
+		$criteria->compare('id_number_type',$this->id_number_type);
+		$criteria->compare('creator_id',$this->creator_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

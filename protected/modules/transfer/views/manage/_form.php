@@ -9,16 +9,27 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
 	'enableAjaxValidation'=>true,
 
 )); ?>
+    <style>
+        .add-customer{
+            border-radius: 50%;
+            font-size: 15px;
+            padding: 1px 7px;
+            margin-right: 15px;
+            margin-bottom: 5px;
+        }
+    </style>
     <div class="message"></div>
 
     <div class="form-group">
         <?php echo $form->labelEx($model,'sender_id'); ?>
+        <a href="#customer-modal" data-toggle="modal" class="btn btn-sm btn-info add-customer">+</a>
         <?php echo $form->dropDownList($model,'sender_id',CHtml::listData(Customers::model()->findAll(), 'id', 'name'),array('class'=>'form-control')); ?>
         <?php echo $form->error($model,'sender_id'); ?>
     </div>
 
     <div class="form-group">
         <?php echo $form->labelEx($model,'receiver_id'); ?>
+        <a href="#customer-modal" data-toggle="modal" class="btn btn-sm btn-info add-customer">+</a>
         <?php echo $form->dropDownList($model,'receiver_id',CHtml::listData(Customers::model()->findAll(), 'id', 'name'),array('class'=>'form-control')); ?>
         <?php echo $form->error($model,'receiver_id'); ?>
     </div>
@@ -44,25 +55,19 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
 
     <div class="form-group">
         <?php echo $form->labelEx($model,'currency_price'); ?>
-        <?php echo $form->textField($model,'currency_price',array('maxlength'=>20,'class'=>'form-control','placeholder'=>'نرخ پیش فرض')); ?>
+        <?php echo $form->textField($model,'currency_price',array('maxlength'=>20,'class'=>'form-control','placeholder'=>'نرخ پیش فرض (دلار: '.number_format(SiteSetting::getOption('dollar_price')).' ريال - درهم: '.number_format(SiteSetting::getOption('dirham_price')).' ريال - دلار: '.number_format(SiteSetting::getOption('dollar_price_dirham')).' درهم)')); ?>
         <?php echo $form->error($model,'currency_price'); ?>
     </div>
 
     <div class="form-group">
         <?php echo $form->labelEx($model,'currency_amount'); ?>
-        <div class="input-group">
-            <span class="input-group-addon">IRR</span>
-            <?php echo $form->textField($model,'currency_amount',array('maxlength'=>255,'class'=>'form-control','value'=>0)); ?>
-        </div>
+        <?php echo $form->numberField($model,'currency_amount',array('maxlength'=>255,'class'=>'form-control')); ?>
         <?php echo $form->error($model,'currency_amount'); ?>
     </div>
 
     <div class="form-group">
         <?php echo $form->labelEx($model,'total_amount'); ?>
-        <div class="input-group">
-            <span class="input-group-addon">AUD</span>
-            <?php echo $form->textField($model,'total_amount',array('maxlength'=>255,'class'=>'form-control','value'=>0)); ?>
-        </div>
+        <?php echo $form->numberField($model,'total_amount',array('maxlength'=>255,'class'=>'form-control')); ?>
         <?php echo $form->error($model,'total_amount'); ?>
     </div>
 
@@ -72,14 +77,47 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
 
 <?php $this->endWidget(); ?>
 
+<div id="customer-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">افزودن مشتری</h4>
+            </div>
+            <div class="modal-body">
+                <?php $this->renderPartial('customers.views.manage._form', array('model'=>new Customers(), 'onlyMainFields' => true)); ?>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
-    $(document).ready(function(){
-        $('body').on('blur', '#Transfer_currency_amount', function(){
+    $(document).ready(function() {
+        $('body').on('blur, keyup', '#Transfer_currency_amount', function () {
             calculateCurrencyPrice();
         }).on('change', '#Transfer_destination_country, #Transfer_origin_country', function () {
             calculateCurrencyPrice();
         }).on('change', '#Transfer_foreign_currency', function () {
             checkCurrency();
+        }).on('click', '.save-customer', function (e) {
+            e.preventDefault();
+            var form = $('#customers-form');
+            $.ajax({
+                url: '<?php echo Yii::app()->createUrl('/customers/manage/create');?>',
+                type: 'post',
+                dataType: 'json',
+                data: form.serialize(),
+                success: function (data) {
+                    alert(data.message);
+                    if (data.status) {
+                        $('#Transfer_sender_id').append('<option value="' + data.id + '">' + data.name + '</option>');
+                        $('#Transfer_receiver_id').append('<option value="' + data.id + '">' + data.name + '</option>');
+                        form.find('input[type="text"]').each(function () {
+                            $(this).val('');
+                        });
+                    }
+                }
+            });
         });
     });
 
@@ -154,6 +192,11 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
         var currency = $('#Transfer_foreign_currency').val(),
             originCountry = $('#Transfer_origin_country').val(),
             destinationCountry = $('#Transfer_destination_country').val();
+
+        if (originCountry == destinationCountry) {
+            alert('مبدا و مقصد نمی تواند یکسان باشد.');
+            return false;
+        }
 
         switch (currency) {
             case 'IRR':

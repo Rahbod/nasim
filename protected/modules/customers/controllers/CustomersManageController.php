@@ -34,10 +34,24 @@ class CustomersManageController extends Controller
             $model->code = 'CO-'.(101 + ($res->id ?: 0));
             $model->creator_id = Yii::app()->user->getId();
             if ($model->save()) {
+                if(isset($_POST['ajax'])) {
+                    echo json_encode([
+                        'status' => true,
+                        'message' => 'عملیات با موفقیت انجام شد.',
+                        'id' => $model->id,
+                        'name' => $model->name,
+                    ]);
+                    Yii::app()->end();
+                }
                 Yii::app()->user->setFlash('success', 'عملیات با موفقیت انجام شد.');
                 $this->redirect(array('admin'));
-            } else
+            } else {
+                if(isset($_POST['ajax'])) {
+                    echo json_encode(['status' => false, 'message' => 'درخواست با خطا مواجه است. لطفا مجددا سعی نمایید.']);
+                    Yii::app()->end();
+                }
                 Yii::app()->user->setFlash('failed', 'درخواست با خطا مواجه است. لطفا مجددا سعی نمایید.');
+            }
         }
 
         $this->render('create', array(

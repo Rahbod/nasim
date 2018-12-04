@@ -99,6 +99,7 @@ class TransferManageController extends Controller
 
     public function actionAdmin()
 	{
+        Yii::app()->getModule('customers');
         $model = new Transfer('search');
         $model->unsetAttributes();  // clear any default values
         if(isset($_GET['Transfer']))
