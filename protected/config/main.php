@@ -21,6 +21,7 @@ return array(
 		'application.modules.pages.models.*',
 		'application.modules.setting.models.*',
 		'application.modules.users.models.*',
+		'application.modules.transfer.models.*',
 	),
 
 	'modules'=>array(

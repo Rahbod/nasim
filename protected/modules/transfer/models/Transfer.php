@@ -132,7 +132,7 @@ class Transfer extends CActiveRecord
 	 * @return CActiveDataProvider the data provider that can return the models
 	 * based on the search/filter conditions.
 	 */
-	public function search()
+	public function search($customerID = false, $mode = '')
     {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -152,6 +152,9 @@ class Transfer extends CActiveRecord
         $criteria->compare('total_amount', $this->total_amount, true);
         $criteria->compare('payment_method', $this->payment_method);
         $criteria->compare('payment_status', $this->payment_status);
+
+        if($customerID && !empty($mode))
+            $criteria->compare($mode == 'send'?"sender_id":'receiver_id', $customerID);
 
         $criteria->order = 'id DESC';
 

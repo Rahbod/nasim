@@ -129,8 +129,22 @@ class CustomersManageController extends Controller
      */
     public function actionView($id)
     {
-        $this->render('view',array(
-            'model'=>$this->loadModel($id),
+        $sendTransfers = new Transfer();
+        $sendTransfers->unsetAttributes();
+        if (isset($_GET['Transfer']) && $_GET['ajax'] == 'send-grid') {
+            $sendTransfers->attributes = $_GET['Transfer'];
+        }
+
+        $receiveTransfers = new Transfer();
+        $receiveTransfers->unsetAttributes();
+        if (isset($_GET['Transfer']) && $_GET['ajax'] == 'receive-grid') {
+            $receiveTransfers->attributes = $_GET['Transfer'];
+        }
+
+        $this->render('view', array(
+            'model' => $this->loadModel($id),
+            'sendTransfers' => $sendTransfers,
+            'receiveTransfers' => $receiveTransfers
         ));
     }
 
