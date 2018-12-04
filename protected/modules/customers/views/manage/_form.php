@@ -60,6 +60,34 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("c
             <?php echo $form->dropDownList($model,'id_number_type',Customers::$idNumLabels, array('class'=>'form-control')); ?>
             <?php echo $form->error($model,'id_number_type'); ?>
         </div>
+
+        <div class="form-group">
+            <?php echo $form->labelEx($model,'attachment'); ?>
+            <?php $this->widget('ext.dropZoneUploader.dropZoneUploader', array(
+            'id' => 'uploaderAttachment',
+            'model' => $model,
+            'name' => 'attachment',
+            'maxFiles' => 1,
+            'maxFileSize' => 10, //MB
+            'url' => $this->createUrl('upload'),
+            'deleteUrl' => $this->createUrl('deleteUpload'),
+            'acceptedFiles' => '.jpg, .jpeg, .png, .pdf, .doc, .docx, .zip',
+            'serverFiles' => $model->attachment ? new UploadedFiles($this->attachmentPath, $model->attachment) : [],
+            'onSuccess' => '
+                var responseObj = JSON.parse(res);
+                if(responseObj.status){
+                    {serverName} = responseObj.fileName;
+                    $(".uploader-message").html("");
+                }
+                else{
+                    $(".uploader-message").html(responseObj.message);
+                    this.removeFile(file);
+                }
+            ',
+        )); ?>
+            <?php echo $form->error($model,'attachment'); ?>
+            <div class="uploader-message error"></div>
+        </div>
     <?php else:?>
         <input type="hidden" name="ajax" value="1">
     <?php endif;?>

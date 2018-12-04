@@ -2,6 +2,9 @@
 
 class CustomersManageController extends Controller
 {
+    public $attachmentPath = 'uploads/customers';
+    public $tempPath = 'uploads/temp';
+
     public static function actionsType()
     {
         return array(
@@ -12,6 +15,27 @@ class CustomersManageController extends Controller
                 'admin',
                 'delete'
             )
+        );
+    }
+
+    public function actions()
+    {
+        return array(
+            'upload' => array( // list image upload
+                'class' => 'ext.dropZoneUploader.actions.AjaxUploadAction',
+                'attribute' => 'attachment',
+                'rename' => 'random',
+                'validateOptions' => array(
+                    'acceptedTypes' => array('png', 'jpg', 'jpeg', 'doc', 'docx', 'pdf', 'zip')
+                )
+            ),
+            'deleteUpload' => array( // delete list image uploaded
+                'class' => 'ext.dropZoneUploader.actions.AjaxDeleteUploadedAction',
+                'modelName' => 'Customers',
+                'attribute' => 'attachment',
+                'uploadDir' => "/$this->attachmentPath/",
+                'storedMode' => 'field'
+            ),
         );
     }
 

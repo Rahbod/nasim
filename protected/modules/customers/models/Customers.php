@@ -15,6 +15,7 @@
  * @property string $id_number
  * @property integer $id_number_type
  * @property integer $creator_id
+ * @property integer $attachment
  *
  * The followings are the available model relations:
  * @property Transfer[] $transfers
@@ -22,6 +23,8 @@
  */
 class Customers extends CActiveRecord
 {
+//    const
+
 	public static $idNumLabels = [
         0 => 'شماره شناسنامه',
         1 => 'کد ملی',
@@ -48,7 +51,7 @@ class Customers extends CActiveRecord
 			array('id_number_type, creator_id', 'numerical', 'integerOnly'=>true),
 			array('name, email, code', 'length', 'max'=>255),
 			array('phone, mobile, country', 'length', 'max'=>20),
-			array('address', 'length', 'max'=>1024),
+			array('address, attachment', 'length', 'max'=>1023),
 			array('id_number', 'length', 'max'=>50),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -86,6 +89,7 @@ class Customers extends CActiveRecord
 			'id_number' => 'شناسه',
 			'id_number_type' => 'نوع شناسه',
 			'creator_id' => 'Creator',
+			'attachment' => 'فایل ضمیمه',
 		);
 	}
 
