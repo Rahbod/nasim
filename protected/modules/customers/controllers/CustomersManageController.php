@@ -13,6 +13,7 @@ class CustomersManageController extends Controller
                 'create',
                 'update',
                 'admin',
+                'clearing',
                 'delete'
             )
         );
@@ -141,10 +142,17 @@ class CustomersManageController extends Controller
             $receiveTransfers->attributes = $_GET['Transfer'];
         }
 
+        $debtorTransfers = new Transfer();
+        $debtorTransfers->unsetAttributes();
+        if (isset($_GET['Transfer']) && $_GET['ajax'] == 'debtor-grid') {
+            $debtorTransfers->attributes = $_GET['Transfer'];
+        }
+
         $this->render('view', array(
             'model' => $this->loadModel($id),
             'sendTransfers' => $sendTransfers,
-            'receiveTransfers' => $receiveTransfers
+            'receiveTransfers' => $receiveTransfers,
+            'debtorTransfers' => $debtorTransfers,
         ));
     }
 
@@ -185,5 +193,21 @@ class CustomersManageController extends Controller
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+    }
+
+    public function actionClearing($id)
+    {
+        $this->pageTitle = 'تسویه بدهی';
+        $model = $this->loadModel($id);
+        $model->setScenario('clearing');
+        $model->attributes = $_POST['Customers'];
+        if ($model->save())
+            Yii::app()->user->setFlash('success', 'عملیات با موفقیت انجام شد.');
+        else
+            Yii::app()->user->setFlash('failed', 'درخواست با خطا مواجه است. لطفا مجددا سعی نمایید.');
+
+        if (isset($_REQUEST['returnUrl']))
+            $this->redirect($_REQUEST['returnUrl']);
+        $this->redirect(array('admin'));
     }
 }

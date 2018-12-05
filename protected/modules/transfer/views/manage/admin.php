@@ -9,16 +9,40 @@ $this->breadcrumbs=array(
 
 $dataProvider = $model->search();
 /* @var $record Transfer */
-$dollar = 0;
-$rial = 0;
-$dirham = 0;
+$statistics = [
+    'sell' => [
+        'dollar' => 0,
+        'rial' => 0,
+        'dirham' => 0,
+    ],
+    'buy' => [
+        'dollar' => 0,
+        'rial' => 0,
+        'dirham' => 0,
+    ]
+];
+
+// calculate statistics
 foreach($dataProvider->getData() as $record) {
-    if ($record->foreign_currency == 'AUD')
-        $dollar += intval($record->currency_amount);
-    elseif($record->foreign_currency == 'IRR')
-        $rial += intval($record->currency_amount);
-    elseif($record->foreign_currency == 'AED')
-        $dirham += intval($record->currency_amount);
+    if ($record->foreign_currency == Transfer::CURRENCY_AUD) {
+        $statistics['sell']['dollar'] += intval($record->currency_amount);
+        if ($record->origin_country == Transfer::COUNTRY_IRAN || $record->destination_country == Transfer::COUNTRY_IRAN)
+            $statistics['buy']['rial'] += intval($record->total_amount);
+        else if ($record->origin_country == Transfer::COUNTRY_EMIRATES || $record->destination_country == Transfer::COUNTRY_EMIRATES)
+            $statistics['buy']['dirham'] += intval($record->total_amount);
+    } elseif ($record->foreign_currency == Transfer::CURRENCY_IRR) {
+        $statistics['sell']['rial'] += intval($record->currency_amount);
+        if ($record->origin_country == Transfer::COUNTRY_AUSTRALIA || $record->destination_country == Transfer::COUNTRY_AUSTRALIA)
+            $statistics['buy']['dollar'] += intval($record->total_amount);
+        else if ($record->origin_country == Transfer::COUNTRY_EMIRATES || $record->destination_country == Transfer::COUNTRY_EMIRATES)
+            $statistics['buy']['dirham'] += intval($record->total_amount);
+    } elseif ($record->foreign_currency == Transfer::CURRENCY_AED) {
+        $statistics['sell']['dirham'] += intval($record->currency_amount);
+        if ($record->origin_country == Transfer::COUNTRY_IRAN || $record->destination_country == Transfer::COUNTRY_IRAN)
+            $statistics['buy']['rial'] += intval($record->total_amount);
+        else if ($record->origin_country == Transfer::COUNTRY_AUSTRALIA || $record->destination_country == Transfer::COUNTRY_AUSTRALIA)
+            $statistics['buy']['dollar'] += intval($record->total_amount);
+    }
 }
 ?>
 
@@ -29,12 +53,31 @@ foreach($dataProvider->getData() as $record) {
     </div>
     <div class="box-body">
         <?php $this->renderPartial("//partial-views/_flashMessage"); ?>
-        <div class="alert alert-info">
-            <span style="margin-left: 30px;font-weight: bold">مجموع حواله های امروز:</span>
-            <span style="margin-left: 30px;"><?= number_format($dollar)?> دلار</span>
-            <span style="margin-left: 30px;"><?= number_format($rial)?> ريال</span>
-            <span style="margin-left: 30px;"><?= number_format($dirham)?> درهم</span>
+
+        <!--Statistics-->
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <span style="margin-left: 30px;font-weight: bold">مجموع حواله های فروش امروز:</span>
+                <div class="alert alert-warning">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center"><?= number_format($statistics['sell']['dollar'])?> دلار</div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center"><?= number_format($statistics['sell']['rial'])?> ريال</div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center"><?= number_format($statistics['sell']['dirham'])?> درهم</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <span style="margin-left: 30px;font-weight: bold">مجموع حواله های خرید امروز:</span>
+                <div class="alert alert-info">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center"><?= number_format($statistics['buy']['dollar'])?> دلار</div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center"><?= number_format($statistics['buy']['rial'])?> ريال</div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center"><?= number_format($statistics['buy']['dirham'])?> درهم</div>
+                    </div>
+                </div>
+            </div>
         </div>
+
         <div class="table-responsive">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'admins-grid',
@@ -47,6 +90,31 @@ foreach($dataProvider->getData() as $record) {
                     'receiver.name',
                     'currency_amount',
                     'total_amount',
+                    [
+                        'name' => 'payment_method',
+                        'header' => $model->getAttributeLabel('payment_status'),
+                        'value' => function($data) {
+                            if ($data->payment_method == Transfer::PAYMENT_METHOD_DEBTOR) {
+                                if ($data->payment_status == Transfer::PAYMENT_STATUS_UNPAID)
+                                    return '<span class="label label-danger">' . Transfer::$paymentMethodLabels[$data->payment_method] . ' - ' . Transfer::$paymentStatusLabels[$data->payment_status] . '</span>';
+                                else
+                                    return '<span class="label label-success">' . Transfer::$paymentMethodLabels[$data->payment_method] . ' - ' . Transfer::$paymentStatusLabels[$data->payment_status] . '</span>';
+                            } else
+                                return '<span class="label label-success">' . Transfer::$paymentMethodLabels[$data->payment_method] . ' - ' . Transfer::$paymentStatusLabels[Transfer::PAYMENT_STATUS_PAID] . '</span>';
+
+                        },
+                        'type' => 'raw',
+                        'filter' => Transfer::$paymentMethodLabels
+                    ],
+                    [
+                        'value' => function($data){
+                            if ($data->payment_method == Transfer::PAYMENT_METHOD_DEBTOR && $data->payment_status == Transfer::PAYMENT_STATUS_UNPAID)
+                                return CHtml::link('تسویه بدهی',array('/customers/manage/clearing?id='.$data->id),array('class' => 'btn btn-xs btn-success'));
+                            return '';
+                        },
+                        'type' => 'raw',
+                        'filter' => false
+                    ],
                     array(
                         'class'=>'CButtonColumn',
                     )
