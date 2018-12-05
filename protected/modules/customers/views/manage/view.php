@@ -38,6 +38,7 @@ $this->breadcrumbs=array(
         <h3 class="box-title">بدهی های مشتری</h3>
     </div>
     <div class="box-body">
+        <?php $this->renderPartial('//partial-views/_flashMessage')?>
         <div class="table-responsive">
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'debtor-grid',
@@ -89,14 +90,19 @@ $this->breadcrumbs=array(
                     [
                         'value' => function($data){
                             $route = urlencode(Yii::app()->request->requestUri);
-                            return CHtml::link('تسویه بدهی',array('/customers/manage/clearing?id='.$data->id.'$returnUrl='.$route),array('class' => 'btn btn-xs btn-success'));
+                            return CHtml::link('تسویه بدهی',array('/customers/manage/clearing?id='.$data->id.'&returnUrl='.$route),array('class' => 'btn btn-xs btn-success'));
                         },
                         'type' => 'raw',
                         'filter' => false
                     ],
                     array(
                         'class'=>'CButtonColumn',
-                        'template' => '{view}'
+                        'template' => '{view}',
+                        'buttons' => array(
+                            'view'=> array(
+                                'url' => 'Yii::app()->createUrl("/transfer/manage/view",array("id" => $data->id, "returnUrl" => Yii::app()->request->requestUri))'
+                            )
+                        )
                     )
                 )
             )); ?>
@@ -158,7 +164,12 @@ $this->breadcrumbs=array(
                     ],
                     array(
                         'class'=>'CButtonColumn',
-                        'template' => '{view}'
+                        'template' => '{view}',
+                        'buttons' => array(
+                            'view'=> array(
+                                'url' => 'Yii::app()->createUrl("/transfer/manage/view",array("id" => $data->id, "returnUrl" => Yii::app()->request->requestUri))'
+                            )
+                        )
                     )
                 )
             )); ?>
@@ -220,7 +231,12 @@ $this->breadcrumbs=array(
                     ],
                     array(
                         'class'=>'CButtonColumn',
-                        'template' => '{view}'
+                        'template' => '{view}',
+                        'buttons' => array(
+                            'view'=> array(
+                                'url' => 'Yii::app()->createUrl("/transfer/manage/view",array("id" => $data->id, "returnUrl" => Yii::app()->request->requestUri))'
+                            )
+                        )
                     )
                 )
             )); ?>

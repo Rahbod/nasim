@@ -50,7 +50,7 @@ class CustomersManageController extends Controller
         $model = new Customers('create');
 
         $this->performAjaxValidation($model);
-
+        
         if (isset($_POST['Customers'])) {
             $model->attributes = $_POST['Customers'];
             $criteria=new CDbCriteria;
@@ -58,7 +58,9 @@ class CustomersManageController extends Controller
             $res = Customers::model()->find($criteria);
             $model->code = 'CO-'.(101 + ($res->id ?: 0));
             $model->creator_id = Yii::app()->user->getId();
+            $attachment = new UploadedFiles($this->tempPath, $model->attachment);
             if ($model->save()) {
+                $attachment->move($this->attachmentPath);
                 if(isset($_POST['ajax'])) {
                     echo json_encode([
                         'status' => true,
@@ -96,11 +98,15 @@ class CustomersManageController extends Controller
         $model = $this->loadModel($id);
         $model->setScenario('update');
 
+        $attachment = new UploadedFiles($this->attachmentPath, $model->attachment);
+
         if (isset($_POST['Customers'])) {
+            $oldAttachment = $model->attachment;
             $model->attributes = $_POST['Customers'];
             if ($model->save()) {
+                $attachment->update($oldAttachment, $model->attachment, $this->tempPath);
                 Yii::app()->user->setFlash('success', 'عملیات با موفقیت انجام شد.');
-                $this->redirect(array('admin'));
+                $this->refresh();
             } else
                 Yii::app()->user->setFlash('failed', 'درخواست با خطا مواجه است. لطفا مجددا سعی نمایید.');
         }

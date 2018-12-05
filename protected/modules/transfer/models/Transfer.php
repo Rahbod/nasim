@@ -195,6 +195,9 @@ class Transfer extends CActiveRecord
 
     protected function beforeSave()
     {
+        if($this->payment_method == self::PAYMENT_METHOD_CASH)
+            $this->payment_method = self::PAYMENT_STATUS_PAID;
+        
         if (empty($this->currency_price)) {
             $dollarPrice = SiteSetting::getOption('dollar_price');
             $dirhamPrice = SiteSetting::getOption('dirham_price');
