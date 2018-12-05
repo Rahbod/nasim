@@ -88,7 +88,8 @@ $this->breadcrumbs=array(
                     ],
                     [
                         'value' => function($data){
-                            return CHtml::link('تسویه بدهی',array('/customers/manage/clearing?id='.$data->id),array('class' => 'btn btn-xs btn-success'));
+                            $route = urlencode(Yii::app()->request->requestUri);
+                            return CHtml::link('تسویه بدهی',array('/customers/manage/clearing?id='.$data->id.'$returnUrl='.$route),array('class' => 'btn btn-xs btn-success'));
                         },
                         'type' => 'raw',
                         'filter' => false

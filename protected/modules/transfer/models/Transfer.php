@@ -10,6 +10,7 @@
  * @property string $receiver_id
  * @property string $branch_id
  * @property string $date
+ * @property string $modified_date
  * @property string $origin_country
  * @property string $destination_country
  * @property string $foreign_currency
@@ -53,94 +54,96 @@ class Transfer extends CActiveRecord
     ];
 
     public static $paymentStatusLabels = [
-        self::PAYMENT_STATUS_PAID=>'پرداخت شده',
-        self::PAYMENT_STATUS_UNPAID=>'پرداخت نشده',
+        self::PAYMENT_STATUS_PAID => 'پرداخت شده',
+        self::PAYMENT_STATUS_UNPAID => 'پرداخت نشده',
     ];
     public static $paymentMethodLabels = [
-        self::PAYMENT_METHOD_CASH=>'نقدی',
-        self::PAYMENT_METHOD_DEBTOR=>'علی الحساب',
+        self::PAYMENT_METHOD_CASH => 'نقدی',
+        self::PAYMENT_METHOD_DEBTOR => 'علی الحساب',
     ];
 
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return '{{transfer}}';
-	}
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName()
+    {
+        return '{{transfer}}';
+    }
 
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('code, date', 'length', 'max'=>20),
-			array('sender_id, receiver_id, branch_id', 'length', 'max'=>10),
-			array('payment_status, payment_method', 'length', 'max'=>1),
-			array('payment_status', 'default', 'value'=>self::PAYMENT_STATUS_UNPAID),
-			array('payment_method', 'default', 'value'=>self::PAYMENT_METHOD_CASH),
-			array('origin_country, destination_country, foreign_currency, currency_amount, currency_price, total_amount', 'length', 'max'=>255),
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules()
+    {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('code, date, modified_date', 'length', 'max' => 20),
+            array('sender_id, receiver_id, branch_id', 'length', 'max' => 10),
+            array('payment_status, payment_method', 'length', 'max' => 1),
+            array('payment_status', 'default', 'value' => self::PAYMENT_STATUS_UNPAID),
+            array('payment_method', 'default', 'value' => self::PAYMENT_METHOD_CASH),
+            array('origin_country, destination_country, foreign_currency, currency_amount, currency_price, total_amount', 'length', 'max' => 255),
             array('date', 'default', 'value' => time(), 'on' => 'create'),
-            array('origin_country','compare','compareAttribute'=>'destination_country','operator'=>'!=','message'=>'کشور مبدا و کشور مقصد نمی تواند یکسان باشد.'),
+            array('modified_date', 'default', 'value' => time(), 'on' => 'create'),
+            array('origin_country', 'compare', 'compareAttribute' => 'destination_country', 'operator' => '!=', 'message' => 'کشور مبدا و کشور مقصد نمی تواند یکسان باشد.'),
             // The following rule is used by search().
-			// @todo Please remove those attributes that should not be searched.
-			array('id, payment_status, payment_method, code, sender_id, receiver_id, branch_id, date, origin_country, destination_country, foreign_currency, currency_amount, currency_price, total_amount', 'safe', 'on'=>'search'),
-		);
-	}
+            // @todo Please remove those attributes that should not be searched.
+            array('id, modified_date, payment_status, payment_method, code, sender_id, receiver_id, branch_id, date, origin_country, destination_country, foreign_currency, currency_amount, currency_price, total_amount', 'safe', 'on' => 'search'),
+        );
+    }
 
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'sender' => array(self::BELONGS_TO, 'Customers', 'sender_id'),
-			'receiver' => array(self::BELONGS_TO, 'Customers', 'receiver_id'),
-			'branch' => array(self::BELONGS_TO, 'Admins', 'branch_id'),
-		);
-	}
+    /**
+     * @return array relational rules.
+     */
+    public function relations()
+    {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+            'sender' => array(self::BELONGS_TO, 'Customers', 'sender_id'),
+            'receiver' => array(self::BELONGS_TO, 'Customers', 'receiver_id'),
+            'branch' => array(self::BELONGS_TO, 'Admins', 'branch_id'),
+        );
+    }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id' => 'ID',
-			'code' => 'کد حواله',
-			'sender_id' => 'فرستنده',
-			'receiver_id' => 'دریافت کننده',
-			'branch_id' => 'شعبه',
-			'date' => 'تاریخ ثبت',
-			'origin_country' => 'کشور مبدا',
-			'destination_country' => 'کشور مقصد',
-			'foreign_currency' => 'ارز',
-			'currency_amount' => 'مقدار',
-			'currency_price' => 'نرخ ارز',
-			'total_amount' => 'مقدار کل',
-			'payment_method' => 'نوع پرداخت',
-			'payment_status' => 'وضعیت پرداخت',
-		);
-	}
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels()
+    {
+        return array(
+            'id' => 'ID',
+            'code' => 'کد حواله',
+            'sender_id' => 'فرستنده',
+            'receiver_id' => 'دریافت کننده',
+            'branch_id' => 'شعبه',
+            'date' => 'تاریخ ثبت',
+            'modified_date' => 'تاریخ تغییرات',
+            'origin_country' => 'کشور مبدا',
+            'destination_country' => 'کشور مقصد',
+            'foreign_currency' => 'ارز',
+            'currency_amount' => 'مقدار',
+            'currency_price' => 'نرخ ارز',
+            'total_amount' => 'مقدار کل',
+            'payment_method' => 'نوع پرداخت',
+            'payment_status' => 'وضعیت پرداخت',
+        );
+    }
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 *
-	 * Typical usecase:
-	 * - Initialize the model fields with values from filter form.
-	 * - Execute this method to get CActiveDataProvider instance which will filter
-	 * models according to data in model fields.
-	 * - Pass data provider to CGridView, CListView or any similar widget.
-	 *
-	 * @return CActiveDataProvider the data provider that can return the models
-	 * based on the search/filter conditions.
-	 */
-	public function search($customerID = false, $mode = '')
+    /**
+     * Retrieves a list of models based on the current search/filter conditions.
+     *
+     * Typical usecase:
+     * - Initialize the model fields with values from filter form.
+     * - Execute this method to get CActiveDataProvider instance which will filter
+     * models according to data in model fields.
+     * - Pass data provider to CGridView, CListView or any similar widget.
+     *
+     * @return CActiveDataProvider the data provider that can return the models
+     * based on the search/filter conditions.
+     */
+    public function search($customerID = false, $mode = '')
     {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
@@ -161,9 +164,9 @@ class Transfer extends CActiveRecord
         $criteria->compare('payment_method', $this->payment_method);
         $criteria->compare('payment_status', $this->payment_status);
 
-        if($customerID && !empty($mode)) {
+        if ($customerID && !empty($mode)) {
 
-            if($mode == 'debtor'){
+            if ($mode == 'debtor') {
                 $criteria->compare('sender_id', $customerID);
                 $criteria->compare('payment_method', self::PAYMENT_METHOD_DEBTOR);
                 $criteria->compare('payment_status', self::PAYMENT_STATUS_UNPAID);
@@ -179,20 +182,20 @@ class Transfer extends CActiveRecord
         ));
     }
 
-	/**
-	 * Returns the static model of the specified AR class.
-	 * Please note that you should have this exact method in all your CActiveRecord descendants!
-	 * @param string $className active record class name.
-	 * @return Transfer the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
-	protected function beforeSave()
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return Transfer the static model class
+     */
+    public static function model($className = __CLASS__)
     {
-        if(empty($this->currency_price)){
+        return parent::model($className);
+    }
+
+    protected function beforeSave()
+    {
+        if (empty($this->currency_price)) {
             $dollarPrice = SiteSetting::getOption('dollar_price');
             $dirhamPrice = SiteSetting::getOption('dirham_price');
             $dollarPriceDirham = SiteSetting::getOption('dollar_price_dirham');
@@ -203,16 +206,75 @@ class Transfer extends CActiveRecord
                     $this->currency_price = $dollarPriceDirham;
             } elseif ($this->foreign_currency == Transfer::CURRENCY_IRR) {
                 if ($this->origin_country == Transfer::COUNTRY_AUSTRALIA || $this->destination_country == Transfer::COUNTRY_AUSTRALIA)
-                    $this->currency_price = 1 / $dollarPrice;
+                    $this->currency_price = (double)1 / $dollarPrice;
                 else if ($this->origin_country == Transfer::COUNTRY_EMIRATES || $this->destination_country == Transfer::COUNTRY_EMIRATES)
-                    $this->currency_price = 1 / $dirhamPrice;
+                    $this->currency_price = (double)1 / $dirhamPrice;
             } elseif ($this->foreign_currency == Transfer::CURRENCY_AED) {
                 if ($this->origin_country == Transfer::COUNTRY_IRAN || $this->destination_country == Transfer::COUNTRY_IRAN)
                     $this->currency_price = $dirhamPrice;
                 else if ($this->origin_country == Transfer::COUNTRY_AUSTRALIA || $this->destination_country == Transfer::COUNTRY_AUSTRALIA)
-                    $this->currency_price = 1 / $dollarPriceDirham;
+                    $this->currency_price = (double)1 / $dollarPriceDirham;
             }
         }
         return parent::beforeSave(); // TODO: Change the autogenerated stub
+    }
+
+    /**
+     * @param null $from
+     * @param null $to
+     * @return array
+     */
+    public static function CalculateStatistics($from = null, $to = null)
+    {
+        $statistics = [
+            'sell' => [
+                'dollar' => 0,
+                'rial' => 0,
+                'dirham' => 0,
+            ],
+            'buy' => [
+                'dollar' => 0,
+                'rial' => 0,
+                'dirham' => 0,
+            ]
+        ];
+
+        $criteria = new CDbCriteria();
+        $criteria->addCondition("payment_method = :cash OR (payment_method = :debtor AND payment_status = :paid)");
+        $criteria->addCondition("modified_date >= :from AND modified_date <= :to");
+        $criteria->params[':cash'] = self::PAYMENT_METHOD_CASH;
+        $criteria->params[':debtor'] = self::PAYMENT_METHOD_DEBTOR;
+        $criteria->params[':paid'] = self::PAYMENT_STATUS_PAID;
+
+        $criteria->params[':from'] = $from;
+        if(!$from)
+            $criteria->params[':from'] = strtotime(date('Y/m/d 00:00:00'));
+        $criteria->params[':to'] = $to;
+        if(!$to)
+            $criteria->params[':to'] = strtotime(date('Y/m/d 23:59:59'));
+
+        $todayTransfers = Transfer::model()->findAll($criteria);
+        foreach ($todayTransfers as $record) {
+            if ($record->foreign_currency == Transfer::CURRENCY_AUD) {
+                $statistics['sell']['dollar'] += intval($record->currency_amount);
+                if ($record->origin_country == Transfer::COUNTRY_IRAN || $record->destination_country == Transfer::COUNTRY_IRAN)
+                    $statistics['buy']['rial'] += intval($record->total_amount);
+                else if ($record->origin_country == Transfer::COUNTRY_EMIRATES || $record->destination_country == Transfer::COUNTRY_EMIRATES)
+                    $statistics['buy']['dirham'] += intval($record->total_amount);
+            } elseif ($record->foreign_currency == Transfer::CURRENCY_IRR) {
+                $statistics['sell']['rial'] += intval($record->currency_amount);
+                if ($record->origin_country == Transfer::COUNTRY_AUSTRALIA || $record->destination_country == Transfer::COUNTRY_AUSTRALIA)
+                    $statistics['buy']['dollar'] += intval($record->total_amount);
+                else if ($record->origin_country == Transfer::COUNTRY_EMIRATES || $record->destination_country == Transfer::COUNTRY_EMIRATES)
+                    $statistics['buy']['dirham'] += intval($record->total_amount);
+            } elseif ($record->foreign_currency == Transfer::CURRENCY_AED) {
+                $statistics['sell']['dirham'] += intval($record->currency_amount);
+                if ($record->origin_country == Transfer::COUNTRY_IRAN || $record->destination_country == Transfer::COUNTRY_IRAN)
+                    $statistics['buy']['rial'] += intval($record->total_amount);
+                else if ($record->origin_country == Transfer::COUNTRY_AUSTRALIA || $record->destination_country == Transfer::COUNTRY_AUSTRALIA)
+                    $statistics['buy']['dollar'] += intval($record->total_amount);
+            }
+        }
+        return $statistics;
     }
 }

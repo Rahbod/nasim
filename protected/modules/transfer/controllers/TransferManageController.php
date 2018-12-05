@@ -98,16 +98,18 @@ class TransferManageController extends Controller
     }
 
     public function actionAdmin()
-	{
+    {
         Yii::app()->getModule('customers');
         $model = new Transfer('search');
         $model->unsetAttributes();  // clear any default values
-        if(isset($_GET['Transfer']))
+        if (isset($_GET['Transfer']))
             $model->attributes = $_GET['Transfer'];
+
         $this->render('admin', array(
             'model' => $model,
+            'statistics' => Transfer::CalculateStatistics(),
         ));
-	}
+    }
 
     /**
      * Returns the data model based on the primary key given in the GET variable.

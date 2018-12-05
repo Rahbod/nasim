@@ -198,9 +198,10 @@ class CustomersManageController extends Controller
     public function actionClearing($id)
     {
         $this->pageTitle = 'تسویه بدهی';
-        $model = $this->loadModel($id);
+        $model = Transfer::model()->findByPk($id);
         $model->setScenario('clearing');
-        $model->attributes = $_POST['Customers'];
+        $model->payment_status = Transfer::PAYMENT_STATUS_PAID;
+        $model->modified_date = time();
         if ($model->save())
             Yii::app()->user->setFlash('success', 'عملیات با موفقیت انجام شد.');
         else
@@ -208,6 +209,6 @@ class CustomersManageController extends Controller
 
         if (isset($_REQUEST['returnUrl']))
             $this->redirect($_REQUEST['returnUrl']);
-        $this->redirect(array('admin'));
+        $this->redirect(array('/transfer/manage/admin'));
     }
 }

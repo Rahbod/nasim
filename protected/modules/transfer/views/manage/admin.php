@@ -1,6 +1,7 @@
 <?php
 /* @var $this TransferManageController */
 /* @var $model Transfer */
+/* @var $statistics [] */
 
 $this->breadcrumbs=array(
     'حواله ها'=>array('admin'),
@@ -8,42 +9,6 @@ $this->breadcrumbs=array(
 );
 
 $dataProvider = $model->search();
-/* @var $record Transfer */
-$statistics = [
-    'sell' => [
-        'dollar' => 0,
-        'rial' => 0,
-        'dirham' => 0,
-    ],
-    'buy' => [
-        'dollar' => 0,
-        'rial' => 0,
-        'dirham' => 0,
-    ]
-];
-
-// calculate statistics
-foreach($dataProvider->getData() as $record) {
-    if ($record->foreign_currency == Transfer::CURRENCY_AUD) {
-        $statistics['sell']['dollar'] += intval($record->currency_amount);
-        if ($record->origin_country == Transfer::COUNTRY_IRAN || $record->destination_country == Transfer::COUNTRY_IRAN)
-            $statistics['buy']['rial'] += intval($record->total_amount);
-        else if ($record->origin_country == Transfer::COUNTRY_EMIRATES || $record->destination_country == Transfer::COUNTRY_EMIRATES)
-            $statistics['buy']['dirham'] += intval($record->total_amount);
-    } elseif ($record->foreign_currency == Transfer::CURRENCY_IRR) {
-        $statistics['sell']['rial'] += intval($record->currency_amount);
-        if ($record->origin_country == Transfer::COUNTRY_AUSTRALIA || $record->destination_country == Transfer::COUNTRY_AUSTRALIA)
-            $statistics['buy']['dollar'] += intval($record->total_amount);
-        else if ($record->origin_country == Transfer::COUNTRY_EMIRATES || $record->destination_country == Transfer::COUNTRY_EMIRATES)
-            $statistics['buy']['dirham'] += intval($record->total_amount);
-    } elseif ($record->foreign_currency == Transfer::CURRENCY_AED) {
-        $statistics['sell']['dirham'] += intval($record->currency_amount);
-        if ($record->origin_country == Transfer::COUNTRY_IRAN || $record->destination_country == Transfer::COUNTRY_IRAN)
-            $statistics['buy']['rial'] += intval($record->total_amount);
-        else if ($record->origin_country == Transfer::COUNTRY_AUSTRALIA || $record->destination_country == Transfer::COUNTRY_AUSTRALIA)
-            $statistics['buy']['dollar'] += intval($record->total_amount);
-    }
-}
 ?>
 
 <div class="box box-primary">

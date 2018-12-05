@@ -1,6 +1,6 @@
 <?php
-/* @var $this CustomersManageController */
-/* @var $model Customers */
+/* @var $this TransferManageController */
+/* @var $model Transfer */
 
 $this->breadcrumbs=array(
 	'مدیریت مشتریان'=>array('admin'),
@@ -9,7 +9,7 @@ $this->breadcrumbs=array(
 ?>
 <div class="box box-primary">
 	<div class="box-header with-border">
-		<h3 class="box-title"><?php echo $model->name?></h3>
+		<h3 class="box-title">نمایش حواله "<?php echo $model->code?>"</h3>
         <a href="<?php echo $this->createUrl('admin')?>" class="pull-left btn btn-danger btn-sm">بازگشت</a>
 	</div>
 	<div class="box-body">

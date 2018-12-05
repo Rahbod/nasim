@@ -22,6 +22,7 @@ return array(
 		'application.modules.setting.models.*',
 		'application.modules.users.models.*',
 		'application.modules.transfer.models.*',
+		'application.modules.customers.models.*',
 	),
 
 	'modules'=>array(
@@ -120,7 +121,7 @@ return array(
 			),
 		),
 		'clientScript'=>array(
-			'class'=>'ext.minScript.components.ExtMinScript',
+//			'class'=>'ext.minScript.components.ExtMinScript',
 			'coreScriptPosition' => CClientScript::POS_HEAD,
 			'defaultScriptFilePosition' => CClientScript::POS_END,
 		),
