@@ -4,6 +4,13 @@ $(function () {
             'YII_CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+    if ($('.select-picker').length && $.fn.selectpicker)
+        $('.select-picker').selectpicker({
+            dropupAuto: false,
+            size: 7
+        });
+
     setInterval(function () {
         $(".callout:not(.message)").fadeOut('fast', function () {
             $(this).remove();

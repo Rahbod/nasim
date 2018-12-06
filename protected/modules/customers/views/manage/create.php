@@ -13,6 +13,6 @@ $this->breadcrumbs=array(
 		<a href="<?php echo $this->createUrl('admin')?>" class="pull-left btn btn-danger btn-sm">بازگشت</a>
 	</div>
 	<div class="box-body">
-		<?php $this->renderPartial('_form', array('model'=>$model)); ?>
+		<?php $this->renderPartial('_form', array('model'=>$model,'accModel'=>$accModel)); ?>
 	</div>
 </div>

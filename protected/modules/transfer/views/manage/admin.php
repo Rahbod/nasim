@@ -53,8 +53,46 @@ $dataProvider = $model->search();
                     'code',
                     'sender.name',
                     'receiver.name',
-                    'currency_amount',
-                    'total_amount',
+                    [
+                        'name' => 'origin_country',
+                        'value' => function($data){
+                            return Transfer::$countryLabels[$data->origin_country];
+                        },
+                        'filter' => Transfer::$countryLabels
+                    ],
+                    [
+                        'name' => 'destination_country',
+                        'value' => function($data){
+                            return Transfer::$countryLabels[$data->destination_country];
+                        },
+                        'filter' => Transfer::$countryLabels
+                    ],
+                    [
+                        'name' => 'currency_amount',
+                        'value' => function($data){
+                            return $data->currency_amount?(strpos($data->currency_amount, '.') !== false?number_format($data->currency_amount, 2):number_format($data->currency_amount)):"";
+                        },
+                    ],
+                    [
+                        'name' => 'total_amount',
+                        'value' => function($data){
+                            return $data->total_amount?(strpos($data->total_amount, '.') !== false?number_format($data->total_amount, 2):number_format($data->total_amount)):"";
+                        },
+                    ],
+                    [
+                        'name' => 'date',
+                        'value' => function($data){
+                            return JalaliDate::date('Y/m/d H:i', $data->date);
+                        },
+                        'filter' => false
+                    ],
+                    [
+                        'name' => 'modified_date',
+                        'value' => function($data){
+                            return JalaliDate::date('Y/m/d H:i', $data->modified_date);
+                        },
+                        'filter' => false
+                    ],
                     [
                         'name' => 'payment_method',
                         'header' => $model->getAttributeLabel('payment_status'),

@@ -23,15 +23,34 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
     <div class="form-group">
         <?php echo $form->labelEx($model,'sender_id'); ?>
         <a href="#customer-modal" data-toggle="modal" class="btn btn-sm btn-info add-customer">+</a>
-        <?php echo $form->dropDownList($model,'sender_id',CHtml::listData(Customers::model()->findAll(), 'id', 'name'),array('class'=>'form-control')); ?>
+        <?php echo $form->dropDownList($model,'sender_id',CHtml::listData(Customers::model()->findAll(), 'id', 'name'),array(
+            'class'=>'form-control select-picker',
+            'data-live-search' => true,
+        )); ?>
         <?php echo $form->error($model,'sender_id'); ?>
     </div>
 
     <div class="form-group">
         <?php echo $form->labelEx($model,'receiver_id'); ?>
         <a href="#customer-modal" data-toggle="modal" class="btn btn-sm btn-info add-customer">+</a>
-        <?php echo $form->dropDownList($model,'receiver_id',CHtml::listData(Customers::model()->findAll(), 'id', 'name'),array('class'=>'form-control')); ?>
+        <?php echo $form->dropDownList($model,'receiver_id',CHtml::listData(Customers::model()->findAll(), 'id', 'name'),array(
+            'class'=>'form-control select-picker receiver-change-trigger',
+            'data-live-search' => true,
+            'data-fetch-url' => $this->createUrl('/customers/manage/fetchAccounts'),
+            'data-target' => "#Transfer_receiver_account_id",
+        )); ?>
         <?php echo $form->error($model,'receiver_id'); ?>
+    </div>
+
+    <div class="form-group">
+        <?php echo $form->labelEx($model,'receiver_account_id'); ?>
+<!--        <a href="#customer-modal" data-toggle="modal" class="btn btn-sm btn-info add-customer">+</a>-->
+        <?php echo $form->dropDownList($model,'receiver_account_id', [],array(
+            'class'=>'form-control',
+//            'disabled' => true,
+            'prompt' => 'شماره حساب موردنظر را انتخاب کنید...'
+        )); ?>
+        <?php echo $form->error($model,'receiver_account_id'); ?>
     </div>
 
     <div class="form-group">
@@ -95,7 +114,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
                 <h4 class="modal-title">افزودن مشتری</h4>
             </div>
             <div class="modal-body">
-                <?php $this->renderPartial('customers.views.manage._form', array('model'=>new Customers(), 'onlyMainFields' => true)); ?>
+                <?php $this->renderPartial('customers.views.manage._form', array('model'=>new Customers(), 'accModel'=>new CustomerAccounts(), 'onlyMainFields' => true)); ?>
             </div>
         </div>
     </div>
@@ -233,3 +252,38 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
         return true;
     }
 </script>
+
+
+<?php
+Yii::app()->clientScript->registerScript('model-load', '
+    $("body").on("change", "select.receiver-change-trigger", function(){
+        var el = $(this);
+        fetch(el);
+    });
+    
+    fetch($("select.receiver-change-trigger"), $("#Transfer_receiver_account_id").data("id"));
+    
+    function fetch(el, id = false){
+        var url = el.data("fetch-url"),
+            target = el.data("target"),
+            val = el.val();
+        if(val !== ""){
+            url = url + "/" + val; 
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: "html",
+                success: function(html){
+                    $(target).html(html);
+                    if(id)
+                        $(target).find("[value=\""+id+"\"]").attr("selected", true);
+                }
+            });
+            
+            $(target).attr("disabled", false);
+        }else{  
+            $(target).attr("disabled", true);
+        }
+    }
+', CClientScript::POS_READY);
+?>

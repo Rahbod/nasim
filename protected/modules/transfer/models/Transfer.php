@@ -8,6 +8,7 @@
  * @property string $code
  * @property string $sender_id
  * @property string $receiver_id
+ * @property string $receiver_account_id
  * @property string $branch_id
  * @property string $date
  * @property string $modified_date
@@ -79,17 +80,16 @@ class Transfer extends CActiveRecord
         // will receive user inputs.
         return array(
             array('code, date, modified_date', 'length', 'max' => 20),
-            array('sender_id, receiver_id, branch_id', 'length', 'max' => 10),
+            array('sender_id, receiver_id, branch_id, receiver_account_id', 'length', 'max' => 10),
             array('payment_status, payment_method', 'length', 'max' => 1),
             array('payment_status', 'default', 'value' => self::PAYMENT_STATUS_UNPAID),
             array('payment_method', 'default', 'value' => self::PAYMENT_METHOD_CASH),
             array('origin_country, destination_country, foreign_currency, currency_amount, currency_price, total_amount', 'length', 'max' => 255),
             array('date', 'default', 'value' => time(), 'on' => 'create'),
-            array('modified_date', 'default', 'value' => time(), 'on' => 'create'),
             array('origin_country', 'compare', 'compareAttribute' => 'destination_country', 'operator' => '!=', 'message' => 'کشور مبدا و کشور مقصد نمی تواند یکسان باشد.'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, modified_date, payment_status, payment_method, code, sender_id, receiver_id, branch_id, date, origin_country, destination_country, foreign_currency, currency_amount, currency_price, total_amount', 'safe', 'on' => 'search'),
+            array('id, modified_date, payment_status, payment_method, code, sender_id, receiver_account_id, receiver_id, branch_id, date, origin_country, destination_country, foreign_currency, currency_amount, currency_price, total_amount', 'safe', 'on' => 'search'),
         );
     }
 
@@ -119,7 +119,7 @@ class Transfer extends CActiveRecord
             'receiver_id' => 'دریافت کننده',
             'branch_id' => 'شعبه',
             'date' => 'تاریخ ثبت',
-            'modified_date' => 'تاریخ تغییرات',
+            'modified_date' => 'تاریخ تسویه',
             'origin_country' => 'کشور مبدا',
             'destination_country' => 'کشور مقصد',
             'foreign_currency' => 'ارز',
@@ -128,6 +128,7 @@ class Transfer extends CActiveRecord
             'total_amount' => 'مقدار کل',
             'payment_method' => 'نوع پرداخت',
             'payment_status' => 'وضعیت پرداخت',
+            'receiver_account_id' => 'شماره حساب گیرنده',
         );
     }
 
@@ -163,6 +164,7 @@ class Transfer extends CActiveRecord
         $criteria->compare('total_amount', $this->total_amount, true);
         $criteria->compare('payment_method', $this->payment_method);
         $criteria->compare('payment_status', $this->payment_status);
+        $criteria->compare('receiver_account_id', $this->receiver_account_id,true);
 
         if ($customerID && !empty($mode)) {
 
@@ -174,6 +176,47 @@ class Transfer extends CActiveRecord
                 $criteria->compare($mode == 'send' ? "sender_id" : 'receiver_id', $customerID);
         }
 
+        $criteria->order = 'id DESC';
+
+        return new CActiveDataProvider($this, array(
+            'criteria' => $criteria,
+            'sort' => false
+        ));
+    }
+
+    public function report($from = null, $to = null)
+    {
+        $criteria = new CDbCriteria;
+
+        $criteria->compare('id', $this->id, true);
+        $criteria->compare('code', $this->code, true);
+        $criteria->compare('sender_id', $this->sender_id, true);
+        $criteria->compare('receiver_id', $this->receiver_id, true);
+        $criteria->compare('branch_id', $this->branch_id, true);
+        $criteria->compare('date', $this->date, true);
+        $criteria->compare('origin_country', $this->origin_country, true);
+        $criteria->compare('destination_country', $this->destination_country, true);
+        $criteria->compare('foreign_currency', $this->foreign_currency, true);
+        $criteria->compare('currency_amount', $this->currency_amount, true);
+        $criteria->compare('currency_price', $this->currency_price, true);
+        $criteria->compare('total_amount', $this->total_amount, true);
+        $criteria->compare('payment_method', $this->payment_method);
+        $criteria->compare('payment_status', $this->payment_status);
+        $criteria->compare('receiver_account_id', $this->receiver_account_id,true);
+
+        $criteria->addCondition("payment_method = :cash OR (payment_method = :debtor AND payment_status = :paid)");
+        $criteria->params[':cash'] = self::PAYMENT_METHOD_CASH;
+        $criteria->params[':debtor'] = self::PAYMENT_METHOD_DEBTOR;
+        $criteria->params[':paid'] = self::PAYMENT_STATUS_PAID;
+
+        $criteria->addCondition("modified_date IS NOT NULL AND (modified_date >= :from AND modified_date <= :to)");
+
+        $criteria->params[':from'] = $from;
+        if (!$from)
+            $criteria->params[':from'] = strtotime(date('Y/m/d 00:00:00'));
+        $criteria->params[':to'] = $to;
+        if (!$to)
+            $criteria->params[':to'] = strtotime(date('Y/m/d 23:59:59'));
         $criteria->order = 'id DESC';
 
         return new CActiveDataProvider($this, array(
@@ -195,9 +238,11 @@ class Transfer extends CActiveRecord
 
     protected function beforeSave()
     {
-        if($this->payment_method == self::PAYMENT_METHOD_CASH)
-            $this->payment_method = self::PAYMENT_STATUS_PAID;
-        
+        if ($this->payment_method == self::PAYMENT_METHOD_CASH) {
+            $this->payment_status = self::PAYMENT_STATUS_PAID;
+            $this->modified_date = time();
+        }
+
         if (empty($this->currency_price)) {
             $dollarPrice = SiteSetting::getOption('dollar_price');
             $dirhamPrice = SiteSetting::getOption('dirham_price');
@@ -244,16 +289,16 @@ class Transfer extends CActiveRecord
 
         $criteria = new CDbCriteria();
         $criteria->addCondition("payment_method = :cash OR (payment_method = :debtor AND payment_status = :paid)");
-        $criteria->addCondition("modified_date >= :from AND modified_date <= :to");
+        $criteria->addCondition("modified_date IS NOT NULL AND (modified_date >= :from AND modified_date <= :to)");
         $criteria->params[':cash'] = self::PAYMENT_METHOD_CASH;
         $criteria->params[':debtor'] = self::PAYMENT_METHOD_DEBTOR;
         $criteria->params[':paid'] = self::PAYMENT_STATUS_PAID;
 
         $criteria->params[':from'] = $from;
-        if(!$from)
+        if (!$from)
             $criteria->params[':from'] = strtotime(date('Y/m/d 00:00:00'));
         $criteria->params[':to'] = $to;
-        if(!$to)
+        if (!$to)
             $criteria->params[':to'] = strtotime(date('Y/m/d 23:59:59'));
 
         $todayTransfers = Transfer::model()->findAll($criteria);

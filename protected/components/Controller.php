@@ -198,6 +198,10 @@ class Controller extends AuthController
                     'url' => array('/setting/manage/changeCurrencyPrice')
                 ),
                 array(
+                    'label' => '<i class="fa fa-line-chart"></i><span>گزارشات</span>',
+                    'url' => array('/transfer/manage/report')
+                ),
+                array(
                     'label' => '<i class="fa fa-sign-out text-danger"></i><span class="text-danger">خروج</span>',
                     'url' => array('/admins/login/logout'),
                     'visible' => !Yii::app()->user->isGuest

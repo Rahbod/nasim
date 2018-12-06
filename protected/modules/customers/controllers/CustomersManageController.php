@@ -48,6 +48,7 @@ class CustomersManageController extends Controller
     {
         $this->pageTitle = 'افزودن مشتری جدید';
         $model = new Customers('create');
+        $accModel = new CustomerAccounts('create');
 
         $this->performAjaxValidation($model);
         
@@ -61,6 +62,11 @@ class CustomersManageController extends Controller
             $attachment = new UploadedFiles($this->tempPath, $model->attachment);
             if ($model->save()) {
                 $attachment->move($this->attachmentPath);
+                if (isset($_POST['CustomerAccounts'])) {
+                    $accModel->attributes = $_POST['CustomerAccounts'];
+                    $accModel->customer_id = $model->id;
+                    @$accModel->save();
+                }
                 if(isset($_POST['ajax'])) {
                     echo json_encode([
                         'status' => true,
@@ -83,6 +89,7 @@ class CustomersManageController extends Controller
 
         $this->render('create', array(
             'model' => $model,
+            'accModel' => $accModel,
         ));
     }
 
@@ -216,5 +223,62 @@ class CustomersManageController extends Controller
         if (isset($_REQUEST['returnUrl']))
             $this->redirect($_REQUEST['returnUrl']);
         $this->redirect(array('/transfer/manage/admin'));
+    }
+
+
+    /***************************  Accounts Action  *****************************/
+    public function actionAccounts($id)
+    {
+        $model = new CustomerAccounts('search');
+        $model->unsetAttributes();
+        if(isset($_GET['CustomerAccounts'])){
+            $model->attributes = $_GET['CustomerAccounts'];
+        }
+        $model->customer_id = $id;
+
+        $this->render('accounts',compact('model'));
+    }
+
+    public function actionAddAccount($id)
+    {
+        $model = new CustomerAccounts();
+        $model->customer_id = $id;
+        if (isset($_POST['CustomerAccounts'])) {
+            $model->attributes = $_POST['CustomerAccounts'];
+            if ($model->save()) {
+                Yii::app()->user->setFlash('success', 'عملیات با موفقیت انجام شد.');
+                $this->refresh();
+            } else
+                Yii::app()->user->setFlash('failed', 'درخواست با خطا مواجه است. لطفا مجددا سعی نمایید.');
+        }
+
+        $this->render('add_account', compact('model'));
+    }
+
+    public function actionDeleteAccount($id)
+    {
+        CustomerAccounts::model()->findByPk($id)->delete();
+
+        // if AJAX request (triggered by deletion via admin grid views), we should not redirect the browser
+        if(!isset($_GET['ajax']))
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+    }
+
+    /**
+     * @param int $id brandID
+     * @return string
+     */
+    public function actionFetchAccounts($id)
+    {
+        $output = "<option value=''>شماره حساب موردنظر را انتخاب کنید...</option>";
+        $empty = "<option value=''>برای این کاربر شماره حسابی ثبت نشده است...</option>";
+        if ($accounts = CustomerAccounts::getList($id))
+            foreach ($accounts as $account)
+                $output .= "<option value='{$account->id}'>
+                                <div>{$account->bank_name} - {$account->account_number}</div>
+                                <small>(".CustomerAccounts::$numberTypeLabels[$account->number_type].")</small>
+                            </option>";
+        echo $accounts ? $output : $empty;
+        return;
     }
 }

@@ -23,8 +23,6 @@
  */
 class Customers extends CActiveRecord
 {
-//    const
-
 	public static $idNumLabels = [
         0 => 'شماره شناسنامه',
         1 => 'کد ملی',

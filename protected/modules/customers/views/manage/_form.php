@@ -1,14 +1,19 @@
 <?php
 /* @var $this CustomersManageController */
 /* @var $model Customers */
+/* @var $accModel CustomerAccounts */
 /* @var $form CActiveForm */
 /* @var $mainFields boolean */
+
 Yii::app()->clientScript->registerScript('resetForm','document.getElementById("customers-form").reset();');
 ?>
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'customers-form',
 	'enableAjaxValidation'=>true,
-
+	'enableClientValidation'=>true,
+    'clientOptions' => array(
+            'validateOnSubmit' => true
+    )
 )); ?>
     <div class="message"></div>
 
@@ -91,6 +96,28 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("c
     <?php else:?>
         <input type="hidden" name="ajax" value="1">
     <?php endif;?>
+
+<!--    Add Account Number-->
+    <?php if($model->isNewRecord):?>
+        <hr>
+        <h4 class="box-title">اطلاعات حساب مشتری</h4>
+        <div class="form-group">
+            <?php echo $form->labelEx($accModel,'account_number'); ?>
+            <?php echo $form->textField($accModel,'account_number',array('maxlength'=>255,'class'=>'form-control')); ?>
+            <?php echo $form->error($accModel,'account_number'); ?>
+        </div>
+        <div class="form-group">
+            <?php echo $form->labelEx($accModel,'number_type'); ?>
+            <?php echo $form->dropDownList($accModel,'number_type', CustomerAccounts::$numberTypeLabels,array('class'=>'form-control')); ?>
+            <?php echo $form->error($accModel,'number_type'); ?>
+        </div>
+        <div class="form-group">
+            <?php echo $form->labelEx($accModel,'bank_name'); ?>
+            <?php echo $form->textField($accModel,'bank_name',array('maxlength'=>255,'class'=>'form-control')); ?>
+            <?php echo $form->error($accModel,'bank_name'); ?>
+        </div>
+        <hr>
+    <?php endif; ?>
 
 	<div class="form-group buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'افزودن' : 'ویرایش', array('class'=>'btn btn-success save-customer')); ?>

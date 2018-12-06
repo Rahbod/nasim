@@ -1,4 +1,6 @@
 <?php
+use Mike42\Escpos\PrintConnectors\FilePrintConnector;
+use Mike42\Escpos\Printer;
 
 class TransferManageController extends Controller
 {
@@ -29,10 +31,10 @@ class TransferManageController extends Controller
 
         if (isset($_POST['Transfer'])) {
             $model->attributes = $_POST['Transfer'];
-            $criteria=new CDbCriteria;
-            $criteria->select='max(id) AS id';
+            $criteria = new CDbCriteria;
+            $criteria->select = 'max(id) AS id';
             $res = Transfer::model()->find($criteria);
-            $model->code = 'CO-'.(101 + ($res->id ?: 0));
+            $model->code = 'CO-' . (101 + ($res->id ?: 0));
             $model->branch_id = Yii::app()->user->getId();
             if ($model->save()) {
                 Yii::app()->user->setFlash('success', 'عملیات با موفقیت انجام شد.');
@@ -79,10 +81,10 @@ class TransferManageController extends Controller
      */
     public function actionDelete($id)
     {
-        if($id != Yii::app()->user->id)
+        if ($id != Yii::app()->user->id)
             $this->loadModel($id)->delete();
         // if AJAX request (triggered by deletion via admin grid views), we should not redirect the browser
-        if(!isset($_GET['ajax']))
+        if (!isset($_GET['ajax']))
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
     }
 
@@ -92,8 +94,13 @@ class TransferManageController extends Controller
      */
     public function actionView($id)
     {
-        $this->render('view',array(
-            'model'=>$this->loadModel($id),
+//        $connector = new FilePrintConnector("php://stdout");
+//        $printer = new Printer($connector);
+//        $printer -> text("Hello World!\n");
+//        $printer -> cut();
+//        $printer -> close();
+        $this->render('view', array(
+            'model' => $this->loadModel($id),
         ));
     }
 
@@ -120,9 +127,9 @@ class TransferManageController extends Controller
      */
     public function loadModel($id)
     {
-        $model=Transfer::model()->findByPk($id);
-        if($model===null)
-            throw new CHttpException(404,'The requested page does not exist.');
+        $model = Transfer::model()->findByPk($id);
+        if ($model === null)
+            throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
     }
 
@@ -132,10 +139,24 @@ class TransferManageController extends Controller
      */
     protected function performAjaxValidation($model)
     {
-        if(isset($_POST['ajax']) && $_POST['ajax']==='transfer-form')
-        {
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'transfer-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }
+    }
+
+    public function actionReport()
+    {
+        $model = new Transfer();
+        $model->unsetAttributes();
+        if (isset($_GET['Transfer'])) {
+            $model->attributes = $_GET['Transfer'];
+        }
+
+        $from = isset($_GET['from_altField']) ? $_GET['from_altField'] : null;
+        $to = isset($_GET['to_altField']) ? $_GET['to_altField'] : null;
+
+        $reports = Transfer::CalculateStatistics($from, $to);
+        $this->render('report', compact('model', 'reports', 'from', 'to'));
     }
 }

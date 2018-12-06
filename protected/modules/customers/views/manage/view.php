@@ -83,7 +83,14 @@ $this->breadcrumbs=array(
                     [
                         'name' => 'date',
                         'value' => function($data){
-                            return JalaliDate::date('H:i Y/m/d', $data->date);
+                            return JalaliDate::date('Y/m/d H:i', $data->date);
+                        },
+                        'filter' => false
+                    ],
+                    [
+                        'name' => 'modified_date',
+                        'value' => function($data){
+                            return $data->modified_date?JalaliDate::date('Y/m/d H:i', $data->modified_date):"-";
                         },
                         'filter' => false
                     ],
@@ -158,7 +165,14 @@ $this->breadcrumbs=array(
                     [
                         'name' => 'date',
                         'value' => function($data){
-                            return JalaliDate::date('H:i Y/m/d', $data->date);
+                            return JalaliDate::date('Y/m/d H:i', $data->date);
+                        },
+                        'filter' => false
+                    ],
+                    [
+                        'name' => 'modified_date',
+                        'value' => function($data){
+                            return $data->modified_date?JalaliDate::date('Y/m/d H:i', $data->modified_date):"-";
                         },
                         'filter' => false
                     ],
@@ -225,7 +239,14 @@ $this->breadcrumbs=array(
                     [
                         'name' => 'date',
                         'value' => function($data){
-                            return JalaliDate::date('H:i Y/m/d', $data->date);
+                            return JalaliDate::date('Y/m/d H:i', $data->date);
+                        },
+                        'filter' => false
+                    ],
+                    [
+                        'name' => 'modified_date',
+                        'value' => function($data){
+                            return $data->modified_date?JalaliDate::date('Y/m/d H:i', $data->modified_date):"-";
                         },
                         'filter' => false
                     ],

@@ -24,6 +24,14 @@ $this->breadcrumbs=array(
                 'columns'=>array(
                     'code',
                     'name',
+                    [
+                        'header' => 'شماره حساب های مشتری',
+                        'type' => 'raw',
+                        'value' => function($data){
+                            return CHtml::link('نمایش', Yii::app()->createUrl('/customers/manage/accounts',array('id' => $data->id)),array('class' => 'btn btn-primary btn-sm','style' => 'width:60px;margin-left:10px')).' '.
+                                CHtml::link('افزودن', Yii::app()->createUrl('/customers/manage/addAccount',array('id' => $data->id)),array('class' => 'btn btn-success btn-sm','style' => 'width:60px'));
+                        }
+                    ],
                     array(
                         'class'=>'CButtonColumn',
                     )
