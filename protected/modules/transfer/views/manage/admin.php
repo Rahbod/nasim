@@ -22,7 +22,7 @@ $dataProvider = $model->search();
         <!--Statistics-->
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <span style="margin-left: 30px;font-weight: bold">مجموع حواله های فروش امروز:</span>
+                <span style="margin-left: 30px;font-weight: bold">مجموع حواله های فروش امروز<?= isset($my)?' شعبه من':''?>:</span>
                 <div class="alert alert-warning">
                     <div class="row">
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center"><?= number_format($statistics['sell']['dollar'])?> دلار</div>
@@ -32,7 +32,7 @@ $dataProvider = $model->search();
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <span style="margin-left: 30px;font-weight: bold">مجموع حواله های خرید امروز:</span>
+                <span style="margin-left: 30px;font-weight: bold">مجموع حواله های خرید امروز<?= isset($my)?' شعبه من':''?>:</span>
                 <div class="alert alert-info">
                     <div class="row">
                         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 text-center"><?= number_format($statistics['buy']['dollar'])?> دلار</div>
@@ -120,6 +120,14 @@ $dataProvider = $model->search();
                     ],
                     array(
                         'class'=>'CButtonColumn',
+                        'buttons' => array(
+                            'delete' =>array(
+                                'visible' => '$data->branch_id == Yii::app()->user->getId()'
+                            ),
+                            'update' =>array(
+                                'visible' => '$data->branch_id == Yii::app()->user->getId()'
+                            )
+                        )
                     )
                 )
             )); ?>

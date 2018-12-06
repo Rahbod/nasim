@@ -182,7 +182,11 @@ class Controller extends AuthController
                     'itemOptions' => array('class' => 'header'),
                 ),
                 array(
-                    'label' => '<i class="fa fa-money"></i><span>مدیریت حواله ها</span>',
+                    'label' => '<i class="fa fa-money text-warning"></i><span class="text-warning">حواله های من</span>',
+                    'url' => array('/transfer/manage/my'),
+                ),
+                array(
+                    'label' => '<i class="fa fa-money"></i><span>حواله ها</span>',
                     'url' => array('/transfer/manage/admin')
                 ),
                 array(

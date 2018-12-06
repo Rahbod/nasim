@@ -1,17 +1,22 @@
 <?php
 
 /**
- * This is the model class for table "ym_admins".
+ * This is the model class for table "{{admins}}".
  *
- * The followings are the available columns in table 'ym_admins':
+ * The followings are the available columns in table '{{admins}}':
  * @property string $id
  * @property string $username
  * @property string $password
  * @property string $email
  * @property string $role_id
+ * @property string $title
+ * @property string $address
+ * @property string $phone
+ * @property string $manager_name
  *
  * The followings are the available model relations:
  * @property AdminRoles $role
+ * @property Transfer[] $transfers
  */
 class Admins extends CActiveRecord
 {
@@ -51,11 +56,14 @@ class Admins extends CActiveRecord
             array('email, role_id', 'required' , 'on'=>'update'),
             array('oldPassword ,newPassword ,repeatPassword', 'required' , 'on'=>'changePassword'),
             array('oldPassword', 'oldPass' , 'on'=>'changePassword'),
+            array('email, title, phone, manager_name', 'length', 'max'=>255),
+            array('role_id', 'length', 'max'=>11),
+            array('address', 'length', 'max'=>1023),
             array('repeatPassword', 'compare', 'compareAttribute'=>'newPassword' ,'operator'=>'==', 'message' => 'کلمه های عبور همخوانی ندارند' , 'on'=>'changePassword'),
             array('repeatPassword', 'compare', 'compareAttribute'=>'password' ,'operator'=>'==', 'message' => 'کلمه های عبور همخوانی ندارند' , 'on'=>'create'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, username, password,role_id,email ,roleId', 'safe', 'on'=>'search'),
+            array('id, username, password,role_id,email ,roleId, title, address, phone, manager_name', 'safe', 'on'=>'search'),
         );
     }
 
@@ -94,7 +102,11 @@ class Admins extends CActiveRecord
             'newPassword' => 'کلمه عبور جدید',
             'repeatPassword' => 'تکرار کلمه عبور',
             'role_id' => 'نقش',
-            'email' => 'پست الکترونیک'
+            'email' => 'پست الکترونیک',
+            'title' => 'نام شعبه',
+            'address' => 'آدرس شعبه',
+            'phone' => 'شماره تلفن',
+            'manager_name' => 'نام مدیر',
         );
     }
 
@@ -145,6 +157,11 @@ class Admins extends CActiveRecord
 		$criteria->compare('username',$this->username,true);
 		$criteria->compare('password',$this->password,true);
 		$criteria->compare('email',$this->email,true);
+        $criteria->compare('title',$this->title,true);
+        $criteria->compare('address',$this->address,true);
+        $criteria->compare('phone',$this->phone,true);
+        $criteria->compare('manager_name',$this->manager_name,true);
+
         $criteria->addSearchCondition('role.id' , $this->roleId );
         $criteria->with = array('role');
 		$criteria->addCondition('username <> "rahbod"');

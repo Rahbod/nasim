@@ -13,12 +13,82 @@ $this->breadcrumbs=array(
         <a href="<?php echo isset($_REQUEST['returnUrl'])?$_REQUEST['returnUrl']:$this->createUrl('admin')?>" class="pull-left btn btn-danger btn-sm">بازگشت</a>
 	</div>
 	<div class="box-body">
-		<?php $this->widget('zii.widgets.CDetailView', array(
-			'data'=>$model,
-			'attributes'=>array(
-				'code',
-
-			),
-		)); ?>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th><?php echo $model->getAttributeLabel('date');?></th>
+                        <td width="35%"><?php echo JalaliDate::date('H:i Y/m/d', $model->date); ?></td>
+                        <th><?php echo $model->getAttributeLabel('modified_date');?></th>
+                        <td width="35%"><?php echo $model->modified_date?JalaliDate::date('H:i Y/m/d', $model->modified_date):"--"; ?></td>
+                    </tr>
+                    <tr>
+                        <th colspan="1"><?php echo $model->getAttributeLabel('payment_status');?></th>
+                        <td colspan="1"><?php
+                            if ($model->payment_method == Transfer::PAYMENT_METHOD_DEBTOR) {
+                                if ($model->payment_status == Transfer::PAYMENT_STATUS_UNPAID)
+                                    echo '<span class="label label-danger">' . Transfer::$paymentMethodLabels[$model->payment_method] . ' - ' . Transfer::$paymentStatusLabels[$model->payment_status] . '</span>';
+                                else
+                                    echo '<span class="label label-success">' . Transfer::$paymentMethodLabels[$model->payment_method] . ' - ' . Transfer::$paymentStatusLabels[$model->payment_status] . '</span>';
+                            } else
+                                echo '<span class="label label-success">' . Transfer::$paymentMethodLabels[$model->payment_method] . ' - ' . Transfer::$paymentStatusLabels[Transfer::PAYMENT_STATUS_PAID] . '</span>';
+                            ?></td>
+                        <td colspan="2"><?php
+                            if ($model->payment_method == Transfer::PAYMENT_METHOD_DEBTOR && $model->payment_status == Transfer::PAYMENT_STATUS_UNPAID)
+                                echo '<a class="btn btn-xs btn-success" href="'.$this->createUrl('/customers/manage/clearing?id='.$model->id.'&returnUrl='.urlencode(Yii::app()->request->requestUri)).'">
+                                        <i class="fa fa-dollar"></i>
+                                        تسویه بدهی
+                                      </a>';
+                            ?></td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <br>
+            <h4>جزییات حواله</h4>
+            <?php $this->widget('zii.widgets.CDetailView', array(
+                'data'=>$model,
+                'htmlOptions' => array(
+                    'class' => 'table table-striped'
+                ),
+                'attributes'=>array(
+                    'code',
+                    'sender.name',
+                    'receiver.name',
+                    [
+                        'name' => 'receiverAccount.account_number',
+                        'value' => $model->receiverAccount?"<div><b>
+                                        <div>{$model->receiverAccount->bank_name} - {$model->receiverAccount->account_number}</div>
+                                        <small>(".CustomerAccounts::$numberTypeLabels[$model->receiverAccount->number_type].")</small>
+                                    </b></div>":null,
+                        'type' => 'raw'
+                    ],
+                    [
+                        'name' => 'origin_country',
+                        'value' => Transfer::$countryLabels[$model->origin_country]
+                    ],
+                    [
+                        'name' => 'destination_country',
+                        'value' => Transfer::$countryLabels[$model->destination_country],
+                    ],
+                    [
+                        'name' => 'foreign_currency',
+                        'value' => "<b>".Transfer::$foreignCurrencyLabels[$model->foreign_currency]."</b>",
+                        'type' => 'raw'
+                    ],
+                    [
+                        'name' => 'currency_price',
+                    ],
+                    [
+                        'name' => 'currency_amount',
+                        'value' => $model->currency_amount?(strpos($model->currency_amount, '.') !== false?number_format($model->currency_amount, 2):number_format($model->currency_amount)):"",
+                    ],
+                    [
+                        'name' => 'total_amount',
+                        'value' => $model->total_amount?(strpos($model->total_amount, '.') !== false?number_format($model->total_amount, 2):number_format($model->total_amount)):"",
+                    ]
+                ),
+            )); ?>
+        </div>
 	</div>
 </div>

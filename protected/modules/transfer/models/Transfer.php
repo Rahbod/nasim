@@ -24,6 +24,7 @@
  * The followings are the available model relations:
  * @property Customers $sender
  * @property Customers $receiver
+ * @property Customers $receiverAccount
  * @property Admins $branch
  */
 class Transfer extends CActiveRecord
@@ -103,6 +104,7 @@ class Transfer extends CActiveRecord
         return array(
             'sender' => array(self::BELONGS_TO, 'Customers', 'sender_id'),
             'receiver' => array(self::BELONGS_TO, 'Customers', 'receiver_id'),
+            'receiverAccount' => array(self::BELONGS_TO, 'CustomerAccounts', 'receiver_account_id'),
             'branch' => array(self::BELONGS_TO, 'Admins', 'branch_id'),
         );
     }
@@ -270,9 +272,10 @@ class Transfer extends CActiveRecord
     /**
      * @param null $from
      * @param null $to
+     * @param null $my
      * @return array
      */
-    public static function CalculateStatistics($from = null, $to = null)
+    public static function CalculateStatistics($from = null, $to = null, $my = false)
     {
         $statistics = [
             'sell' => [
@@ -288,6 +291,10 @@ class Transfer extends CActiveRecord
         ];
 
         $criteria = new CDbCriteria();
+
+        if($my)
+            $criteria->compare("branch_id", Yii::app()->user->getId());
+
         $criteria->addCondition("payment_method = :cash OR (payment_method = :debtor AND payment_status = :paid)");
         $criteria->addCondition("modified_date IS NOT NULL AND (modified_date >= :from AND modified_date <= :to)");
         $criteria->params[':cash'] = self::PAYMENT_METHOD_CASH;

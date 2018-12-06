@@ -118,6 +118,22 @@ class TransferManageController extends Controller
         ));
     }
 
+    public function actionMy()
+    {
+        Yii::app()->getModule('customers');
+        $model = new Transfer('search');
+        $model->unsetAttributes();  // clear any default values
+        if (isset($_GET['Transfer']))
+            $model->attributes = $_GET['Transfer'];
+        $model->branch_id = Yii::app()->user->getId();
+
+        $this->render('admin', array(
+            'model' => $model,
+            'my' => true,
+            'statistics' => Transfer::CalculateStatistics(null, null, true),
+        ));
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
