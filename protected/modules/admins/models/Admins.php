@@ -47,7 +47,7 @@ class Admins extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('username, password ,repeatPassword , email ,role_id', 'required' , 'on' => 'create'),
+            array('username, password ,repeatPassword , email ,role_id, title, manager_name', 'required' , 'on' => 'create'),
             array('email' , 'email', 'except' => 'changePassword'),
             array('email' , 'unique', 'except' => 'changePassword'),
             array('email' , 'filter' , 'filter' => 'trim'),
@@ -106,7 +106,7 @@ class Admins extends CActiveRecord
             'title' => 'نام شعبه',
             'address' => 'آدرس شعبه',
             'phone' => 'شماره تلفن',
-            'manager_name' => 'نام مدیر',
+            'manager_name' => 'نام مدیر شعبه',
         );
     }
 

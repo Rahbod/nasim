@@ -8,10 +8,42 @@ $branch = isset($branch);
 ?>
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'admins-form',
-	'enableAjaxValidation'=>true,
+	'enableAjaxValidation'=>false,
+	'enableClientValidation'=>true,
+	'clientOptions'=>array(
+        'validateOnSubmit'=>true,
+    ),
 
 )); ?>
     <div class="message"></div>
+    <h4>
+        <i class="fa fa-chevron-left"></i>
+        اطلاعات شعبه</h4>
+	<div class="form-group">
+		<?php echo $form->labelEx($model,'title'); ?>
+		<?php echo $form->textField($model,'title',array('size'=>50,'maxlength'=>255 , 'class'=>'form-control')); ?>
+		<?php echo $form->error($model,'title'); ?>
+	</div>
+    <div class="form-group">
+        <?php echo $form->labelEx($model,'manager_name'); ?>
+        <?php echo $form->textField($model,'manager_name',array('size'=>50,'maxlength'=>255 , 'class'=>'form-control')); ?>
+        <?php echo $form->error($model,'manager_name'); ?>
+    </div>
+	<div class="form-group">
+		<?php echo $form->labelEx($model,'phone'); ?>
+		<?php echo $form->telField($model,'phone',array('size'=>50,'maxlength'=>255 , 'class'=>'form-control ltr text-right')); ?>
+		<?php echo $form->error($model,'phone'); ?>
+	</div>
+
+    <div class="form-group">
+        <?php echo $form->labelEx($model,'address'); ?>
+        <?php echo $form->textField($model,'address',array('size'=>50,'maxlength'=>1023 , 'class'=>'form-control', 'dir' => 'auto')); ?>
+        <?php echo $form->error($model,'address'); ?>
+    </div>
+	<hr>
+    <h4>
+        <i class="fa fa-chevron-left"></i>
+        اطلاعات کاربری</h4>
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'username'); ?>
 		<?php echo $form->textField($model,'username',array('size'=>50,'maxlength'=>100 , 'class'=>'form-control', (!$model->isNewRecord?'disabled':'s') => true)); ?>

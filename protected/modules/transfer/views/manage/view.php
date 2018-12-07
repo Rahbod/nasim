@@ -13,9 +13,27 @@ $this->breadcrumbs=array(
         <a href="<?php echo isset($_REQUEST['returnUrl'])?$_REQUEST['returnUrl']:$this->createUrl('admin')?>" class="pull-left btn btn-danger btn-sm">بازگشت</a>
 	</div>
 	<div class="box-body">
+        <div class="row form-group">
+            <div class="col-lg-12 text-left">
+                <a href="<?php echo $this->createUrl('/transfer/manage/print',array('id' => $model->id))?>" class="btn btn-primary btn-sm">
+                    <i class="fa fa-print"></i>
+                    چاپ رسید
+                </a>
+                <a href="<?php echo $this->createUrl('/transfer/manage/print',array('id' => $model->id))?>" class="btn btn-default btn-sm">
+                    <i class="fa fa-print"></i>
+                    چاپ کامل حواله
+                </a>
+            </div>
+        </div>
         <div class="table-responsive">
             <table class="table table-striped">
                 <tbody>
+                    <tr>
+                        <th><?php echo $model->branch->getAttributeLabel('title');?></th>
+                        <td width="35%"><?php echo $model->branch->title; ?></td>
+                        <th><?php echo $model->branch->getAttributeLabel('manager_name');?></th>
+                        <td width="35%"><?php echo $model->branch->manager_name; ?></td>
+                    </tr>
                     <tr>
                         <th><?php echo $model->getAttributeLabel('date');?></th>
                         <td width="35%"><?php echo JalaliDate::date('H:i Y/m/d', $model->date); ?></td>

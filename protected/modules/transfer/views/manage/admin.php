@@ -51,6 +51,7 @@ $dataProvider = $model->search();
                 'itemsCssClass'=>'table table-striped table-hover',
                 'columns'=>array(
                     'code',
+                    'branch.title',
                     'sender.name',
                     'receiver.name',
                     [

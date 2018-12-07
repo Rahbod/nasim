@@ -18,14 +18,23 @@ $this->breadcrumbs=array(
 		<div class="table-responsive">
 			<?php $this->widget('zii.widgets.grid.CGridView', array(
 				'id'=>'admins-grid',
+                'itemsCssClass'=>'table table-striped table-hover',
 				'dataProvider'=>$model->search(),
 				'filter'=>$model,
 				'columns'=>array(
-					'username',
+					'title',
+					'manager_name',
+					[
+                        'name' => 'phone',
+                        'value' => function($data){
+					        return '<div class="ltr text-right"><b>'.$data->phone.'</b></div>';
+                        },
+                        'type' => 'raw'
+                    ],
 					'email',
 					array(
 						'class'=>'CButtonColumn',
-						'template' => '{delete}'
+						'template' => '{update} {delete}',
 					),
 				),
 			)); ?>

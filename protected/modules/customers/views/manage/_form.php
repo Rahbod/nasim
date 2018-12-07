@@ -100,7 +100,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("c
 <!--    Add Account Number-->
     <?php if($model->isNewRecord):?>
         <hr>
-        <h4 class="box-title">اطلاعات حساب مشتری</h4>
+        <h4><i class="fa fa-chevron-left"></i>اطلاعات حساب مشتری</h4>
         <div class="form-group">
             <?php echo $form->labelEx($accModel,'account_number'); ?>
             <?php echo $form->textField($accModel,'account_number',array('maxlength'=>255,'class'=>'form-control')); ?>
