@@ -83,14 +83,14 @@ $dataProvider = $model->search();
                     [
                         'name' => 'date',
                         'value' => function($data){
-                            return JalaliDate::date('Y/m/d H:i', $data->date);
+                            return $data->date?JalaliDate::date('Y/m/d H:i', $data->date):'';
                         },
                         'filter' => false
                     ],
                     [
                         'name' => 'modified_date',
                         'value' => function($data){
-                            return JalaliDate::date('Y/m/d H:i', $data->modified_date);
+                            return $data->modified_date?JalaliDate::date('Y/m/d H:i', $data->modified_date):'';
                         },
                         'filter' => false
                     ],

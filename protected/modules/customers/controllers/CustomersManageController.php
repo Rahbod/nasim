@@ -239,17 +239,39 @@ class CustomersManageController extends Controller
         $this->render('accounts',compact('model'));
     }
 
-    public function actionAddAccount($id)
+    public function actionAddAccount($id = false)
     {
         $model = new CustomerAccounts();
-        $model->customer_id = $id;
+        if ($id)
+            $model->customer_id = $id;
+
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'account-customer-form') {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
         if (isset($_POST['CustomerAccounts'])) {
             $model->attributes = $_POST['CustomerAccounts'];
             if ($model->save()) {
+                if (Yii::app()->request->isAjaxRequest) {
+                    echo json_encode([
+                        'status' => true,
+                        'message' => 'عملیات با موفقیت انجام شد.',
+                        'id' => $model->id,
+                        'name' => "<div>{$model->bank_name} - {$model->account_number}</div>
+                                <small>(" . CustomerAccounts::$numberTypeLabels[$model->number_type] . ")</small>",
+                    ]);
+                    Yii::app()->end();
+                }
                 Yii::app()->user->setFlash('success', 'عملیات با موفقیت انجام شد.');
                 $this->refresh();
-            } else
+            } else {
+                if (Yii::app()->request->isAjaxRequest) {
+                    echo json_encode(['status' => false, 'message' => 'درخواست با خطا مواجه است. لطفا مجددا سعی نمایید.']);
+                    Yii::app()->end();
+                }
                 Yii::app()->user->setFlash('failed', 'درخواست با خطا مواجه است. لطفا مجددا سعی نمایید.');
+            }
         }
 
         $this->render('add_account', compact('model'));

@@ -38,13 +38,14 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
             'data-live-search' => true,
             'data-fetch-url' => $this->createUrl('/customers/manage/fetchAccounts'),
             'data-target' => "#Transfer_receiver_account_id",
+            'data-id' => $model->receiver_id,
         )); ?>
         <?php echo $form->error($model,'receiver_id'); ?>
     </div>
 
     <div class="form-group">
         <?php echo $form->labelEx($model,'receiver_account_id'); ?>
-<!--        <a href="#customer-modal" data-toggle="modal" class="btn btn-sm btn-info add-customer">+</a>-->
+        <a href="#account-customer-modal" data-toggle="modal" class="btn btn-sm btn-info add-customer">+</a>
         <?php echo $form->dropDownList($model,'receiver_account_id', [],array(
             'class'=>'form-control',
 //            'disabled' => true,
@@ -120,6 +121,20 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
     </div>
 </div>
 
+<div id="account-customer-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">افزودن شماره حساب مشتری</h4>
+            </div>
+            <div class="modal-body">
+                <?php $this->renderPartial('customers.views.manage._account_form', array('model'=>new CustomerAccounts())); ?>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
     $(document).ready(function() {
         $('body').on('blur, keyup', '#Transfer_currency_amount', function () {
@@ -147,8 +162,63 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
                     }
                 }
             });
+        }).on('click', '.save-customer-account', function (e) {
+            e.preventDefault();
+            var form = $('#account-customer-form');
+            $.ajax({
+                url: '<?php echo Yii::app()->createUrl('/customers/manage/addAccount');?>',
+                cache: false,
+                type: 'post',
+                dataType: 'json',
+                data: form.serialize(),
+                success: function (data) {
+                    alert(data.message);
+                    if (data.status) {
+                        fetch($("select.receiver-change-trigger"));
+                        $("#account-customer-modal").modal("hide");
+                        form.find('input[type="text"]').each(function () {
+                            $(this).val('');
+                        });
+                    }
+                }
+            });
         });
     });
+
+
+    $("body").on("change", "select.receiver-change-trigger", function(){
+        var el = $(this);
+        fetch(el);
+    });
+
+    fetch($("select.receiver-change-trigger"), $("#Transfer_receiver_account_id").data("id"));
+
+    function fetch(el, id = false){
+        var url = el.data("fetch-url"),
+            target = el.data("target"),
+            val = el.val();
+
+        $("#account-customer-modal form #CustomerAccounts_customer_id").val(val);
+
+        if(val !== ""){
+            url = url + "/" + val;
+            $.ajax({
+                url: url,
+                cache: false,
+                type: "GET",
+                dataType: "html",
+                success: function(html){
+                    $(target).html(html);
+                    if(id)
+                        $(target).find("[value=\""+id+"\"]").attr("selected", true);
+                }
+            });
+
+            $(target).attr("disabled", false);
+        }else{
+            $(target).attr("disabled", true);
+        }
+    }
 
     function calculateCurrencyPrice() {
         if (!checkCurrency())
@@ -252,38 +322,3 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
         return true;
     }
 </script>
-
-
-<?php
-Yii::app()->clientScript->registerScript('model-load', '
-    $("body").on("change", "select.receiver-change-trigger", function(){
-        var el = $(this);
-        fetch(el);
-    });
-    
-    fetch($("select.receiver-change-trigger"), $("#Transfer_receiver_account_id").data("id"));
-    
-    function fetch(el, id = false){
-        var url = el.data("fetch-url"),
-            target = el.data("target"),
-            val = el.val();
-        if(val !== ""){
-            url = url + "/" + val; 
-            $.ajax({
-                url: url,
-                type: "GET",
-                dataType: "html",
-                success: function(html){
-                    $(target).html(html);
-                    if(id)
-                        $(target).find("[value=\""+id+"\"]").attr("selected", true);
-                }
-            });
-            
-            $(target).attr("disabled", false);
-        }else{  
-            $(target).attr("disabled", true);
-        }
-    }
-', CClientScript::POS_READY);
-?>
