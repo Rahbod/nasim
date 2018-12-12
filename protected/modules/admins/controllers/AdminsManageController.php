@@ -124,7 +124,7 @@ class AdminsManageController extends Controller
 			if ( $model->save() )
 			{
 				Yii::app()->user->setFlash('success','با موفقیت انجام شد');
-				$this->redirect(array('admin'));
+				$this->refresh();
 			}
 			else
 				Yii::app()->user->setFlash('failed','درخواست با خطا مواجه است. لطفا مجددا سعی نمایید.');

@@ -175,4 +175,13 @@ class TransferManageController extends Controller
         $reports = Transfer::CalculateStatistics($from, $to);
         $this->render('report', compact('model', 'reports', 'from', 'to'));
     }
+
+
+    public function actionPrint($id)
+    {
+        $this->layout = 'xxx';
+        $mode = isset($_GET['mode']) ? $_GET['mode'] : false;
+        $model = $this->loadModel($id);
+        $this->render('print_view', compact('model', 'mode'));
+    }
 }

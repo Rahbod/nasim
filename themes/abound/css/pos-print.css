@@ -1,0 +1,138 @@
+*{
+    font-family: Tahoma;
+}
+@media print {
+    .page-break {
+        display: block;
+        page-break-before: always;
+    }
+}
+#invoice-POS {
+    box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
+    padding: 4mm;
+    margin: 0 auto;
+    /*width: 44mm;*/
+    width: 76mm;
+    background: #FFF;
+}
+#invoice-POS ::selection {
+    background: #f31544;
+    color: #FFF;
+}
+#invoice-POS ::moz-selection {
+    background: #f31544;
+    color: #FFF;
+}
+
+#invoice-POS #top h2,
+#invoice-POS #top h3{
+    margin: 0;
+}
+#invoice-POS #top h2 {
+    font-size: 1em;
+}
+#invoice-POS #top h3 {
+    font-size: 0.54em;
+    font-weight: 300;
+    line-height: 2em;
+}
+
+#invoice-POS h1 {
+    font-size: 1.5em;
+    color: #222;
+}
+#invoice-POS h2 {
+    font-size: .9em;
+}
+#invoice-POS h3 {
+    font-size: 1.2em;
+    font-weight: 300;
+    line-height: 2em;
+}
+#invoice-POS p {
+    font-size: .7em;
+    color: #666;
+    line-height: 1.2em;
+}
+#invoice-POS #top, #invoice-POS #mid, #invoice-POS #bot {
+    /* Targets all id with 'col-' */
+    border-bottom: 1px solid #EEE;
+}
+#invoice-POS #top{
+    min-height: 100px;
+}
+#invoice-POS #mid {
+    min-height: 80px;
+}
+#invoice-POS #bot {
+    min-height: 50px;
+}
+#invoice-POS #top .logo {
+    height: 60px;
+    width: 60px;
+    background: url("../img/logo1.png") no-repeat;
+    background-size: 60px 60px;
+}
+#invoice-POS .clientlogo {
+    float: left;
+    height: 60px;
+    width: 60px;
+    background: url(http://michaeltruong.ca/images/client.jpg) no-repeat;
+    background-size: 60px 60px;
+    border-radius: 50px;
+}
+#invoice-POS .info {
+    display: block;
+    margin-left: 0;
+}
+#invoice-POS .title {
+    float: right;
+}
+#invoice-POS .title p {
+    text-align: right;
+}
+#invoice-POS table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.border2x{
+    border-top: 2pt solid black;
+    border-bottom: 2pt solid black;
+}
+.border2x-side{
+    border-right: 2pt solid black;
+    border-left: 2pt solid black;
+}
+table, td {
+    border: 1px solid black;
+}
+#invoice-POS .tabletitle {
+    font-size: .7em;
+}
+#invoice-POS .details td{
+    border: none;
+}
+#invoice-POS .details td:first-of-type{
+    text-align: right;
+    min-width: 40%;
+    max-width: 50%;
+}
+#invoice-POS .details td:last-of-type{
+    text-align: left;
+    padding-left: 2mm;
+    /*width: 60%;*/
+}
+#invoice-POS .item {
+    width: 24mm;
+}
+#invoice-POS .itemtext {
+    font-size: .5em;
+}
+#invoice-POS #legalcopy {
+    margin-top: 5mm;
+    font-size: 0.8em;
+    text-align: justify;
+}
+.pre-line{
+    white-space: pre-line;
+}

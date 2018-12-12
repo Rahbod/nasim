@@ -6,6 +6,7 @@
 Yii::app()->clientScript->registerScript('resetForm','document.getElementById("admins-form").reset();');
 $branch = isset($branch);
 ?>
+<?php $this->renderPartial('//partial-views/_flashMessage')?>
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'admins-form',
 	'enableAjaxValidation'=>false,

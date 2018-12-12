@@ -15,11 +15,11 @@ $this->breadcrumbs=array(
 	<div class="box-body">
         <div class="row form-group">
             <div class="col-lg-12 text-left">
-                <a href="<?php echo $this->createUrl('/transfer/manage/print',array('id' => $model->id))?>" class="btn btn-primary btn-sm">
+                <a target="_blank" href="<?php echo $this->createUrl('/transfer/manage/print',array('id' => $model->id, 'mode' => 'pos'))?>" class="btn btn-primary btn-sm">
                     <i class="fa fa-print"></i>
                     چاپ رسید
                 </a>
-                <a href="<?php echo $this->createUrl('/transfer/manage/print',array('id' => $model->id))?>" class="btn btn-default btn-sm">
+                <a target="_blank" href="<?php echo $this->createUrl('/transfer/manage/print',array('id' => $model->id, 'mode' => 'A4'))?>" class="btn btn-default btn-sm">
                     <i class="fa fa-print"></i>
                     چاپ کامل حواله
                 </a>

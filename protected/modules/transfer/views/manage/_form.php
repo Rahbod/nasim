@@ -198,6 +198,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
             target = el.data("target"),
             val = el.val();
 
+        $(target).attr("disabled", "true");
         $("#account-customer-modal form #CustomerAccounts_customer_id").val(val);
 
         if(val !== ""){

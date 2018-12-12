@@ -20,11 +20,12 @@
  * @property string $total_amount
  * @property string $payment_method
  * @property int $payment_status
+ * @property string $origin_currency
  *
  * The followings are the available model relations:
  * @property Customers $sender
  * @property Customers $receiver
- * @property Customers $receiverAccount
+ * @property CustomerAccounts $receiverAccount
  * @property Admins $branch
  */
 class Transfer extends CActiveRecord
@@ -53,6 +54,18 @@ class Transfer extends CActiveRecord
         self::CURRENCY_IRR => 'ریال ایران',
         self::CURRENCY_AUD => 'دلار استرالیا',
         self::CURRENCY_AED => 'درهم امارت',
+    ];
+
+    public static $foreignCurrencyEnLabels = [
+        self::CURRENCY_IRR => 'Iranian rial',
+        self::CURRENCY_AUD => 'Australian dollar',
+        self::CURRENCY_AED => 'Emirati Dirham',
+    ];
+
+    public static $foreignCurrencyShortEnLabels = [
+        self::CURRENCY_IRR => 'RIAL',
+        self::CURRENCY_AUD => 'DOLLAR',
+        self::CURRENCY_AED => 'DIRHAM',
     ];
 
     public static $paymentStatusLabels = [
@@ -166,7 +179,7 @@ class Transfer extends CActiveRecord
         $criteria->compare('total_amount', $this->total_amount, true);
         $criteria->compare('payment_method', $this->payment_method);
         $criteria->compare('payment_status', $this->payment_status);
-        $criteria->compare('receiver_account_id', $this->receiver_account_id,true);
+        $criteria->compare('receiver_account_id', $this->receiver_account_id, true);
 
         if ($customerID && !empty($mode)) {
 
@@ -204,7 +217,7 @@ class Transfer extends CActiveRecord
         $criteria->compare('total_amount', $this->total_amount, true);
         $criteria->compare('payment_method', $this->payment_method);
         $criteria->compare('payment_status', $this->payment_status);
-        $criteria->compare('receiver_account_id', $this->receiver_account_id,true);
+        $criteria->compare('receiver_account_id', $this->receiver_account_id, true);
 
         $criteria->addCondition("payment_method = :cash OR (payment_method = :debtor AND payment_status = :paid)");
         $criteria->params[':cash'] = self::PAYMENT_METHOD_CASH;
@@ -292,7 +305,7 @@ class Transfer extends CActiveRecord
 
         $criteria = new CDbCriteria();
 
-        if($my)
+        if ($my)
             $criteria->compare("branch_id", Yii::app()->user->getId());
 
         $criteria->addCondition("payment_method = :cash OR (payment_method = :debtor AND payment_status = :paid)");
@@ -331,5 +344,26 @@ class Transfer extends CActiveRecord
             }
         }
         return $statistics;
+    }
+
+    public function getOrigin_currency()
+    {
+        if ($this->foreign_currency == Transfer::CURRENCY_AUD) {
+            if ($this->origin_country == Transfer::COUNTRY_IRAN || $this->destination_country == Transfer::COUNTRY_IRAN)
+                return self::CURRENCY_IRR;
+            else if ($this->origin_country == Transfer::COUNTRY_EMIRATES || $this->destination_country == Transfer::COUNTRY_EMIRATES)
+                return self::CURRENCY_AED;
+        } elseif ($this->foreign_currency == Transfer::CURRENCY_IRR) {
+            if ($this->origin_country == Transfer::COUNTRY_AUSTRALIA || $this->destination_country == Transfer::COUNTRY_AUSTRALIA)
+                return self::CURRENCY_AUD;
+            else if ($this->origin_country == Transfer::COUNTRY_EMIRATES || $this->destination_country == Transfer::COUNTRY_EMIRATES)
+                return self::CURRENCY_AED;
+        } elseif ($this->foreign_currency == Transfer::CURRENCY_AED) {
+            if ($this->origin_country == Transfer::COUNTRY_IRAN || $this->destination_country == Transfer::COUNTRY_IRAN)
+                return self::CURRENCY_IRR;
+            else if ($this->origin_country == Transfer::COUNTRY_AUSTRALIA || $this->destination_country == Transfer::COUNTRY_AUSTRALIA)
+                return self::CURRENCY_AUD;
+        }
+        return null;
     }
 }
