@@ -75,19 +75,28 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
 
     <div class="form-group">
         <?php echo $form->labelEx($model,'currency_price'); ?>
-        <?php echo $form->textField($model,'currency_price',array('maxlength'=>20,'class'=>'form-control','placeholder'=>'نرخ پیش فرض (دلار: '.number_format(SiteSetting::getOption('dollar_price')).' ريال - درهم: '.number_format(SiteSetting::getOption('dirham_price')).' ريال - دلار: '.number_format(SiteSetting::getOption('dollar_price_dirham')).' درهم)')); ?>
+        <div class="input-group" style="width: 50%">
+            <?php echo $form->textField($model,'currency_price',array('maxlength'=>20,'class'=>'form-control','placeholder'=>'نرخ پیش فرض (دلار: '.number_format(SiteSetting::getOption('dollar_price')).' ريال - درهم: '.number_format(SiteSetting::getOption('dirham_price')).' ريال - دلار: '.number_format(SiteSetting::getOption('dollar_price_dirham')).' درهم)')); ?>
+            <span class="input-group-addon">$</span>
+        </div>
         <?php echo $form->error($model,'currency_price'); ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->labelEx($model,'currency_amount'); ?>
-        <?php echo $form->numberField($model,'currency_amount',array('maxlength'=>255,'class'=>'form-control')); ?>
+        <?php echo $form->labelEx($model,'currency_amount'); ?> <small>(فروش)</small>
+        <div class="input-group" style="width: 300px">
+            <?php echo $form->numberField($model,'currency_amount',array('maxlength'=>255,'class'=>'form-control')); ?>
+            <span class="input-group-addon" id="sell-label">-</span>
+        </div>
         <?php echo $form->error($model,'currency_amount'); ?>
     </div>
 
     <div class="form-group">
-        <?php echo $form->labelEx($model,'total_amount'); ?>
-        <?php echo $form->numberField($model,'total_amount',array('maxlength'=>255,'class'=>'form-control')); ?>
+        <?php echo $form->labelEx($model,'total_amount'); ?> <small>(خرید)</small>
+        <div class="input-group" style="width: 300px">
+            <?php echo $form->numberField($model,'total_amount',array('maxlength'=>255,'class'=>'form-control')); ?>
+            <span class="input-group-addon" id="buy-label">-</span>
+        </div>
         <?php echo $form->error($model,'total_amount'); ?>
     </div>
 
@@ -137,7 +146,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('body').on('blur, keyup', '#Transfer_currency_amount', function () {
+        $('body').on('blur, keyup', '#Transfer_currency_amount, #Transfer_currency_price', function () {
             calculateCurrencyPrice();
         }).on('change', '#Transfer_destination_country, #Transfer_origin_country', function () {
             calculateCurrencyPrice();
@@ -232,18 +241,18 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
             totalAmount = 0,
             operator = '*',
             currency = 'dollar';
-
-        if (originCountry != destinationCountry) {
-            if (foreignCurrency == 'IRR')
+        setLabels(foreignCurrency, originCountry, destinationCountry);
+        if (originCountry !== destinationCountry) {
+            if (foreignCurrency === 'IRR')
                 operator = '/';
-            else if (foreignCurrency == 'AED' && (originCountry == 'AUSTRALIA' || destinationCountry == 'AUSTRALIA'))
+            else if (foreignCurrency === 'AED' && (originCountry === 'AUSTRALIA' || destinationCountry === 'AUSTRALIA'))
                 operator = '/';
             else
                 operator = '*';
 
-            if (originCountry == 'AUSTRALIA' || destinationCountry == 'AUSTRALIA') {
+            if (originCountry === 'AUSTRALIA' || destinationCountry === 'AUSTRALIA') {
                 currency = 'dollar';
-                if (originCountry == 'EMIRATES' || destinationCountry == 'EMIRATES')
+                if (originCountry === 'EMIRATES' || destinationCountry === 'EMIRATES')
                     currency = 'dollarDirham';
             } else
                 currency = 'dirham';
@@ -261,26 +270,26 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
             dollarPriceDirham = <?= SiteSetting::getOption('dollar_price_dirham')?>,
             currencyPrice = $('#Transfer_currency_price').val();
 
-        if (currencyPrice != '')
+        if (currencyPrice !== '')
             dollarPrice = dirhamPrice = dollarPriceDirham = currencyPrice;
 
         var result = 0;
         switch (currency) {
             case 'dollar':
                 result = amount * dollarPrice;
-                if (operator == '/')
+                if (operator === '/')
                     result = amount / dollarPrice;
                 break;
 
             case 'dirham':
                 result = amount * dirhamPrice;
-                if (operator == '/')
+                if (operator === '/')
                     result = amount / dirhamPrice;
                 break;
 
             case 'dollarDirham':
                 result = amount * dollarPriceDirham;
-                if (operator == '/')
+                if (operator === '/')
                     result = amount / dollarPriceDirham;
                 break;
         }
@@ -292,34 +301,66 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
         var currency = $('#Transfer_foreign_currency').val(),
             originCountry = $('#Transfer_origin_country').val(),
             destinationCountry = $('#Transfer_destination_country').val();
-
-        if (originCountry == destinationCountry) {
+        setLabels(currency, originCountry, destinationCountry);
+        if (originCountry === destinationCountry) {
             alert('مبدا و مقصد نمی تواند یکسان باشد.');
             return false;
         }
 
         switch (currency) {
             case 'IRR':
-                if (originCountry != 'IRAN' && destinationCountry != 'IRAN') {
+                if (originCountry !== 'IRAN' && destinationCountry !== 'IRAN') {
                     alert('ارز انتخاب شده اشتباه است.');
                     return false;
                 }
                 break;
 
             case 'AUD':
-                if (originCountry != 'AUSTRALIA' && destinationCountry != 'AUSTRALIA') {
+                if (originCountry !== 'AUSTRALIA' && destinationCountry !== 'AUSTRALIA') {
                     alert('ارز انتخاب شده اشتباه است.');
                     return false;
                 }
                 break;
 
             case 'AED':
-                if (originCountry != 'EMIRATES' && destinationCountry != 'EMIRATES') {
+                if (originCountry !== 'EMIRATES' && destinationCountry !== 'EMIRATES') {
                     alert('ارز انتخاب شده اشتباه است.');
                     return false;
                 }
                 break;
         }
         return true;
+    }
+    setLabels($('#Transfer_foreign_currency').val(), $('#Transfer_origin_country').val(), $('#Transfer_destination_country').val());
+    function setLabels(currency, originCountry, destinationCountry) {
+        let sell = '-', buy = '-';
+        switch (currency) {
+            case 'IRR':
+                sell = 'ریال ایران';
+                if (originCountry === 'AUSTRALIA' || destinationCountry === 'AUSTRALIA')
+                    buy = 'دلار استرالیا';
+                else if (originCountry === 'EMIRATES' || destinationCountry === 'EMIRATES')
+                    buy = 'درهم امارات';
+                break;
+            case 'AUD':
+                sell = 'دلار استرالیا';
+
+                if (originCountry === 'IRAN' || destinationCountry === 'IRAN')
+                    buy = 'ریال ایران';
+                else if (originCountry === 'EMIRATES' || destinationCountry === 'EMIRATES')
+                    buy = 'درهم امارات';
+                break;
+
+            case 'AED':
+                sell = 'درهم امارات';
+                if (originCountry === 'IRAN' || destinationCountry === 'IRAN')
+                    buy = 'ریال ایران';
+                else if (originCountry === 'AUSTRALIA' || destinationCountry === 'AUSTRALIA')
+                    buy = 'دلار استرالیا';
+                break;
+        }
+
+        $("#sell-label").text(sell);
+        $("#buy-label").text(buy);
     }
 </script>

@@ -106,13 +106,17 @@ $this->breadcrumbs=array(
                     [
                         'name' => 'currency_amount',
                         'value' => function($data){
-                            return $data->currency_amount?(strpos($data->currency_amount, '.') !== false?number_format($data->currency_amount, 2):number_format($data->currency_amount)):"";
+                            /* @var $data Transfer */
+                            return (($data->currency_amount?(strpos($data->currency_amount, '.') !== false?number_format($data->currency_amount, 2):number_format($data->currency_amount)):"").
+                                " ".Transfer::$foreignCurrencyLabels[$data->foreign_currency]);
                         },
                     ],
                     [
                         'name' => 'total_amount',
                         'value' => function($data){
-                            return $data->total_amount?(strpos($data->total_amount, '.') !== false?number_format($data->total_amount, 2):number_format($data->total_amount)):"";
+                            /* @var $data Transfer */
+                            return (($data->total_amount?(strpos($data->total_amount, '.') !== false?number_format($data->total_amount, 2):number_format($data->total_amount)):"").
+                                " ".Transfer::$foreignCurrencyLabels[$data->origin_currency]);
                         },
                     ],
                     [
