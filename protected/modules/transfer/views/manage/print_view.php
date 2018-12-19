@@ -219,7 +219,8 @@
 
         <div id="legalcopy">
             <p class="legal pre-line">Money orders will be send by the naseem exchange money transfer rules available at our website.
-<!--                <strong>ABN:</strong>91169278725-->
+                <br>
+                <strong>AUSTRAC:</strong> IND100584398001
                 <?= $model->branch->address ?>
             </p>
         </div>
