@@ -5,6 +5,16 @@ class CustomersManageController extends Controller
     public $attachmentPath = 'uploads/customers';
     public $tempPath = 'uploads/temp';
 
+    /**
+     * @return array action filters
+     */
+    public function filters()
+    {
+        return array(
+            'checkAccess',
+        );
+    }
+
     public static function actionsType()
     {
         return array(

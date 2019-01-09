@@ -4,6 +4,17 @@ use Mike42\Escpos\Printer;
 
 class TransferManageController extends Controller
 {
+
+    /**
+     * @return array action filters
+     */
+    public function filters()
+    {
+        return array(
+            'checkAccess',
+        );
+    }
+    
     public static function actionsType()
     {
         return array(
