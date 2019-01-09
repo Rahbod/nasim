@@ -22,17 +22,6 @@
         </div>
     </div>
 
-    <!-- Copyright -->
-    <div class="copyright">
-        <div class="ltr">
-            <?php $this->renderPartial('//partial-views/_copyright');?>
-        </div>
-        <div>
-            <a href="<?php echo $this->createUrl('/help')?>">راهنما</a> / <a href="<?php echo $this->createUrl('/contact')?>">تماس با ما</a>
-        </div>
-    </div>
-    <!-- ./Copyright -->
-
 </div>
 <script>
     $(function () {

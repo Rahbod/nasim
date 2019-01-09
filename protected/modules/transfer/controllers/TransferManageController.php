@@ -14,12 +14,14 @@ class TransferManageController extends Controller
             'checkAccess',
         );
     }
-    
+
     public static function actionsType()
     {
         return array(
             'backend' => array(
-                'view',
+                'my',
+                'report',
+                'print',
                 'create',
                 'update',
                 'admin',

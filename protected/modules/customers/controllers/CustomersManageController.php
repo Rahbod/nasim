@@ -11,7 +11,7 @@ class CustomersManageController extends Controller
     public function filters()
     {
         return array(
-            'checkAccess',
+            'checkAccess - upload, deleteUpload, fetchAccounts',
         );
     }
 
@@ -24,7 +24,10 @@ class CustomersManageController extends Controller
                 'update',
                 'admin',
                 'clearing',
-                'delete'
+                'delete',
+                'accounts',
+                'addAccount',
+                'deleteAccount',
             )
         );
     }
