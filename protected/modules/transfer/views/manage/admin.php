@@ -69,6 +69,14 @@ $dataProvider = $model->search();
                         'filter' => Transfer::$countryLabels
                     ],
                     [
+                        'name' => 'currency_price',
+                        'value' => function($data){
+                            /* @var $data Transfer */
+                            return (($data->currency_price?(strpos($data->currency_price, '.') !== false?number_format($data->currency_price, 2):number_format($data->currency_price)):"").
+                                " ".Transfer::$foreignCurrencyLabels[$data->origin_currency]);
+                        },
+                    ],
+                    [
                         'name' => 'currency_amount',
                         'value' => function($data){
                             /* @var $data Transfer */

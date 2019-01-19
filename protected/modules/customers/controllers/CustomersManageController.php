@@ -61,7 +61,7 @@ class CustomersManageController extends Controller
     {
         $this->pageTitle = 'افزودن مشتری جدید';
         $model = new Customers('create');
-        $accModel = new CustomerAccounts('create');
+        $accModel = new CustomerAccounts('quick');
 
         $this->performAjaxValidation($model);
         

@@ -36,9 +36,9 @@ $this->breadcrumbs=array(
                     </tr>
                     <tr>
                         <th><?php echo $model->getAttributeLabel('date');?></th>
-                        <td width="35%"><?php echo JalaliDate::date('H:i Y/m/d', $model->date); ?></td>
+                        <td width="35%"><?php echo JalaliDate::date('H:i Y/m/d', $model->date); ?> - <?php echo date('H:i Y/m/d', $model->date); ?></td>
                         <th><?php echo $model->getAttributeLabel('modified_date');?></th>
-                        <td width="35%"><?php echo $model->modified_date?JalaliDate::date('H:i Y/m/d', $model->modified_date):"--"; ?></td>
+                        <td width="35%"><?php echo $model->modified_date?JalaliDate::date('H:i Y/m/d', $model->modified_date).' - '.date('H:i Y/m/d', $model->modified_date):"--"; ?></td>
                     </tr>
                     <tr>
                         <th colspan="1"><?php echo $model->getAttributeLabel('payment_status');?></th>
@@ -96,6 +96,7 @@ $this->breadcrumbs=array(
                     ],
                     [
                         'name' => 'currency_price',
+                        'value' => $model->currency_price?(strpos($model->currency_price, '.') !== false?number_format($model->currency_price, 2):number_format($model->currency_price)):"",
                     ],
                     [
                         'name' => 'currency_amount',

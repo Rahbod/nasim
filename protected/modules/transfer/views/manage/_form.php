@@ -46,7 +46,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
     <div class="form-group">
         <?php echo $form->labelEx($model,'receiver_account_id'); ?>
         <a href="#account-customer-modal" data-toggle="modal" class="btn btn-sm btn-info add-customer">+</a>
-        <?php echo $form->dropDownList($model,'receiver_account_id', [],array(
+        <?php echo $form->dropDownList($model,'receiver_account_id', $model->isNewRecord?[]:CHtml::listData(CustomerAccounts::getList($model->receiver_id), 'id', 'html'),array(
             'class'=>'form-control',
 //            'disabled' => true,
             'prompt' => 'شماره حساب موردنظر را انتخاب کنید...'
@@ -76,7 +76,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
     <div class="form-group">
         <?php echo $form->labelEx($model,'currency_price'); ?>
         <div class="input-group" style="width: 50%">
-            <?php echo $form->textField($model,'currency_price',array('maxlength'=>20,'class'=>'form-control','placeholder'=>'نرخ پیش فرض (دلار: '.number_format(SiteSetting::getOption('dollar_price')).' ريال - درهم: '.number_format(SiteSetting::getOption('dirham_price')).' ريال - دلار: '.number_format(SiteSetting::getOption('dollar_price_dirham')).' درهم)')); ?>
+            <?php echo $form->textField($model,'currency_price',array('maxlength'=>20,'class'=>'form-control digitFormat','placeholder'=>'نرخ پیش فرض (دلار: '.number_format(SiteSetting::getOption('dollar_price')).' ريال - درهم: '.number_format(SiteSetting::getOption('dirham_price')).' ريال - دلار: '.number_format(SiteSetting::getOption('dollar_price_dirham')).' درهم)')); ?>
             <span class="input-group-addon">$</span>
         </div>
         <?php echo $form->error($model,'currency_price'); ?>
@@ -85,7 +85,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
     <div class="form-group">
         <?php echo $form->labelEx($model,'currency_amount'); ?> <small>(فروش)</small>
         <div class="input-group" style="width: 300px">
-            <?php echo $form->numberField($model,'currency_amount',array('maxlength'=>255,'class'=>'form-control')); ?>
+            <?php echo $form->textField($model,'currency_amount',array('maxlength'=>255,'class'=>'form-control digitFormat')); ?>
             <span class="input-group-addon" id="sell-label">-</span>
         </div>
         <?php echo $form->error($model,'currency_amount'); ?>
@@ -94,7 +94,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
     <div class="form-group">
         <?php echo $form->labelEx($model,'total_amount'); ?> <small>(خرید)</small>
         <div class="input-group" style="width: 300px">
-            <?php echo $form->numberField($model,'total_amount',array('maxlength'=>255,'class'=>'form-control')); ?>
+            <?php echo $form->textField($model,'total_amount',array('maxlength'=>255,'class'=>'form-control')); ?>
             <span class="input-group-addon" id="buy-label">-</span>
         </div>
         <?php echo $form->error($model,'total_amount'); ?>
@@ -124,7 +124,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
                 <h4 class="modal-title">افزودن مشتری</h4>
             </div>
             <div class="modal-body">
-                <?php $this->renderPartial('customers.views.manage._form', array('model'=>new Customers(), 'accModel'=>new CustomerAccounts(), 'onlyMainFields' => true)); ?>
+                <?php $this->renderPartial('customers.views.manage._form', array('model'=>new Customers(), 'accModel'=>new CustomerAccounts('quick'), 'onlyMainFields' => true)); ?>
             </div>
         </div>
     </div>
@@ -168,6 +168,8 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
                         form.find('input[type="text"]').each(function () {
                             $(this).val('');
                         });
+                        $('.select-picker').selectpicker('refresh');
+                        $('#customer-modal').modal("hide");
                     }
                 }
             });
@@ -200,7 +202,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
         fetch(el);
     });
 
-    fetch($("select.receiver-change-trigger"), $("#Transfer_receiver_account_id").data("id"));
+    // fetch($("select.receiver-change-trigger"), $("#Transfer_receiver_account_id").data("id"));
 
     function fetch(el, id = false){
         var url = el.data("fetch-url"),
@@ -237,7 +239,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
         var originCountry = $('#Transfer_origin_country').val(),
             destinationCountry = $('#Transfer_destination_country').val(),
             foreignCurrency = $('#Transfer_foreign_currency').val(),
-            amount = parseInt($('#Transfer_currency_amount').val()),
+            amount = parseInt($('#Transfer_currency_amount').val().replace(',','')),
             totalAmount = 0,
             operator = '*',
             currency = 'dollar';
@@ -262,13 +264,14 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
             totalAmount = 0;
 
         $('#Transfer_total_amount').val(totalAmount)
+            // .digitFormat();
     }
 
     function calculator(amount, currency, operator) {
         var dollarPrice = <?= SiteSetting::getOption('dollar_price')?>,
             dirhamPrice = <?= SiteSetting::getOption('dirham_price')?>,
             dollarPriceDirham = <?= SiteSetting::getOption('dollar_price_dirham')?>,
-            currencyPrice = $('#Transfer_currency_price').val();
+            currencyPrice = $('#Transfer_currency_price').val().replace(',','');
 
         if (currencyPrice !== '')
             dollarPrice = dirhamPrice = dollarPriceDirham = currencyPrice;

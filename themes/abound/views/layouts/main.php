@@ -40,7 +40,7 @@
     $cs->registerScriptFile($baseUrl . '/js/bootstrap.min.js');
     $cs->registerScriptFile($baseUrl . '/js/bootstrap-select.min.js');
     $cs->registerScriptFile($baseUrl . '/js/app.min.js', CClientScript::POS_END);
-    $cs->registerScriptFile($baseUrl . '/js/script.js');
+    $cs->registerScriptFile($baseUrl . '/js/script.js?5.4');
     $cs->registerScript('icheck','
 //        $(\'input\').iCheck({
 //          checkboxClass: \'icheckbox_square-blue\',

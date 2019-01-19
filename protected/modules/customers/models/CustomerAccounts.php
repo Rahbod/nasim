@@ -41,7 +41,7 @@ class CustomerAccounts extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('customer_id, account_number, number_type, bank_name', 'required'),
+			array('customer_id, account_number, number_type, bank_name', 'required', 'except' => 'quick'),
 			array('customer_id', 'length', 'max'=>10),
 			array('account_number, bank_name', 'length', 'max'=>255),
 			array('number_type', 'length', 'max'=>1),
@@ -128,5 +128,10 @@ class CustomerAccounts extends CActiveRecord
             return self::model()->countByAttributes(['customer_id' => $customerID]);
         $data = self::model()->findAllByAttributes(['customer_id' => $customerID]);
         return $data;
+    }
+
+    public function getHtml()
+    {
+        return "{$this->bank_name} - {$this->account_number} (".CustomerAccounts::$numberTypeLabels[$this->number_type].")";
     }
 }

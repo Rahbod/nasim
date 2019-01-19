@@ -24,9 +24,23 @@
 class Customers extends CActiveRecord
 {
 	public static $idNumLabels = [
-        0 => 'شماره شناسنامه',
-        1 => 'کد ملی',
-        2 => 'شماره گذرنامه',
+        0 => 'Alien registration number',
+//        1 => 'Bank Account',
+        2 => 'Benefits card/ID',
+        3 => 'Birth Certificate',
+        4 => 'Business registration/licence',
+        5 => 'Credit card/debit card',
+        6 => 'Driver Licence',
+        7 => 'Membership ID',
+        8 => 'National identity card',
+        9 => 'Official passport',
+        10 => 'Others',
+        11 => 'Photo ID',
+        12 => 'Proof of age card',
+        13 => 'Security ID',
+        14 => 'Social security ID',
+        15 => 'Student',
+        16 => 'Tax number/ID',
     ];
 
 	/**
@@ -45,12 +59,14 @@ class Customers extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, phone, mobile, country, address', 'required'),
+			array('name, mobile, country, address', 'required'),
 			array('id_number_type, creator_id', 'numerical', 'integerOnly'=>true),
 			array('name, email, code', 'length', 'max'=>255),
 			array('phone, mobile, country', 'length', 'max'=>20),
 			array('address, attachment', 'length', 'max'=>1023),
 			array('id_number', 'length', 'max'=>50),
+			array('id_number', 'default', 'value'=>''),
+			array('id_number_type', 'default', 'value'=>0),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, name, phone, mobile, country, address, email, code, id_number, id_number_type, creator_id', 'safe', 'on'=>'search'),
@@ -123,6 +139,7 @@ class Customers extends CActiveRecord
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+            'pagination' => array('pageSize' => 50)
 		));
 	}
 

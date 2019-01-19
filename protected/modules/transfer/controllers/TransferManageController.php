@@ -25,6 +25,7 @@ class TransferManageController extends Controller
                 'create',
                 'update',
                 'admin',
+                'view',
                 'delete'
             )
         );
@@ -182,8 +183,13 @@ class TransferManageController extends Controller
             $model->attributes = $_GET['Transfer'];
         }
 
-        $from = isset($_GET['from_altField']) ? $_GET['from_altField'] : null;
-        $to = isset($_GET['to_altField']) ? $_GET['to_altField'] : null;
+        if (isset($_GET['date_type']) && $_GET['date_type'] == 'gregorian') {
+            $from = isset($_GET['g_from']) ? strtotime($_GET['g_from']) : null;
+            $to = isset($_GET['g_to']) ? strtotime($_GET['g_to']) : null;
+        } else {
+            $from = isset($_GET['from_altField']) ? $_GET['from_altField'] : null;
+            $to = isset($_GET['to_altField']) ? $_GET['to_altField'] : null;
+        }
 
         $reports = Transfer::CalculateStatistics($from, $to);
         $this->render('report', compact('model', 'reports', 'from', 'to'));

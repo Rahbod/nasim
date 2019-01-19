@@ -108,7 +108,7 @@ class SettingManageController extends Controller
             $this->refresh();
         }
         $criteria = new CDbCriteria();
-        $criteria->addCondition('name NOT REGEXP \'\\([^\\)]*form_.*\\)\'');
+        $criteria->addCondition('name NOT REGEXP \'\\([^\\)]*form_.*\\)\' AND name NOT LIKE \'%price%\'');
         $model = SiteSetting::model()->findAll($criteria);
         $this->render('_general', array(
             'model' => $model

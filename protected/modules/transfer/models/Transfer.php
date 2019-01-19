@@ -253,6 +253,10 @@ class Transfer extends CActiveRecord
 
     protected function beforeSave()
     {
+        $this->currency_price = str_replace(',','',$this->currency_price);
+        $this->currency_amount = str_replace(',','',$this->currency_amount);
+        $this->total_amount = str_replace(',','',$this->total_amount);
+
         if ($this->payment_method == self::PAYMENT_METHOD_CASH) {
             $this->payment_status = self::PAYMENT_STATUS_PAID;
             $this->modified_date = time();

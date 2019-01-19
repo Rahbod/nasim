@@ -28,6 +28,11 @@ $this->breadcrumbs=array(
                     'country',
                     'address',
                     'email',
+                    [
+                        'name' => 'id_number_type',
+                        'value' => Customers::$idNumLabels[$model->id_number_type]
+                    ],
+                    'id_number',
                 ),
             )); ?>
         </div>

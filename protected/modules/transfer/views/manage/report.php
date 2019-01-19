@@ -4,7 +4,6 @@
 /* @var $reports [] */
 /* @var $from int */
 /* @var $to int */
-
 $this->breadcrumbs=array(
     'گزارشات'
 );
@@ -21,44 +20,106 @@ $this->breadcrumbs=array(
             <div class="">
                 <h5>نمایش گزارش:</h5>
             </div>
-            <div class="form-group">
-                <?= CHtml::label('از تاریخ', '') ?>
-                <div class="input-group">
-                    <?php $this->widget('ext.PDatePicker.PDatePicker', array(
-                        'id'=>'from',
-                        'value' => isset($_GET['from_altField'])?$_GET['from_altField']:null,
-                        'options'=>array(
-                            'format'=>'YYYY-MM-DD'
-                        ),
-                        'htmlOptions'=>array(
-                            'class'=>'form-control',
-                            'autocomplete' => 'off',
-                            'name' =>''
-                        ),
-                    ));?>
-                    <span class="input-group-addon">
+            <div class="row">
+                <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
+                    <?= CHtml::radioButton('date_type', !isset($_GET['date_type']) || (isset($_GET['date_type']) && $_GET['date_type'] == 'gregorian')?:false, ['value' => 'gregorian']); ?>
+                    <?= CHtml::label('تاریخ میلادی', 'date_type') ?>
+                </div>
+                <div class="col-lg-10 col-md-9 col-sm-9 col-xs-12 dis-box" id="gregorian-fields">
+                    <div class="form-group">
+                        <?= CHtml::label('از تاریخ', '') ?>
+                        <div class="input-group">
+                            <?php
+                            $this->widget('ext.YiiDateTimePicker.jqueryDateTime', array(
+                                'id' => 'g_from',
+                                'name' =>'g_from',
+                                'value' => isset($_GET['g_from'])?$_GET['g_from']:date("Y-m-d"),
+                                'options' => array(
+                                    'format'=>'Y-m-d',
+                                    'timepicker' => false,
+                                ),
+                                'htmlOptions' => array(
+                                    'class'=>'form-control',
+                                    'autocomplete' => 'off'
+                                ),
+                            ));
+                            ?>
+                            <span class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                     </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <?= CHtml::label('تا تاریخ', '') ?>
+                        <div class="input-group">
+                            <?php
+                            $this->widget('ext.YiiDateTimePicker.jqueryDateTime', array(
+                                'id' => 'g_to',
+                                'name' =>'g_to',
+                                'value' => isset($_GET['g_to'])?$_GET['g_to']:date("Y-m-d"),
+                                'options' => array(
+                                    'format'=>'Y-m-d',
+                                    'timepicker' => false,
+                                ),
+                                'htmlOptions' => array(
+                                    'class'=>'form-control',
+                                    'autocomplete' => 'off'
+                                ),
+                            ));
+                            ?>
+                            <span class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <?= CHtml::label('تا تاریخ', '') ?>
-                <div class="input-group">
-                    <?php $this->widget('ext.PDatePicker.PDatePicker', array(
-                        'id'=>'to',
-                        'value' => isset($_GET['to_altField'])?$_GET['to_altField']:null,
-                        'options'=>array(
-                            'format'=>'YYYY-MM-DD'
-                        ),
-                        'htmlOptions'=>array(
-                            'class'=>'form-control',
-                            'autocomplete' => 'off',
-                            'name' =>''
-                        ),
-                    ));?>
-                    <span class="input-group-addon">
+            <div class="row">
+                <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12">
+                    <?= CHtml::radioButton('date_type', isset($_GET['date_type']) && $_GET['date_type'] == 'jalali'?:false, ['value' => 'jalali']); ?>
+                    <?= CHtml::label('تاریخ شمسی', 'date_type') ?>
+                </div>
+                <div class="col-lg-10 col-md-9 col-sm-9 col-xs-12 dis-box" id="jalali-fields">
+                    <div class="form-group">
+                        <?= CHtml::label('از تاریخ', '') ?>
+                        <div class="input-group">
+                            <?php $this->widget('ext.PDatePicker.PDatePicker', array(
+                                'id'=>'from',
+                                'value' => isset($_GET['from_altField'])?$_GET['from_altField']:null,
+                                'options'=>array(
+                                    'format'=>'YYYY-MM-DD'
+                                ),
+                                'htmlOptions'=>array(
+                                    'class'=>'form-control',
+                                    'autocomplete' => 'off',
+                                    'name' =>''
+                                ),
+                            ));?>
+                            <span class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                     </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <?= CHtml::label('تا تاریخ', '') ?>
+                        <div class="input-group">
+                            <?php $this->widget('ext.PDatePicker.PDatePicker', array(
+                                'id'=>'to',
+                                'value' => isset($_GET['to_altField'])?$_GET['to_altField']:null,
+                                'options'=>array(
+                                    'format'=>'YYYY-MM-DD'
+                                ),
+                                'htmlOptions'=>array(
+                                    'class'=>'form-control',
+                                    'autocomplete' => 'off',
+                                    'name' =>''
+                                ),
+                            ));?>
+                            <span class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                    </span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -104,6 +165,14 @@ $this->breadcrumbs=array(
                     'sender.name',
                     'receiver.name',
                     [
+                        'name' => 'currency_price',
+                        'value' => function($data){
+                            /* @var $data Transfer */
+                            return (($data->currency_price?(strpos($data->currency_price, '.') !== false?number_format($data->currency_price, 2):number_format($data->currency_price)):"").
+                                " ".Transfer::$foreignCurrencyLabels[$data->origin_currency]);
+                        },
+                    ],
+                    [
                         'name' => 'currency_amount',
                         'value' => function($data){
                             /* @var $data Transfer */
@@ -122,6 +191,8 @@ $this->breadcrumbs=array(
                     [
                         'name' => 'date',
                         'value' => function($data){
+                            if (isset($_GET['date_type']) && $_GET['date_type'] == 'gregorian')
+                                return date('Y/m/d H:i', $data->date);
                             return JalaliDate::date('Y/m/d H:i', $data->date);
                         },
                         'filter' => false
@@ -129,6 +200,8 @@ $this->breadcrumbs=array(
                     [
                         'name' => 'modified_date',
                         'value' => function($data){
+                            if (isset($_GET['date_type']) && $_GET['date_type'] == 'gregorian')
+                                return date('Y/m/d H:i', $data->modified_date);
                             return JalaliDate::date('Y/m/d H:i', $data->modified_date);
                         },
                         'filter' => false
@@ -163,3 +236,26 @@ $this->breadcrumbs=array(
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+        $(".dis-box#"+$('#date_type:checked').val()+"-fields").find(":input").each(function(){
+            $(this).attr("disabled", false)
+        });
+        $(".dis-box").not("#"+$('#date_type:checked').val()+"-fields").find(":input").each(function(){
+            $(this).val("").attr("disabled", true)
+        });
+
+        $("body").on("change", '#date_type', function () {
+            var val = $(this).val();
+            console.log(val);
+
+            $(".dis-box#"+val+"-fields").find(":input").each(function(){
+                $(this).val("").attr("disabled", false)
+            });
+            $(".dis-box").not("#"+val+"-fields").find(":input").each(function(){
+                $(this).val("").attr("disabled", true)
+            });
+        })
+    })
+</script>

@@ -25,13 +25,13 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("c
 
     <div class="form-group">
         <?php echo $form->labelEx($model,'phone'); ?>
-        <?php echo $form->textField($model,'phone',array('maxlength'=>20,'class'=>'form-control')); ?>
+        <?php echo $form->textField($model,'phone',array('maxlength'=>13,'class'=>'form-control')); ?>
         <?php echo $form->error($model,'phone'); ?>
     </div>
 
     <div class="form-group">
         <?php echo $form->labelEx($model,'mobile'); ?>
-        <?php echo $form->textField($model,'mobile',array('maxlength'=>20,'class'=>'form-control')); ?>
+        <?php echo $form->textField($model,'mobile',array('maxlength'=>13,'class'=>'form-control')); ?>
         <?php echo $form->error($model,'mobile'); ?>
     </div>
 
@@ -47,23 +47,24 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("c
         <?php echo $form->error($model,'address'); ?>
     </div>
 
+
+    <div class="form-group">
+        <?php echo $form->labelEx($model,'id_number_type'); ?>
+        <?php echo $form->dropDownList($model,'id_number_type',Customers::$idNumLabels, array('class'=>'form-control')); ?>
+        <?php echo $form->error($model,'id_number_type'); ?>
+    </div>
+    <div class="form-group">
+        <?php echo $form->labelEx($model,'id_number'); ?>
+        <?php echo $form->textField($model,'id_number',array('maxlength'=>50,'class'=>'form-control')); ?>
+        <?php echo $form->error($model,'id_number'); ?>
+    </div>
+
+
     <?php if(!isset($onlyMainFields)):?>
         <div class="form-group">
             <?php echo $form->labelEx($model,'email'); ?>
             <?php echo $form->emailField($model,'email',array('maxlength'=>255,'class'=>'form-control')); ?>
             <?php echo $form->error($model,'email'); ?>
-        </div>
-
-        <div class="form-group">
-            <?php echo $form->labelEx($model,'id_number'); ?>
-            <?php echo $form->textField($model,'id_number',array('maxlength'=>50,'class'=>'form-control')); ?>
-            <?php echo $form->error($model,'id_number'); ?>
-        </div>
-
-        <div class="form-group">
-            <?php echo $form->labelEx($model,'id_number_type'); ?>
-            <?php echo $form->dropDownList($model,'id_number_type',Customers::$idNumLabels, array('class'=>'form-control')); ?>
-            <?php echo $form->error($model,'id_number_type'); ?>
         </div>
 
         <div class="form-group">
