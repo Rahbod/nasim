@@ -7,7 +7,7 @@
 <?php $form=$this->beginWidget('CActiveForm', array(
     'id'=>'account-customer-form',
     'action' => array('/customers/manage/addAccount'),
-    'enableAjaxValidation'=>true,
+    'enableAjaxValidation'=>false,
     'enableClientValidation'=>true,
     'clientOptions' => array(
         'validateOnSubmit' => true

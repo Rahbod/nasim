@@ -113,13 +113,12 @@ table, td {
     border: none;
 }
 #invoice-POS .details td:first-of-type{
-    text-align: right;
+    text-align: left;
     min-width: 40%;
     max-width: 50%;
 }
 #invoice-POS .details td:last-of-type{
     text-align: left;
-    padding-left: 2mm;
     /*width: 60%;*/
 }
 #invoice-POS .item {

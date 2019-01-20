@@ -12,11 +12,11 @@
     <link rel="mask-icon" type="" href="https://static.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
     <title>Print Receipt</title>
     <?php if(strtolower($mode) == 'a4'): ?>
-        <link rel="stylesheet" href="<?= Yii::app()->theme->baseUrl.'/css/a4-print.css' ?>" media="print">
-        <link rel="stylesheet" href="<?= Yii::app()->theme->baseUrl.'/css/a4-print.css' ?>" media="screen">
+        <link rel="stylesheet" href="<?= Yii::app()->theme->baseUrl.'/css/a4-print.css?2.1' ?>" media="print">
+        <link rel="stylesheet" href="<?= Yii::app()->theme->baseUrl.'/css/a4-print.css?2.1' ?>" media="screen">
     <?php elseif($mode == 'pos'): ?>
-        <link rel="stylesheet" href="<?= Yii::app()->theme->baseUrl.'/css/pos-print.css' ?>" media="print">
-        <link rel="stylesheet" href="<?= Yii::app()->theme->baseUrl.'/css/pos-print.css' ?>" media="screen">
+        <link rel="stylesheet" href="<?= Yii::app()->theme->baseUrl.'/css/pos-print.css?2.1' ?>" media="print">
+        <link rel="stylesheet" href="<?= Yii::app()->theme->baseUrl.'/css/pos-print.css?2.1' ?>" media="screen">
     <?php endif; ?>
     <script>
         window.console = window.console || function(t) {};
@@ -30,7 +30,9 @@
 <body translate="no">
 <div id="invoice-POS">
 <?php if(strtolower($mode) == 'a4'): ?>
-    <table border=0 cellpadding=0 cellspacing=0 style='border-collapse:collapse;table-layout:fixed;border:2.0pt solid black;border-right: none'>
+    <div id="bot">
+        <div id="table">
+            <table border=0 cellpadding=0 cellspacing=0 style='border-collapse:collapse;table-layout:fixed;border:2.0pt solid black;border-right: none'>
         <tbody>
         <tr height=50 style='mso-height-source:userset;height:37.5pt'>
             <td colspan=7 class=xl65 style='border-right:2.0pt solid black;width: 100%'><font
@@ -119,13 +121,26 @@
         </tr>
         </tbody>
     </table>
-<?php elseif($mode == 'pos'): ?>
+        </div><!--End Table-->
+    </div><!--End InvoiceBot-->
+<?php elseif($mode == 'pos'):
+        $socials = CJSON::decode(SiteSetting::getOption('social_links'));
+        $tlg = isset($socials['telegram'])?$socials['telegram']:false;
+        ?>
     <center id="top">
-        <div class="logo"></div>
         <div class="info">
             <h2>Naseem Exchange</h2>
-            <h3>money transfer invoice</h3>
+            <h3>AUSTRAC: IND100584398001</h3>
         </div><!--End Info-->
+        <div style="text-align: left !important;margin-top: 15px">
+            <h3>add: <?= SiteSetting::getOption('foreign_address') ?></h3>
+            <h3>add: <?= SiteSetting::getOption('foreign_address2') ?></h3>
+            <h3>ph: <?= SiteSetting::getOption('tel_code') ?> <?= SiteSetting::getOption('tel') ?></h3>
+            <h3>ph: <?= SiteSetting::getOption('tel_code') ?> <?= SiteSetting::getOption('tel2') ?></h3>
+            <h3>email: <?= SiteSetting::getOption('master_email') ?></h3>
+            <h3>website: <?= Yii::app()->getBaseUrl(true) ?></h3>
+            <?php if($tlg): ?><h3>telegram: <?= $tlg ?></h3><?php endif; ?>
+        </div>
     </center><!--End InvoiceTop-->
 
 <!--    <div id="mid">-->
@@ -147,12 +162,52 @@
                     <td><b>Order No.</b> <?= $model->code ?></td>
                     <td><b>Order Date:</b> <?= date('d/m/Y', $model->date) ?></td>
                 </tr>
-                <tr class="tabletitle border2x-side">
-                    <td><b>Customer Code:</b> <?= $model->sender->code ?></td>
-                    <td><b>Branch No.</b> <?= "AU ".$model->branch->id ?></td>
-                </tr>
+<!--                <tr class="tabletitle border2x-side">-->
+<!--                    <td><b>Customer Code:</b> --><?//= $model->sender->code ?><!--</td>-->
+<!--                    <td><b>Branch No.</b> --><?//= "AU ".$model->branch->id ?><!--</td>-->
+<!--                </tr>-->
             </table>
             <table>
+                <!--Sender Details-->
+                <tr class="tabletitle border2x" style="border-bottom: none !important;">
+                    <td style="border-bottom: none !important;border-right: none !important"><b>Sender:</b></td>
+                    <td style="border-bottom: none !important;border-left: none !important"><?= $model->sender->name ?></td>
+                </tr>
+                <tr class="tabletitle details">
+                    <td><b>Address:</b></td>
+                    <td><?= $model->sender->address ?></td>
+                </tr>
+                <tr class="tabletitle details">
+                    <td><b>Mobile:</b></td>
+                    <td><?= $model->sender->mobile ?></td>
+                </tr>
+                <tr class="tabletitle details">
+                    <td><b>Country:</b></td>
+                    <td class="text-uppercase"><?= $model->origin_country ?></td>
+                </tr>
+
+                <!--Receiver Details-->
+                <tr class="tabletitle border2x" style="border-bottom: none !important;">
+                    <td style="border-bottom: none !important;border-right: none !important"><b>Receiver:</b></td>
+                    <td style="border-bottom: none !important;border-left: none !important"><?= $model->receiver->name ?></td>
+                </tr>
+                <tr class="tabletitle details">
+                    <td><b>Bank:</b> <?= $model->receiverAccount->bank_name ?></td>
+                    <td><b>Acc Number:</b> <?= $model->receiverAccount->account_number ?></td>
+                </tr>
+                <tr class="tabletitle details">
+                    <td><b>Country:</b></td>
+                    <td class="text-uppercase"><?= $model->destination_country ?></td>
+                </tr>
+                <tr class="tabletitle details">
+                    <td><b>Address:</b></td>
+                    <td><?= $model->receiver->address ?></td>
+                </tr>
+                <tr class="tabletitle details">
+                    <td><b>Mobile:</b></td>
+                    <td><?= $model->receiver->mobile ?></td>
+                </tr>
+
                 <tr class="tabletitle border2x">
                     <td colspan="2"><b>Order Details:</b></td>
                 </tr>
@@ -169,62 +224,21 @@
                     <td><?= number_format($model->currency_amount).' '.$model->foreign_currency ?></td>
                 </tr>
                 <tr class="tabletitle details">
+                    <td><b>Rate:</b></td>
+                    <td><?= number_format($model->currency_price).' '.$model->origin_currency ?></td>
+                </tr>
+                <tr class="tabletitle details">
                     <td><b>Total Amount:</b></td>
                     <td><?= number_format($model->total_amount).' '.$model->origin_currency ?></td>
                 </tr>
-
-                <!--Sender Details-->
-                <tr class="tabletitle border2x">
-                    <td colspan="2"><b>Sender Information:</b></td>
-                </tr>
-                <tr class="tabletitle details">
-                    <td><b>Country:</b></td>
-                    <td class="text-uppercase"><?= $model->origin_country ?></td>
-                </tr>
-                <tr class="tabletitle details">
-                    <td><b>Full Name:</b></td>
-                    <td><?= $model->sender->name ?></td>
-                </tr>
-                <tr class="tabletitle details">
-                    <td><b>Address:</b></td>
-                    <td><?= $model->sender->address ?></td>
-                </tr>
-                <tr class="tabletitle details">
-                    <td><b>Mobile:</b></td>
-                    <td><?= $model->sender->mobile ?></td>
-                </tr>
-
-                <!--Receiver Details-->
-                <tr class="tabletitle border2x">
-                    <td colspan="2"><b>Receiver Information:</b></td>
-                </tr>
-                <tr class="tabletitle details">
-                    <td><b>Country:</b></td>
-                    <td class="text-uppercase"><?= $model->destination_country ?></td>
-                </tr>
-                <tr class="tabletitle details">
-                    <td><b>Full Name:</b></td>
-                    <td><?= $model->receiver->name ?></td>
-                </tr>
-                <tr class="tabletitle details">
-                    <td><b>Address:</b></td>
-                    <td><?= $model->receiver->address ?></td>
-                </tr>
-                <tr class="tabletitle details">
-                    <td><b>Mobile:</b></td>
-                    <td><?= $model->receiver->mobile ?></td>
+            </table>
+            <table>
+                <tr class="tabletitle">
+                    <td width="50%" style="height: 70px;text-align: center">Customer signature</td>
+                    <td width="50%" style="height: 70px;text-align: center">Operator signature</td>
                 </tr>
             </table>
         </div><!--End Table-->
-
-        <div id="legalcopy">
-            <p class="legal pre-line">Money orders will be send by the naseem exchange money transfer rules available at our website.
-                <br>
-                <strong>AUSTRAC:</strong> IND100584398001
-                <?= $model->branch->address ?>
-            </p>
-        </div>
-
     </div><!--End InvoiceBot-->
 <!--    <div class="page-break"></div>-->
 <?php endif; ?>
