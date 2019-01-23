@@ -69,6 +69,7 @@ class AuthController extends CController
                 Yii::app()->user->returnUrl = Yii::app()->request->pathInfo;
                 $this->redirect(array('/login'));
             }
+            $this->redirect(array('/admins/login'));
             throw new CHttpException(403, Yii::t('yii', 'You are not authorized to perform this action.'));
         }
         if (!Yii::app()->user->isGuest && Yii::app()->user->type == 'admin' && isset($filterChain->controller->actionsType()['frontend']) && in_array($filterChain->action->id, $filterChain->controller->actionsType()['frontend'])) {
@@ -106,10 +107,14 @@ class AuthController extends CController
                 $actions = explode(',', $permissions->actions);
                 if (in_array($actionID, $actions))
                     $filterChain->run();
-                else
+                else {
+                    $this->redirect(array('/admins/login'));
                     throw new CHttpException(403, Yii::t('yii', 'You are not authorized to perform this action.'));
-            } else
+                }
+            } else {
+                $this->redirect(array('/admins/login'));
                 throw new CHttpException(403, Yii::t('yii', 'You are not authorized to perform this action.'));
+            }
         }
     }
 }
