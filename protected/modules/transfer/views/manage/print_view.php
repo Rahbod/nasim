@@ -133,8 +133,8 @@
             <h3>AUSTRAC: IND100584398001</h3>
         </div><!--End Info-->
         <div style="text-align: left !important;margin-top: 15px">
-            <h3>add: <?= SiteSetting::getOption('foreign_address') ?></h3>
-            <h3>add: <?= SiteSetting::getOption('foreign_address2') ?></h3>
+            <h3>Add: <?= SiteSetting::getOption('foreign_address') ?></h3>
+            <h3>Add: <?= SiteSetting::getOption('foreign_address2') ?></h3>
             <h3>ph: <?= SiteSetting::getOption('tel_code') ?> <?= SiteSetting::getOption('tel') ?></h3>
             <h3>ph: <?= SiteSetting::getOption('tel_code') ?> <?= SiteSetting::getOption('tel2') ?></h3>
             <h3>email: <?= SiteSetting::getOption('master_email') ?></h3>
@@ -192,8 +192,12 @@
                     <td style="border-bottom: none !important;border-left: none !important"><?= $model->receiver->name ?></td>
                 </tr>
                 <tr class="tabletitle details">
-                    <td><b>Bank:</b> <?= $model->receiverAccount->bank_name ?></td>
-                    <td><b>Acc Number:</b> <?= $model->receiverAccount->account_number ?></td>
+                    <td><b>Acc Number:</b></td>
+                    <td><?= $model->receiverAccount->account_number ?></td>
+                </tr>
+                <tr class="tabletitle details">
+                    <td><b>Bank:</b></td>
+                    <td><?= $model->receiverAccount->bank_name ?></td>
                 </tr>
                 <tr class="tabletitle details">
                     <td><b>Country:</b></td>
@@ -234,8 +238,8 @@
             </table>
             <table>
                 <tr class="tabletitle">
-                    <td width="50%" style="height: 70px;text-align: center">Customer signature</td>
-                    <td width="50%" style="height: 70px;text-align: center">Operator signature</td>
+                    <td width="50%" style="padding:10px 0;vertical-align:top;font-size:10px;height: 80px;text-align: center">Customer signature</td>
+                    <td width="50%" style="padding:10px 0;vertical-align:top;font-size:10px;height: 80px;text-align: center">Operator signature</td>
                 </tr>
             </table>
         </div><!--End Table-->

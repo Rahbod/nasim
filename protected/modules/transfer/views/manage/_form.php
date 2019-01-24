@@ -6,7 +6,11 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
 ?>
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'transfer-form',
-	'enableAjaxValidation'=>true,
+	'enableAjaxValidation'=>false,
+	'enableClientValidation'=>true,
+    'clientOptions' => array(
+        'validateOnSubmit' => true
+    )
 
 )); ?>
     <style>
@@ -26,6 +30,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
         <?php echo $form->dropDownList($model,'sender_id',CHtml::listData(Customers::model()->findAll(), 'id', 'name'),array(
             'class'=>'form-control select-picker',
             'data-live-search' => true,
+            'prompt' => 'فرستنده را انتخاب کنید',
         )); ?>
         <?php echo $form->error($model,'sender_id'); ?>
     </div>
@@ -39,16 +44,17 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
             'data-fetch-url' => $this->createUrl('/customers/manage/fetchAccounts'),
             'data-target' => "#Transfer_receiver_account_id",
             'data-id' => $model->receiver_id,
+            'prompt' => 'گیرنده را انتخاب کنید',
         )); ?>
         <?php echo $form->error($model,'receiver_id'); ?>
     </div>
 
     <div class="form-group">
         <?php echo $form->labelEx($model,'receiver_account_id'); ?>
-        <a href="#account-customer-modal" data-toggle="modal" class="btn btn-sm btn-info add-customer">+</a>
+        <a id="add-customer-account" href="#account-customer-modal" data-toggle="modal" class="btn btn-sm btn-info add-customer <?= !$model->receiver_id?"hidden":"" ?>">+</a>
         <?php echo $form->dropDownList($model,'receiver_account_id', $model->isNewRecord?[]:CHtml::listData(CustomerAccounts::getList($model->receiver_id), 'id', 'html'),array(
             'class'=>'form-control',
-//            'disabled' => true,
+            'disabled' => !$model->receiver_id?true:false,
             'prompt' => 'شماره حساب موردنظر را انتخاب کنید...'
         )); ?>
         <?php echo $form->error($model,'receiver_account_id'); ?>
@@ -80,6 +86,12 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
             <span class="input-group-addon">$</span>
         </div>
         <?php echo $form->error($model,'currency_price'); ?>
+        <small style="white-space: pre-line">**نرخ ارز بنا بر کشور مبدا و مقصد باید یکی از این سه مورد باشد:
+            - بین ایران و استرالیا: نرخ دلار به ریال
+            - بین ایران و امارات: نرخ درهم به ریال
+            - بین امارات و استرالیا: نرخ دلار به درهم
+            سیستم به طور خودکار نرخ معکوس را محاسبه خواهد کرد.
+        </small>
     </div>
 
     <div class="form-group">
@@ -94,7 +106,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
     <div class="form-group">
         <?php echo $form->labelEx($model,'total_amount'); ?> <small>(خرید)</small>
         <div class="input-group" style="width: 300px">
-            <?php echo $form->textField($model,'total_amount',array('maxlength'=>255,'class'=>'form-control')); ?>
+            <?php echo $form->textField($model,'total_amount',array('maxlength'=>255,'class'=>'form-control', 'readonly' => true)); ?>
             <span class="input-group-addon" id="buy-label">-</span>
         </div>
         <?php echo $form->error($model,'total_amount'); ?>
@@ -152,6 +164,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
             calculateCurrencyPrice();
         }).on('change', '#Transfer_foreign_currency', function () {
             checkCurrency();
+            calculateCurrencyPrice();
         }).on('click', '.save-customer', function (e) {
             e.preventDefault();
             var form = $('#customers-form');
@@ -199,10 +212,12 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
 
     $("body").on("change", "select.receiver-change-trigger", function(){
         var el = $(this);
+        if(el.val() === '')
+            $("#add-customer-account").addClass("hidden");
         fetch(el);
     });
 
-    // fetch($("select.receiver-change-trigger"), $("#Transfer_receiver_account_id").data("id"));
+    fetch($("select.receiver-change-trigger"), $("#Transfer_receiver_account_id").data("id"));
 
     function fetch(el, id = false){
         var url = el.data("fetch-url"),
@@ -210,6 +225,7 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
             val = el.val();
 
         $(target).attr("disabled", "true");
+        $("#add-customer-account").addClass("hidden");
         $("#account-customer-modal form #CustomerAccounts_customer_id").val(val);
 
         if(val !== ""){
@@ -227,8 +243,10 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
             });
 
             $(target).attr("disabled", false);
+            $("#add-customer-account").removeClass("hidden");
         }else{
             $(target).attr("disabled", true);
+            $("#add-customer-account").addClass("hidden");
         }
     }
 
@@ -263,7 +281,8 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
         } else
             totalAmount = 0;
 
-        $('#Transfer_total_amount').val(totalAmount)
+        if(!isNaN(totalAmount))
+            $('#Transfer_total_amount').val(totalAmount)
             // .digitFormat();
     }
 

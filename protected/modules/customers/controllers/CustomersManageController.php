@@ -279,6 +279,7 @@ class CustomersManageController extends Controller
                 Yii::app()->user->setFlash('success', 'عملیات با موفقیت انجام شد.');
                 $this->refresh();
             } else {
+                var_dump($model->errors);exit;
                 if (Yii::app()->request->isAjaxRequest) {
                     echo json_encode(['status' => false, 'message' => 'درخواست با خطا مواجه است. لطفا مجددا سعی نمایید.']);
                     Yii::app()->end();

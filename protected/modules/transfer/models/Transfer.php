@@ -51,9 +51,9 @@ class Transfer extends CActiveRecord
     ];
 
     public static $foreignCurrencyLabels = [
-        self::CURRENCY_IRR => 'ریال ایران',
         self::CURRENCY_AUD => 'دلار استرالیا',
         self::CURRENCY_AED => 'درهم امارت',
+        self::CURRENCY_IRR => 'ریال ایران',
     ];
 
     public static $foreignCurrencyEnLabels = [
@@ -93,6 +93,7 @@ class Transfer extends CActiveRecord
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
+            array('origin_country, destination_country, foreign_currency, currency_amount, sender_id, receiver_id, receiver_account_id', 'required'),
             array('code, date, modified_date', 'length', 'max' => 20),
             array('sender_id, receiver_id, branch_id, receiver_account_id', 'length', 'max' => 10),
             array('payment_status, payment_method', 'length', 'max' => 1),
