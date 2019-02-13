@@ -8,6 +8,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Great+Vibes" rel="stylesheet"><link href="https://fonts.googleapis.com/css?family=Great+Vibes" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="https://static.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" />
     <link rel="mask-icon" type="" href="https://static.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" />
     <title>Print Receipt</title>
@@ -15,9 +16,16 @@
         <link rel="stylesheet" href="<?= Yii::app()->theme->baseUrl.'/css/a4-print.css?2.1' ?>" media="print">
         <link rel="stylesheet" href="<?= Yii::app()->theme->baseUrl.'/css/a4-print.css?2.1' ?>" media="screen">
     <?php elseif($mode == 'pos'): ?>
-        <link rel="stylesheet" href="<?= Yii::app()->theme->baseUrl.'/css/pos-print.css?2.1' ?>" media="print">
-        <link rel="stylesheet" href="<?= Yii::app()->theme->baseUrl.'/css/pos-print.css?2.1' ?>" media="screen">
+        <link rel="stylesheet" href="<?= Yii::app()->theme->baseUrl.'/css/pos-print.css?2.1'.time() ?>" media="print">
+        <link rel="stylesheet" href="<?= Yii::app()->theme->baseUrl.'/css/pos-print.css?2.1'.time() ?>" media="screen">
     <?php endif; ?>
+    <style>
+        .great-vibes {
+            font-family: "Great Vibes", cursive;
+            font-weight: bold;
+        }
+
+    </style>
     <script>
         window.console = window.console || function(t) {};
     </script>
@@ -127,40 +135,29 @@
         $socials = CJSON::decode(SiteSetting::getOption('social_links'));
         $tlg = isset($socials['telegram'])?$socials['telegram']:false;
         ?>
-    <center id="top">
+    <center id="top" style="margin-top: 10px;padding-bottom: 5px">
         <div class="info">
-            <h2>Naseem Exchange</h2>
-            <h3>AUSTRAC: IND100584398001</h3>
+            <h2 class="great-vibes" style="font-size: 1.7em !important;">Naseem Exchange</h2>
+            <h3>AUSTRAC&nbsp;&nbsp;&nbsp;IND100584398001</h3>
         </div><!--End Info-->
-        <div style="text-align: left !important;margin-top: 15px">
-            <h3>Add: <?= SiteSetting::getOption('foreign_address') ?></h3>
+        <div>
+            <h3 style="margin-top: 5px">Add: <?= SiteSetting::getOption('foreign_address') ?></h3>
             <h3>Add: <?= SiteSetting::getOption('foreign_address2') ?></h3>
-            <h3>ph: <?= SiteSetting::getOption('tel_code') ?> <?= SiteSetting::getOption('tel') ?></h3>
-            <h3>ph: <?= SiteSetting::getOption('tel_code') ?> <?= SiteSetting::getOption('tel2') ?></h3>
-            <h3>email: <?= SiteSetting::getOption('master_email') ?></h3>
-            <h3>website: <?= Yii::app()->getBaseUrl(true) ?></h3>
-            <?php if($tlg): ?><h3>telegram: <?= $tlg ?></h3><?php endif; ?>
+            <h3 style="margin-top: 5px">Tel: <?= SiteSetting::getOption('tel_code') ?> <?= SiteSetting::getOption('tel') ?></h3>
+            <h3>Tel: <?= SiteSetting::getOption('tel_code') ?> <?= SiteSetting::getOption('tel2') ?></h3>
+<!--            <h3>email: --><?//= SiteSetting::getOption('master_email') ?><!--</h3>-->
+<!--            <h3>website: --><?//= Yii::app()->getBaseUrl(true) ?><!--</h3>-->
+<!--            --><?php //if($tlg): ?><!--<h3>telegram: --><?//= $tlg ?><!--</h3>--><?php //endif; ?>
         </div>
     </center><!--End InvoiceTop-->
-
-<!--    <div id="mid">-->
-<!--        <div class="info">-->
-<!--            <h2>Contact Info</h2>-->
-<!--            <p>-->
-<!--                Address : street city, state 0000</br>-->
-<!--                Email   : JohnDoe@gmail.com</br>-->
-<!--                Phone   : 555-555-5555</br>-->
-<!--            </p>-->
-<!--        </div>-->
-<!--    </div><!--End Invoice Mid-->
 
     <div id="bot">
 
         <div id="table">
             <table>
-                <tr class="tabletitle border2x border2x-side">
+                <tr class="tabletitle" style="border-bottom: 1px solid !important;">
                     <td><b>Order No.</b> <?= $model->code ?></td>
-                    <td><b>Order Date:</b> <?= date('d/m/Y', $model->date) ?></td>
+                    <td style="border-left: none !important;"><b>Order Date:</b> <?= date('d/m/Y', $model->date) ?></td>
                 </tr>
 <!--                <tr class="tabletitle border2x-side">-->
 <!--                    <td><b>Customer Code:</b> --><?//= $model->sender->code ?><!--</td>-->
@@ -169,66 +166,66 @@
             </table>
             <table>
                 <!--Sender Details-->
-                <tr class="tabletitle border2x" style="border-bottom: none !important;">
-                    <td style="border-bottom: none !important;border-right: none !important"><b>Sender:</b></td>
+                <tr class="tabletitle" style="border-bottom: none !important;">
+                    <td style="border-bottom: none !important;border-right: none !important"><b>Sender</b></td>
                     <td style="border-bottom: none !important;border-left: none !important"><?= $model->sender->name ?></td>
                 </tr>
                 <tr class="tabletitle details">
-                    <td><b>Address:</b></td>
+                    <td>Address:</td>
                     <td><?= $model->sender->address ?></td>
                 </tr>
                 <tr class="tabletitle details">
-                    <td><b>Mobile:</b></td>
+                    <td>Mobile:</td>
                     <td><?= $model->sender->mobile ?></td>
                 </tr>
                 <tr class="tabletitle details">
-                    <td><b>Country:</b></td>
+                    <td>Country:</td>
                     <td class="text-uppercase"><?= $model->origin_country ?></td>
                 </tr>
 
                 <!--Receiver Details-->
-                <tr class="tabletitle border2x" style="border-bottom: none !important;">
-                    <td style="border-bottom: none !important;border-right: none !important"><b>Receiver:</b></td>
+                <tr class="tabletitle border-dashed" style="border-bottom: none !important;">
+                    <td style="border-bottom: none !important;border-right: none !important"><b>Receiver</b></td>
                     <td style="border-bottom: none !important;border-left: none !important"><?= $model->receiver->name ?></td>
                 </tr>
                 <tr class="tabletitle details">
-                    <td><b>Acc Number:</b></td>
+                    <td>Acc Number:</td>
                     <td><?= $model->receiverAccount->account_number ?></td>
                 </tr>
                 <tr class="tabletitle details">
-                    <td><b>Bank:</b></td>
+                    <td>Bank:</td>
                     <td><?= $model->receiverAccount->bank_name ?></td>
                 </tr>
                 <tr class="tabletitle details">
-                    <td><b>Country:</b></td>
+                    <td>Country:</td>
                     <td class="text-uppercase"><?= $model->destination_country ?></td>
                 </tr>
                 <tr class="tabletitle details">
-                    <td><b>Address:</b></td>
+                    <td>Address:</td>
                     <td><?= $model->receiver->address ?></td>
                 </tr>
                 <tr class="tabletitle details">
-                    <td><b>Mobile:</b></td>
+                    <td>Mobile:</td>
                     <td><?= $model->receiver->mobile ?></td>
                 </tr>
 
-                <tr class="tabletitle border2x">
-                    <td colspan="2"><b>Order Details:</b></td>
+                <tr class="tabletitle border-dashed text-center">
+                    <td colspan="2" style="text-align: center !important;"><b>Order Details</b></td>
                 </tr>
                 <tr class="tabletitle details">
-                    <td><b>Country:</b></td>
+                    <td>Country:</td>
                     <td class="text-uppercase"><?= "$model->origin_country to $model->destination_country" ?></td>
                 </tr>
                 <tr class="tabletitle details">
-                    <td><b>Foreign Currency:</b></td>
+                    <td>Foreign Currency:</td>
                     <td><?= Transfer::$foreignCurrencyEnLabels[$model->foreign_currency] ?></td>
                 </tr>
                 <tr class="tabletitle details">
-                    <td><b>Currency Amount:</b></td>
+                    <td>Currency Amount:</td>
                     <td><?= number_format($model->currency_amount).' '.$model->foreign_currency ?></td>
                 </tr>
                 <tr class="tabletitle details">
-                    <td><b>Rate:</b></td>
+                    <td>Rate:</td>
                     <td><?= number_format($model->currency_price).' '.$model->origin_currency ?></td>
                 </tr>
                 <tr class="tabletitle details">
@@ -236,13 +233,17 @@
                     <td><?= number_format($model->total_amount).' '.$model->origin_currency ?></td>
                 </tr>
             </table>
-            <table>
-                <tr class="tabletitle">
-                    <td width="50%" style="padding:10px 0;vertical-align:top;font-size:10px;height: 80px;text-align: center">Customer signature</td>
-                    <td width="50%" style="padding:10px 0;vertical-align:top;font-size:10px;height: 80px;text-align: center">Operator signature</td>
-                </tr>
-            </table>
         </div><!--End Table-->
+        <table>
+            <tr class="tabletitle">
+                <td width="50%" style="padding:10px 0;vertical-align:top;font-size:10px;height: 80px;text-align: center">Operator signature
+                <div style="text-align:center;margin-top: 30px">............</div>
+                </td>
+                <td width="50%" style="padding:10px 0;vertical-align:top;font-size:10px;height: 80px;text-align: center">Customer signature
+                    <div style="text-align:center;margin-top: 30px">............</div>
+                </td>
+            </tr>
+        </table>
     </div><!--End InvoiceBot-->
 <!--    <div class="page-break"></div>-->
 <?php endif; ?>

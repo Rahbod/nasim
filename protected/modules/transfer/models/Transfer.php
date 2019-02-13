@@ -21,6 +21,8 @@
  * @property string $payment_method
  * @property int $payment_status
  * @property string $origin_currency
+ * @property string $receiver_name
+ * @property string $sender_name
  *
  * The followings are the available model relations:
  * @property Customers $sender
@@ -77,6 +79,8 @@ class Transfer extends CActiveRecord
         self::PAYMENT_METHOD_DEBTOR => 'علی الحساب',
     ];
 
+    public $sender_name, $receiver_name;
+
     /**
      * @return string the associated database table name
      */
@@ -104,7 +108,7 @@ class Transfer extends CActiveRecord
             array('origin_country', 'compare', 'compareAttribute' => 'destination_country', 'operator' => '!=', 'message' => 'کشور مبدا و کشور مقصد نمی تواند یکسان باشد.'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, modified_date, payment_status, payment_method, code, sender_id, receiver_account_id, receiver_id, branch_id, date, origin_country, destination_country, foreign_currency, currency_amount, currency_price, total_amount', 'safe', 'on' => 'search'),
+            array('id,receiver_name, sender_name, modified_date, payment_status, payment_method, code, sender_id, receiver_account_id, receiver_id, branch_id, date, origin_country, destination_country, foreign_currency, currency_amount, currency_price, total_amount', 'safe', 'on' => 'search'),
         );
     }
 
@@ -166,7 +170,7 @@ class Transfer extends CActiveRecord
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id, true);
+        $criteria->compare('t.id', $this->id, true);
         $criteria->compare('code', $this->code, true);
         $criteria->compare('sender_id', $this->sender_id, true);
         $criteria->compare('receiver_id', $this->receiver_id, true);
@@ -181,7 +185,11 @@ class Transfer extends CActiveRecord
         $criteria->compare('payment_method', $this->payment_method);
         $criteria->compare('payment_status', $this->payment_status);
         $criteria->compare('receiver_account_id', $this->receiver_account_id, true);
+        $criteria->compare('sender.name', $this->sender_name, true);
+        $criteria->compare('receiver.name', $this->receiver_name, true);
 
+        $criteria->with = ['sender','receiver'];
+        $criteria->together = true;
         if ($customerID && !empty($mode)) {
 
             if ($mode == 'debtor') {
@@ -192,7 +200,7 @@ class Transfer extends CActiveRecord
                 $criteria->compare($mode == 'send' ? "sender_id" : 'receiver_id', $customerID);
         }
 
-        $criteria->order = 'id DESC';
+        $criteria->order = 't.id DESC';
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

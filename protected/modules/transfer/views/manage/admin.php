@@ -43,17 +43,42 @@ $dataProvider = $model->search();
             </div>
         </div>
 
-        <div class="table-responsive">
+<!--        <div class="table-responsive">-->
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'admins-grid',
                 'dataProvider'=>$model->search(),
                 'filter'=>$model,
                 'itemsCssClass'=>'table table-striped table-hover',
                 'columns'=>array(
+                    array(
+                        'class'=>'CButtonColumn',
+                        'buttons' => array(
+                            'delete' =>array(
+                                'visible' => '$data->branch_id == Yii::app()->user->getId()'
+                            ),
+                            'update' =>array(
+                                'visible' => '$data->branch_id == Yii::app()->user->getId()'
+                            )
+                        )
+                    ),
                     'code',
-                    'branch.title',
-                    'sender.name',
-                    'receiver.name',
+//                    'branch.title',
+                    [
+                            'header' => 'فرستنده',
+                        'name' => 'sender.name',
+                        'value' => function($data){
+                            return $data->sender->name;
+                        },
+                        'filter' => CHtml::activeTextField($model, 'sender_name', array())
+                    ],
+                    [
+                            'header' => 'گیرنده',
+                        'name' => 'receiver.name',
+                        'value' => function($data){
+                            return $data->sender->name;
+                        },
+                        'filter' => CHtml::activeTextField($model, 'receiver_name', array())
+                    ],
                     [
                         'name' => 'origin_country',
                         'value' => function($data){
@@ -68,22 +93,22 @@ $dataProvider = $model->search();
                         },
                         'filter' => Transfer::$countryLabels
                     ],
-                    [
-                        'name' => 'currency_price',
-                        'value' => function($data){
-                            /* @var $data Transfer */
-                            return (($data->currency_price?(strpos($data->currency_price, '.') !== false?number_format($data->currency_price, 2):number_format($data->currency_price)):"").
-                                " ".Transfer::$foreignCurrencyLabels[$data->origin_currency]);
-                        },
-                    ],
-                    [
-                        'name' => 'currency_amount',
-                        'value' => function($data){
-                            /* @var $data Transfer */
-                            return (($data->currency_amount?(strpos($data->currency_amount, '.') !== false?number_format($data->currency_amount, 2):number_format($data->currency_amount)):"").
-                                " ".Transfer::$foreignCurrencyLabels[$data->foreign_currency]);
-                        },
-                    ],
+//                    [
+//                        'name' => 'currency_price',
+//                        'value' => function($data){
+//                            /* @var $data Transfer */
+//                            return (($data->currency_price?(strpos($data->currency_price, '.') !== false?number_format($data->currency_price, 2):number_format($data->currency_price)):"").
+//                                " ".Transfer::$foreignCurrencyLabels[$data->origin_currency]);
+//                        },
+//                    ],
+//                    [
+//                        'name' => 'currency_amount',
+//                        'value' => function($data){
+//                            /* @var $data Transfer */
+//                            return (($data->currency_amount?(strpos($data->currency_amount, '.') !== false?number_format($data->currency_amount, 2):number_format($data->currency_amount)):"").
+//                                " ".Transfer::$foreignCurrencyLabels[$data->foreign_currency]);
+//                        },
+//                    ],
                     [
                         'name' => 'total_amount',
                         'value' => function($data){
@@ -112,38 +137,20 @@ $dataProvider = $model->search();
                         'value' => function($data) {
                             if ($data->payment_method == Transfer::PAYMENT_METHOD_DEBTOR) {
                                 if ($data->payment_status == Transfer::PAYMENT_STATUS_UNPAID)
-                                    return '<span class="label label-danger">' . Transfer::$paymentMethodLabels[$data->payment_method] . ' - ' . Transfer::$paymentStatusLabels[$data->payment_status] . '</span>';
+                                    $html = '<span class="label label-danger">' . Transfer::$paymentMethodLabels[$data->payment_method] . ' - ' . Transfer::$paymentStatusLabels[$data->payment_status] . '</span>';
                                 else
-                                    return '<span class="label label-success">' . Transfer::$paymentMethodLabels[$data->payment_method] . ' - ' . Transfer::$paymentStatusLabels[$data->payment_status] . '</span>';
+                                    $html = '<span class="label label-success">' . Transfer::$paymentMethodLabels[$data->payment_method] . ' - ' . Transfer::$paymentStatusLabels[$data->payment_status] . '</span>';
                             } else
-                                return '<span class="label label-success">' . Transfer::$paymentMethodLabels[$data->payment_method] . ' - ' . Transfer::$paymentStatusLabels[Transfer::PAYMENT_STATUS_PAID] . '</span>';
-
+                                $html = '<span class="label label-success">' . Transfer::$paymentMethodLabels[$data->payment_method] . ' - ' . Transfer::$paymentStatusLabels[Transfer::PAYMENT_STATUS_PAID] . '</span>';
+                            if ($data->payment_method == Transfer::PAYMENT_METHOD_DEBTOR && $data->payment_status == Transfer::PAYMENT_STATUS_UNPAID)
+                                $html .= '<br>'.CHtml::link('تسویه بدهی',array('/customers/manage/clearing?id='.$data->id),array('class' => 'btn btn-xs btn-success','style' => 'margin-top:5px'));
+                            return $html;
                         },
                         'type' => 'raw',
                         'filter' => Transfer::$paymentMethodLabels
                     ],
-                    [
-                        'value' => function($data){
-                            if ($data->payment_method == Transfer::PAYMENT_METHOD_DEBTOR && $data->payment_status == Transfer::PAYMENT_STATUS_UNPAID)
-                                return CHtml::link('تسویه بدهی',array('/customers/manage/clearing?id='.$data->id),array('class' => 'btn btn-xs btn-success'));
-                            return '';
-                        },
-                        'type' => 'raw',
-                        'filter' => false
-                    ],
-                    array(
-                        'class'=>'CButtonColumn',
-                        'buttons' => array(
-                            'delete' =>array(
-                                'visible' => '$data->branch_id == Yii::app()->user->getId()'
-                            ),
-                            'update' =>array(
-                                'visible' => '$data->branch_id == Yii::app()->user->getId()'
-                            )
-                        )
-                    )
                 )
             )); ?>
-        </div>
+<!--        </div>-->
     </div>
 </div>
