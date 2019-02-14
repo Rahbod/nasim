@@ -74,9 +74,16 @@ class Transfer extends CActiveRecord
         self::PAYMENT_STATUS_PAID => 'پرداخت شده',
         self::PAYMENT_STATUS_UNPAID => 'پرداخت نشده',
     ];
+
     public static $paymentMethodLabels = [
         self::PAYMENT_METHOD_CASH => 'نقدی',
         self::PAYMENT_METHOD_DEBTOR => 'علی الحساب',
+    ];
+
+    public static $paymentMethodFilterLabels = [
+        2 => 'علی الحساب - پرداخت شده',
+        1 => 'علی الحساب - پرداخت نشده',
+        0 => 'نقدی - پرداخت شده',
     ];
 
     public $sender_name, $receiver_name;
@@ -182,11 +189,26 @@ class Transfer extends CActiveRecord
         $criteria->compare('currency_amount', $this->currency_amount, true);
         $criteria->compare('currency_price', $this->currency_price, true);
         $criteria->compare('total_amount', $this->total_amount, true);
-        $criteria->compare('payment_method', $this->payment_method);
-        $criteria->compare('payment_status', $this->payment_status);
         $criteria->compare('receiver_account_id', $this->receiver_account_id, true);
         $criteria->compare('sender.name', $this->sender_name, true);
         $criteria->compare('receiver.name', $this->receiver_name, true);
+
+        if($this->payment_method !== null) {
+            switch ($this->payment_method) {
+                case 0:
+                    $criteria->compare('payment_method', self::PAYMENT_METHOD_CASH);
+                    $criteria->compare('payment_status', self::PAYMENT_STATUS_PAID);
+                    break;
+                case 1:
+                    $criteria->compare('payment_method', self::PAYMENT_METHOD_DEBTOR);
+                    $criteria->compare('payment_status', self::PAYMENT_STATUS_UNPAID);
+                    break;
+                case 2:
+                    $criteria->compare('payment_method', self::PAYMENT_METHOD_DEBTOR);
+                    $criteria->compare('payment_status', self::PAYMENT_STATUS_PAID);
+                    break;
+            }
+        }
 
         $criteria->with = ['sender','receiver'];
         $criteria->together = true;
@@ -208,7 +230,7 @@ class Transfer extends CActiveRecord
         ));
     }
 
-    public function report($from = null, $to = null)
+    public function report($from = null, $to = null, $page = true)
     {
         $criteria = new CDbCriteria;
 
@@ -224,16 +246,31 @@ class Transfer extends CActiveRecord
         $criteria->compare('currency_amount', $this->currency_amount, true);
         $criteria->compare('currency_price', $this->currency_price, true);
         $criteria->compare('total_amount', $this->total_amount, true);
-        $criteria->compare('payment_method', $this->payment_method);
-        $criteria->compare('payment_status', $this->payment_status);
         $criteria->compare('receiver_account_id', $this->receiver_account_id, true);
 
-        $criteria->addCondition("payment_method = :cash OR (payment_method = :debtor AND payment_status = :paid)");
-        $criteria->params[':cash'] = self::PAYMENT_METHOD_CASH;
-        $criteria->params[':debtor'] = self::PAYMENT_METHOD_DEBTOR;
-        $criteria->params[':paid'] = self::PAYMENT_STATUS_PAID;
+        if($this->payment_method !== null && !empty($this->payment_method)) {
+            switch ($this->payment_method) {
+                case 0:
+                    $criteria->compare('payment_method', self::PAYMENT_METHOD_CASH);
+                    $criteria->compare('payment_status', self::PAYMENT_STATUS_PAID);
+                    break;
+                case 1:
+                    $criteria->compare('payment_method', self::PAYMENT_METHOD_DEBTOR);
+                    $criteria->compare('payment_status', self::PAYMENT_STATUS_UNPAID);
+                    break;
+                case 2:
+                    $criteria->compare('payment_method', self::PAYMENT_METHOD_DEBTOR);
+                    $criteria->compare('payment_status', self::PAYMENT_STATUS_PAID);
+                    break;
+            }
+        }
 
-        $criteria->addCondition("modified_date IS NOT NULL AND (modified_date >= :from AND modified_date <= :to)");
+//        $criteria->addCondition("payment_method = :cash OR (payment_method = :debtor AND payment_status = :paid)");
+//        $criteria->params[':cash'] = self::PAYMENT_METHOD_CASH;
+//        $criteria->params[':debtor'] = self::PAYMENT_METHOD_DEBTOR;
+//        $criteria->params[':paid'] = self::PAYMENT_STATUS_PAID;
+
+        $criteria->addCondition("((modified_date IS NOT NULL AND (modified_date >= :from AND modified_date <= :to)) OR (modified_date IS NULL AND (t.date >= :from AND date <= :to)))");
 
         $criteria->params[':from'] = $from;
         if (!$from)
@@ -243,8 +280,13 @@ class Transfer extends CActiveRecord
             $criteria->params[':to'] = strtotime(date('Y/m/d 23:59:59'));
         $criteria->order = 'id DESC';
 
+//        if(!$page){
+//            var_dump($_GET);exit;
+//        }
+
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
+            'pagination' => $page?new CPagination():false,
             'sort' => false
         ));
     }
@@ -316,17 +358,53 @@ class Transfer extends CActiveRecord
             ]
         ];
 
+
+        $model = new self();
+        $model->unsetAttributes();
+        if (isset($_GET['Transfer']))
+            $model->attributes = $_GET['Transfer'];
+
         $criteria = new CDbCriteria();
 
+        $criteria->compare('id', $model->id, true);
+        $criteria->compare('code', $model->code, true);
+        $criteria->compare('sender_id', $model->sender_id, true);
+        $criteria->compare('receiver_id', $model->receiver_id, true);
+        $criteria->compare('branch_id', $model->branch_id, true);
+        $criteria->compare('date', $model->date, true);
+        $criteria->compare('origin_country', $model->origin_country, true);
+        $criteria->compare('destination_country', $model->destination_country, true);
+        $criteria->compare('foreign_currency', $model->foreign_currency, true);
+        $criteria->compare('currency_amount', $model->currency_amount, true);
+        $criteria->compare('currency_price', $model->currency_price, true);
+        $criteria->compare('total_amount', $model->total_amount, true);
+        $criteria->compare('receiver_account_id', $model->receiver_account_id, true);
         if ($my)
             $criteria->compare("branch_id", Yii::app()->user->getId());
 
-        $criteria->addCondition("payment_method = :cash OR (payment_method = :debtor AND payment_status = :paid)");
-        $criteria->addCondition("modified_date IS NOT NULL AND (modified_date >= :from AND modified_date <= :to)");
-        $criteria->params[':cash'] = self::PAYMENT_METHOD_CASH;
-        $criteria->params[':debtor'] = self::PAYMENT_METHOD_DEBTOR;
-        $criteria->params[':paid'] = self::PAYMENT_STATUS_PAID;
+        if($model->payment_method !== null && !empty($model->payment_method)) {
+            switch ($model->payment_method) {
+                case 0:
+                    $criteria->compare('payment_method', self::PAYMENT_METHOD_CASH);
+                    $criteria->compare('payment_status', self::PAYMENT_STATUS_PAID);
+                    break;
+                case 1:
+                    $criteria->compare('payment_method', self::PAYMENT_METHOD_DEBTOR);
+                    $criteria->compare('payment_status', self::PAYMENT_STATUS_UNPAID);
+                    break;
+                case 2:
+                    $criteria->compare('payment_method', self::PAYMENT_METHOD_DEBTOR);
+                    $criteria->compare('payment_status', self::PAYMENT_STATUS_PAID);
+                    break;
+            }
+        }
 
+//        $criteria->addCondition("payment_method = :cash OR (payment_method = :debtor AND payment_status = :paid)");
+//        $criteria->params[':cash'] = self::PAYMENT_METHOD_CASH;
+//        $criteria->params[':debtor'] = self::PAYMENT_METHOD_DEBTOR;
+//        $criteria->params[':paid'] = self::PAYMENT_STATUS_PAID;
+
+        $criteria->addCondition("((modified_date IS NOT NULL AND (modified_date >= :from AND modified_date <= :to)) OR (modified_date IS NULL AND (t.date >= :from AND date <= :to)))");
         $criteria->params[':from'] = $from;
         if (!$from)
             $criteria->params[':from'] = strtotime(date('Y/m/d 00:00:00'));
@@ -378,5 +456,36 @@ class Transfer extends CActiveRecord
                 return self::CURRENCY_AUD;
         }
         return null;
+    }
+
+    /**
+     * @param string $method
+     * @param array $params
+     * @return int|string
+     */
+    public function getTotalCurrencyAmount($method = 'search',$params = [])
+    {
+        /** @var $data Transfer[] */
+        $data = $this->{$method}(...$params)->getData();
+        $total = 0;
+        foreach ($data as $item)
+            $total += floatval($item->currency_amount);
+        return $total ? (strpos($total, '.') !== false ? number_format($total, 2) : number_format($total)) : 0;
+    }
+
+
+    /**
+     * @param string $method
+     * @param array $params
+     * @return int|string
+     */
+    public function getTotalAmount($method = 'search',$params = [])
+    {
+        /** @var $data Transfer[] */
+        $data = $this->{$method}(...$params)->getData();
+        $total = 0;
+        foreach ($data as $item)
+            $total += floatval($item->total_amount);
+        return $total ? (strpos($total, '.') !== false ? number_format($total, 2) : number_format($total)) : 0;
     }
 }

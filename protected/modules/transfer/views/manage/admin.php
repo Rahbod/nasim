@@ -49,6 +49,25 @@ $dataProvider = $model->search();
                 'dataProvider'=>$model->search(),
                 'filter'=>$model,
                 'itemsCssClass'=>'table table-striped table-hover',
+                'template' => '{items} {pager}',
+                'ajaxUpdate' => true,
+                'afterAjaxUpdate' => "function(id, data){
+                    $('html, body').animate({
+                    scrollTop: ($('#'+id).offset().top-130)
+                    },1000);
+                }",
+                'pager' => array(
+                    'header' => '',
+                    'firstPageLabel' => '<<',
+                    'lastPageLabel' => '>>',
+                    'prevPageLabel' => '<',
+                    'nextPageLabel' => '>',
+                    'cssFile' => false,
+                    'htmlOptions' => array(
+                        'class' => 'pagination pagination-sm',
+                    ),
+                ),
+                'pagerCssClass' => 'blank',
                 'columns'=>array(
                     array(
                         'class'=>'CButtonColumn',
@@ -93,22 +112,24 @@ $dataProvider = $model->search();
                         },
                         'filter' => Transfer::$countryLabels
                     ],
-//                    [
-//                        'name' => 'currency_price',
-//                        'value' => function($data){
-//                            /* @var $data Transfer */
-//                            return (($data->currency_price?(strpos($data->currency_price, '.') !== false?number_format($data->currency_price, 2):number_format($data->currency_price)):"").
-//                                " ".Transfer::$foreignCurrencyLabels[$data->origin_currency]);
-//                        },
-//                    ],
-//                    [
-//                        'name' => 'currency_amount',
-//                        'value' => function($data){
-//                            /* @var $data Transfer */
-//                            return (($data->currency_amount?(strpos($data->currency_amount, '.') !== false?number_format($data->currency_amount, 2):number_format($data->currency_amount)):"").
-//                                " ".Transfer::$foreignCurrencyLabels[$data->foreign_currency]);
-//                        },
-//                    ],
+                    [
+                        'name' => 'currency_price',
+                        'value' => function($data){
+                            /* @var $data Transfer */
+                            return (($data->currency_price?(strpos($data->currency_price, '.') !== false?number_format($data->currency_price, 2):number_format($data->currency_price)):"").
+                                " ".Transfer::$foreignCurrencyLabels[$data->origin_currency]);
+                        },
+                        'footer' => '<b>جمع کل</b>'
+                    ],
+                    [
+                        'name' => 'currency_amount',
+                        'value' => function($data){
+                            /* @var $data Transfer */
+                            return (($data->currency_amount?(strpos($data->currency_amount, '.') !== false?number_format($data->currency_amount, 2):number_format($data->currency_amount)):"").
+                                " ".Transfer::$foreignCurrencyLabels[$data->foreign_currency]);
+                        },
+                        'footer' => $model->getTotalCurrencyAmount(),
+                    ],
                     [
                         'name' => 'total_amount',
                         'value' => function($data){
@@ -116,6 +137,7 @@ $dataProvider = $model->search();
                             return (($data->total_amount?(strpos($data->total_amount, '.') !== false?number_format($data->total_amount, 2):number_format($data->total_amount)):"").
                                 " ".Transfer::$foreignCurrencyLabels[$data->origin_currency]);
                         },
+                        'footer' => $model->getTotalAmount(),
                     ],
                     [
                         'name' => 'date',
@@ -147,7 +169,7 @@ $dataProvider = $model->search();
                             return $html;
                         },
                         'type' => 'raw',
-                        'filter' => Transfer::$paymentMethodLabels
+                        'filter' => Transfer::$paymentMethodFilterLabels
                     ],
                 )
             )); ?>

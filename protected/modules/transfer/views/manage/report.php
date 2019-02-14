@@ -160,10 +160,52 @@ $this->breadcrumbs=array(
                 'dataProvider'=>$model->report($from, $to),
                 'filter'=>$model,
                 'itemsCssClass'=>'table table-striped table-hover',
+                'template' => '{items} {pager}',
+                'ajaxUpdate' => true,
+                'afterAjaxUpdate' => "function(id, data){
+                    $('html, body').animate({
+                    scrollTop: ($('#'+id).offset().top-130)
+                    },1000);
+                }",
+                'pager' => array(
+                    'header' => '',
+                    'firstPageLabel' => '<<',
+                    'lastPageLabel' => '>>',
+                    'prevPageLabel' => '<',
+                    'nextPageLabel' => '>',
+                    'cssFile' => false,
+                    'htmlOptions' => array(
+                        'class' => 'pagination pagination-sm',
+                    ),
+                ),
+                'pagerCssClass' => 'blank',
                 'columns'=>array(
+                    [
+                        'class'=>'CButtonColumn',
+                        'template' => '{view}',
+                        'buttons' => array(
+                            'view'=> array(
+                                'url' => 'Yii::app()->createUrl("/transfer/manage/view",array("id" => $data->id, "returnUrl" => Yii::app()->request->requestUri))'
+                            )
+                        )
+                    ],
                     'code',
-                    'sender.name',
-                    'receiver.name',
+                    [
+                        'header' => 'فرستنده',
+                        'name' => 'sender.name',
+                        'value' => function($data){
+                            return $data->sender->name;
+                        },
+                        'filter' => CHtml::activeTextField($model, 'sender_name', array())
+                    ],
+                    [
+                        'header' => 'گیرنده',
+                        'name' => 'receiver.name',
+                        'value' => function($data){
+                            return $data->sender->name;
+                        },
+                        'filter' => CHtml::activeTextField($model, 'receiver_name', array())
+                    ],
                     [
                         'name' => 'currency_price',
                         'value' => function($data){
@@ -171,6 +213,7 @@ $this->breadcrumbs=array(
                             return (($data->currency_price?(strpos($data->currency_price, '.') !== false?number_format($data->currency_price, 2):number_format($data->currency_price)):"").
                                 " ".Transfer::$foreignCurrencyLabels[$data->origin_currency]);
                         },
+                        'footer' => '<b>جمع کل</b>'
                     ],
                     [
                         'name' => 'currency_amount',
@@ -179,6 +222,7 @@ $this->breadcrumbs=array(
                             return (($data->currency_amount?(strpos($data->currency_amount, '.') !== false?number_format($data->currency_amount, 2):number_format($data->currency_amount)):"").
                                 " ".Transfer::$foreignCurrencyLabels[$data->foreign_currency]);
                         },
+                        'footer' => $model->getTotalCurrencyAmount('report', [$from, $to, false]),
                     ],
                     [
                         'name' => 'total_amount',
@@ -187,6 +231,7 @@ $this->breadcrumbs=array(
                             return (($data->total_amount?(strpos($data->total_amount, '.') !== false?number_format($data->total_amount, 2):number_format($data->total_amount)):"").
                                 " ".Transfer::$foreignCurrencyLabels[$data->origin_currency]);
                         },
+                        'footer' => $model->getTotalAmount('report', [$from, $to, false]),
                     ],
                     [
                         'name' => 'date',
@@ -200,6 +245,8 @@ $this->breadcrumbs=array(
                     [
                         'name' => 'modified_date',
                         'value' => function($data){
+                            if(!$data->modified_date)
+                                return '--';
                             if (isset($_GET['date_type']) && $_GET['date_type'] == 'gregorian')
                                 return date('Y/m/d H:i', $data->modified_date);
                             return JalaliDate::date('Y/m/d H:i', $data->modified_date);
@@ -220,17 +267,8 @@ $this->breadcrumbs=array(
 
                         },
                         'type' => 'raw',
-                        'filter' => Transfer::$paymentMethodLabels
-                    ],
-                    array(
-                        'class'=>'CButtonColumn',
-                        'template' => '{view}',
-                        'buttons' => array(
-                            'view'=> array(
-                                'url' => 'Yii::app()->createUrl("/transfer/manage/view",array("id" => $data->id, "returnUrl" => Yii::app()->request->requestUri))'
-                            )
-                        )
-                    )
+                        'filter' => Transfer::$paymentMethodFilterLabels
+                    ]
                 )
             )); ?>
         </div>
