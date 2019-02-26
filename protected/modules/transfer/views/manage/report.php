@@ -155,6 +155,8 @@ $this->breadcrumbs=array(
         </div>
 
         <div class="table-responsive">
+            <a href="#" id="export-grid-view" class="btn btn-default"><i class="fa fa-file"></i> خروجی Excel</a>
+            <a href="#" id="print-grid-view" class="btn btn-default"><i class="fa fa-print"></i> چاپ</a>
             <?php $this->widget('zii.widgets.grid.CGridView', array(
                 'id'=>'admins-grid',
                 'dataProvider'=>$model->report($from, $to),
@@ -162,6 +164,10 @@ $this->breadcrumbs=array(
                 'itemsCssClass'=>'table table-striped table-hover',
                 'template' => '{items} {pager}',
                 'ajaxUpdate' => true,
+                'htmlOptions' => [
+                    'data-export-uri' => Yii::app()->createUrl(str_replace('transfer/manage/report', 'transfer/manage/exportReport', Yii::app()->request->requestUri)),
+                    'data-print-uri' => Yii::app()->createUrl(str_replace('transfer/manage/report', 'transfer/manage/printGrid', Yii::app()->request->requestUri)),
+                ],
                 'afterAjaxUpdate' => "function(id, data){
                     $('html, body').animate({
                     scrollTop: ($('#'+id).offset().top-130)
@@ -202,7 +208,7 @@ $this->breadcrumbs=array(
                         'header' => 'گیرنده',
                         'name' => 'receiver.name',
                         'value' => function($data){
-                            return $data->sender->name;
+                            return $data->receiver->name;
                         },
                         'filter' => CHtml::activeTextField($model, 'receiver_name', array())
                     ],
@@ -286,7 +292,6 @@ $this->breadcrumbs=array(
 
         $("body").on("change", '#date_type', function () {
             var val = $(this).val();
-            console.log(val);
 
             $(".dis-box#"+val+"-fields").find(":input").each(function(){
                 $(this).val("").attr("disabled", false)
@@ -294,6 +299,16 @@ $this->breadcrumbs=array(
             $(".dis-box").not("#"+val+"-fields").find(":input").each(function(){
                 $(this).val("").attr("disabled", true)
             });
-        })
+        }).on("click", '#export-grid-view', function (e) {
+            e.preventDefault();
+            var url = $('.grid-view').data('export-uri');
+            if(url != undefined)
+                window.location.href = url;
+        }).on("click", '#print-grid-view', function (e) {
+            e.preventDefault();
+            var url = $('.grid-view').data('print-uri');
+            if(url != undefined)
+                window.open(url, '_blank');
+        });
     })
 </script>

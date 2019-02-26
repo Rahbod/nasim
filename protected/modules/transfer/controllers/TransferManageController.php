@@ -20,8 +20,10 @@ class TransferManageController extends Controller
         return array(
             'backend' => array(
                 'my',
+                'exportReport',
                 'report',
                 'print',
+                'printGrid',
                 'create',
                 'update',
                 'admin',
@@ -177,7 +179,7 @@ class TransferManageController extends Controller
 
     public function actionReport()
     {
-        $model = new Transfer();
+        $model = new Transfer('search');
         $model->unsetAttributes();
         if (isset($_GET['Transfer'])) {
             $model->attributes = $_GET['Transfer'];
@@ -195,6 +197,42 @@ class TransferManageController extends Controller
         $this->render('report', compact('model', 'reports', 'from', 'to'));
     }
 
+    public function actionExportReport()
+    {
+        header('Content-Encoding: UTF-8');
+        header('Content-type: text/csv;charset=UTF-8');
+        header('Content-Disposition: attachment; filename="Report-' . date('YmdHi') . '.csv"');
+        echo "\xEF\xBB\xBF";
+
+        $model = new Transfer('search');
+        $model->unsetAttributes();
+        if (isset($_GET['Transfer']))
+            $model->attributes = $_GET['Transfer'];
+
+        if (isset($_GET['date_type']) && $_GET['date_type'] == 'gregorian') {
+            $from = isset($_GET['g_from']) ? strtotime($_GET['g_from']) : null;
+            $to = isset($_GET['g_to']) ? strtotime($_GET['g_to']) : null;
+        } else {
+            $from = isset($_GET['from_altField']) ? $_GET['from_altField'] : null;
+            $to = isset($_GET['to_altField']) ? $_GET['to_altField'] : null;
+        }
+
+        $dataProvider = $model->report($from, $to);
+
+        //csv header
+        echo Transfer::model()->getAttributeLabel("code") . "," . Transfer::model()->getAttributeLabel("sender_id") . "," . Transfer::model()->getAttributeLabel("receiver_id") . "," . Transfer::model()->getAttributeLabel("currency_price") . "," . Transfer::model()->getAttributeLabel("currency_amount") . "," . Transfer::model()->getAttributeLabel("total_amount") . " \r\n";
+
+        foreach ($dataProvider->getData() as $data) {
+            $currencyPrice = (($data->currency_price ?: "") . " " . Transfer::$foreignCurrencyLabels[$data->origin_currency]);
+
+            $currencyAmount = (($data->currency_amount ?: "") . " " . Transfer::$foreignCurrencyLabels[$data->foreign_currency]);
+
+            $totalAmount = (($data->total_amount ?: "") . " " . Transfer::$foreignCurrencyLabels[$data->origin_currency]);
+
+            echo "$data->code,{$data->sender->name},{$data->receiver->name},$currencyPrice,$currencyAmount,$totalAmount \r\n";
+        }
+        exit;
+    }
 
     public function actionPrint($id)
     {
@@ -202,5 +240,25 @@ class TransferManageController extends Controller
         $mode = isset($_GET['mode']) ? $_GET['mode'] : false;
         $model = $this->loadModel($id);
         $this->render('print_view', compact('model', 'mode'));
+    }
+
+    public function actionPrintGrid()
+    {
+        $this->layout = 'xxx';
+
+        $model = new Transfer('search');
+        $model->unsetAttributes();
+        if (isset($_GET['Transfer']))
+            $model->attributes = $_GET['Transfer'];
+
+        if (isset($_GET['date_type']) && $_GET['date_type'] == 'gregorian') {
+            $from = isset($_GET['g_from']) ? strtotime($_GET['g_from']) : null;
+            $to = isset($_GET['g_to']) ? strtotime($_GET['g_to']) : null;
+        } else {
+            $from = isset($_GET['from_altField']) ? $_GET['from_altField'] : null;
+            $to = isset($_GET['to_altField']) ? $_GET['to_altField'] : null;
+        }
+
+        $this->render('grid_print_view', compact('model', 'from', 'to'));
     }
 }

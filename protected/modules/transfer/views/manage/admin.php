@@ -94,7 +94,7 @@ $dataProvider = $model->search();
                             'header' => 'گیرنده',
                         'name' => 'receiver.name',
                         'value' => function($data){
-                            return $data->sender->name;
+                            return $data->receiver->name;
                         },
                         'filter' => CHtml::activeTextField($model, 'receiver_name', array())
                     ],

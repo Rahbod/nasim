@@ -193,7 +193,7 @@ class Transfer extends CActiveRecord
         $criteria->compare('sender.name', $this->sender_name, true);
         $criteria->compare('receiver.name', $this->receiver_name, true);
 
-        if($this->payment_method !== null) {
+        if($this->payment_method !== null and (!empty($this->payment_method) or $this->payment_method == '0')) {
             switch ($this->payment_method) {
                 case 0:
                     $criteria->compare('payment_method', self::PAYMENT_METHOD_CASH);
@@ -247,8 +247,10 @@ class Transfer extends CActiveRecord
         $criteria->compare('currency_price', $this->currency_price, true);
         $criteria->compare('total_amount', $this->total_amount, true);
         $criteria->compare('receiver_account_id', $this->receiver_account_id, true);
+        $criteria->compare('sender.name', $this->sender_name, true);
+        $criteria->compare('receiver.name', $this->receiver_name, true);
 
-        if($this->payment_method !== null && !empty($this->payment_method)) {
+        if($this->payment_method !== null and (!empty($this->payment_method) or $this->payment_method == '0')) {
             switch ($this->payment_method) {
                 case 0:
                     $criteria->compare('payment_method', self::PAYMENT_METHOD_CASH);
@@ -270,6 +272,8 @@ class Transfer extends CActiveRecord
 //        $criteria->params[':debtor'] = self::PAYMENT_METHOD_DEBTOR;
 //        $criteria->params[':paid'] = self::PAYMENT_STATUS_PAID;
 
+        $criteria->with = ['sender','receiver'];
+        $criteria->together = true;
         $criteria->addCondition("((modified_date IS NOT NULL AND (modified_date >= :from AND modified_date <= :to)) OR (modified_date IS NULL AND (t.date >= :from AND date <= :to)))");
 
         $criteria->params[':from'] = $from;
@@ -278,11 +282,7 @@ class Transfer extends CActiveRecord
         $criteria->params[':to'] = $to;
         if (!$to)
             $criteria->params[':to'] = strtotime(date('Y/m/d 23:59:59'));
-        $criteria->order = 'id DESC';
-
-//        if(!$page){
-//            var_dump($_GET);exit;
-//        }
+        $criteria->order = 't.id DESC';
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -340,7 +340,7 @@ class Transfer extends CActiveRecord
     /**
      * @param null $from
      * @param null $to
-     * @param null $my
+     * @param boolean $my
      * @return array
      */
     public static function CalculateStatistics($from = null, $to = null, $my = false)
@@ -382,7 +382,7 @@ class Transfer extends CActiveRecord
         if ($my)
             $criteria->compare("branch_id", Yii::app()->user->getId());
 
-        if($model->payment_method !== null && !empty($model->payment_method)) {
+        if($model->payment_method !== null and (!empty($model->payment_method) or $model->payment_method == '0')) {
             switch ($model->payment_method) {
                 case 0:
                     $criteria->compare('payment_method', self::PAYMENT_METHOD_CASH);
@@ -413,7 +413,7 @@ class Transfer extends CActiveRecord
             $criteria->params[':to'] = strtotime(date('Y/m/d 23:59:59'));
 
         $todayTransfers = Transfer::model()->findAll($criteria);
-        foreach ($todayTransfers as $record) {
+        /*foreach ($todayTransfers as $record) {
             if ($record->foreign_currency == Transfer::CURRENCY_AUD) {
                 $statistics['sell']['dollar'] += intval($record->currency_amount);
                 if ($record->origin_country == Transfer::COUNTRY_IRAN || $record->destination_country == Transfer::COUNTRY_IRAN)
@@ -432,6 +432,20 @@ class Transfer extends CActiveRecord
                     $statistics['buy']['rial'] += intval($record->total_amount);
                 else if ($record->origin_country == Transfer::COUNTRY_AUSTRALIA || $record->destination_country == Transfer::COUNTRY_AUSTRALIA)
                     $statistics['buy']['dollar'] += intval($record->total_amount);
+            }
+        }*/
+
+        foreach ($todayTransfers as $record) {
+            if($record->origin_country == Transfer::COUNTRY_IRAN and $record->destination_country == Transfer::COUNTRY_AUSTRALIA){
+                if ($record->foreign_currency == Transfer::CURRENCY_AUD)
+                    $statistics['sell']['dollar'] += intval($record->currency_amount);
+                elseif ($record->foreign_currency == Transfer::CURRENCY_IRR)
+                    $statistics['sell']['rial'] += intval($record->currency_amount);
+            }elseif($record->origin_country == Transfer::COUNTRY_AUSTRALIA and $record->destination_country == Transfer::COUNTRY_IRAN){
+                if ($record->foreign_currency == Transfer::CURRENCY_AUD)
+                    $statistics['buy']['dollar'] += intval($record->currency_amount);
+                elseif ($record->foreign_currency == Transfer::CURRENCY_IRR)
+                    $statistics['buy']['rial'] += intval($record->currency_amount);
             }
         }
         return $statistics;
