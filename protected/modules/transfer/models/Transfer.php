@@ -23,6 +23,7 @@
  * @property string $origin_currency
  * @property string $receiver_name
  * @property string $sender_name
+ * @property string $reason
  *
  * The followings are the available model relations:
  * @property Customers $sender
@@ -106,6 +107,7 @@ class Transfer extends CActiveRecord
         return array(
             array('origin_country, destination_country, foreign_currency, currency_amount, sender_id, receiver_id, receiver_account_id', 'required'),
             array('code, date, modified_date', 'length', 'max' => 20),
+            array('reason', 'length', 'max' => 255),
             array('sender_id, receiver_id, branch_id, receiver_account_id', 'length', 'max' => 10),
             array('payment_status, payment_method', 'length', 'max' => 1),
             array('payment_status', 'default', 'value' => self::PAYMENT_STATUS_UNPAID),
@@ -156,6 +158,7 @@ class Transfer extends CActiveRecord
             'payment_method' => 'نوع پرداخت',
             'payment_status' => 'وضعیت پرداخت',
             'receiver_account_id' => 'شماره حساب گیرنده',
+            'reason' => 'بابت',
         );
     }
 

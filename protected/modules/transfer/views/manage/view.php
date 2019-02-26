@@ -107,7 +107,11 @@ $this->breadcrumbs=array(
                         'name' => 'total_amount',
                         'value' => (($model->total_amount?(strpos($model->total_amount, '.') !== false?number_format($model->total_amount, 2):number_format($model->total_amount)):"").
                             " ".Transfer::$foreignCurrencyLabels[$model->origin_currency]),
-                    ]
+                    ],
+                    [
+                        'name' => 'reason',
+                        'value' => $model->reason ?: '-',
+                    ],
                 ),
             )); ?>
         </div>

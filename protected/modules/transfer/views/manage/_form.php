@@ -122,6 +122,16 @@ Yii::app()->clientScript->registerScript('resetForm','document.getElementById("t
         <?php echo $form->error($model,'payment_method'); ?>
     </div>
 
+    <div class="form-group">
+        <?php echo $form->labelEx($model,'reason'); ?>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <?php echo $form->textArea($model,'reason', ['maxlength' => 255, 'class'=>'form-control']); ?>
+            </div>
+        </div>
+        <?php echo $form->error($model,'reason'); ?>
+    </div>
+
     <div class="form-group buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'افزودن' : 'ویرایش', array('class'=>'btn btn-success')); ?>
 	</div>
